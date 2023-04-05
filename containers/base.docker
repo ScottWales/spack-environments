@@ -7,6 +7,13 @@ ENV  SPACK_ROOT=/opt/spack
 ENV  SPACK_CACHE=$SPACK_CACHE
 ENV  SPACK_ENV=jopa
 
+# Base packages
+RUN  microdnf install --yes --nodocs \
+     shadow-utils \
+     wget \
+     tar \
+&&   microdnf clean
+
 # Spack user
 RUN  useradd spack \
 &&   mkdir -p $SPACK_ROOT \
