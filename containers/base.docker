@@ -8,7 +8,7 @@ ENV  SPACK_CACHE=$SPACK_CACHE
 ENV  SPACK_ENV=jopa
 
 # Base packages
-RUN  microdnf install --yes --nodocs \
+RUN  microdnf install --y --nodocs \
      shadow-utils \
      wget \
      tar \
