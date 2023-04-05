@@ -1,0 +1,44 @@
+# 1. Build base image with Docker
+# 2. Build spack packages and save to binary cache
+# 3. Build CI packages with dependencies for that package only
+# 4. Build full container with all of Jopa
+# 5. Convert Jopa docker container to Apptainer
+
+steps:
+    - setup
+    - base
+    - spack-prebuild
+    - docker
+    - apptainer
+    - clean
+
+variables:
+    DOCKER_REGISTRY: '172.17.0.2:5000'
+    DOCKER_PERSIST: '/scratch/gitlab-runner/'
+    SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
+
+base:
+    stage: base
+    tags: [docker]
+    image: &kaniko_image
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    script: &kaniko_build
+        - mkdir -p /kaniko/.docker
+        - |
+            cat > /kaniko/.docker/config.json <<EOF
+            {"auths": {
+                "$CI_DEPENDENCY_PROXY_SERVER": {
+                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
+                }
+            }}
+            EOF
+        - /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
+            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --build-arg "SPACK_CACHE=${SPACK_CACHE}"
+            --cache=true
+    variables:
+        DOCKERFILE=base.docker
+        DEST=jopa-spack-base:latest

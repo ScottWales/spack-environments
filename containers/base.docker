@@ -1,0 +1,25 @@
+FROM rockylinux:8-minimal
+
+ARG  SPACK_CACHE
+
+ENV  SPACK_VERSION=0.19.1
+ENV  SPACK_ROOT=/opt/spack
+ENV  SPACK_CACHE=$SPACK_CACHE
+ENV  SPACK_ENV=jopa
+
+# Spack user
+RUN  useradd spack \
+&&   mkdir -p $SPACK_ROOT \
+&&   chown spack $SPACK_ROOT
+USER spack
+
+# Copy repos
+COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
+
+# Install spack
+COPY etc/spack-bootstrap.sh $SPACK_ROOT/bin/spack-bootstrap.sh
+RUN  $SPACK_ROOT/bin/spack-bootstrap.sh
+
+# Install entrypoint
+COPY etc/entrypoint.sh /bin/entrypoint.sh
+ENTRYPOINT ["/bin/entrypoint.sh"]

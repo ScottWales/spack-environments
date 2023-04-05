@@ -1,0 +1,12 @@
+FROM spack-base
+
+ARG  SPACK_COMPILER
+ARG  SPACK_MPI
+ARG  JOPA_PACKAGE
+
+ENV  SPACK_COMPILER=$SPACK_COMPILER
+ENV  SPACK_MPI=$SPACK_MPI
+
+RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
+&&   spack env activate jopa \
+&&   spack install --only dependencies --add $JOPA_PACKAGE%$SPACK_COMPILER $SPACK_MPI%$SPACK_COMPILER
