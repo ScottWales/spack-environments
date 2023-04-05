@@ -11,8 +11,8 @@ spack mirror add --scope site ci-mirror file://$SPACK_CACHE
 spack repo add --scope site $SPACK_ROOT/var/spack/repos/jopa
 
 # Update Spack with system packages
-spack compiler find --scope site
-spack external find --scope site --all
+spack --debug compiler find --scope site /usr
+spack --debug external find --scope site --all --path /usr --not-buildable
 spack bootstrap now
 
 # List the found environment

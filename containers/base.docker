@@ -5,7 +5,6 @@ ARG  SPACK_CACHE
 ENV  SPACK_VERSION=0.19.1
 ENV  SPACK_ROOT=/opt/spack
 ENV  SPACK_CACHE=$SPACK_CACHE
-ENV  SPACK_ENV=jopa
 
 # Base packages
 RUN  microdnf install -y --nodocs \
@@ -15,6 +14,7 @@ RUN  microdnf install -y --nodocs \
      gzip \
      perl \
      perl-ExtUtils-MakeMaker \
+     python3-devel \
      shadow-utils \
      tar \
      unzip \
@@ -23,14 +23,14 @@ RUN  microdnf install -y --nodocs \
      zstd \
 &&   microdnf clean all
 
+# Copy repos
+COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
+
 # Spack user
 RUN  useradd spack \
 &&   mkdir -p $SPACK_ROOT \
-&&   chown spack $SPACK_ROOT
+&&   chown -R spack $SPACK_ROOT
 USER spack
-
-# Copy repos
-COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
 
 # Install spack
 COPY etc/spack-bootstrap.sh $SPACK_ROOT/sbin/spack-bootstrap.sh
