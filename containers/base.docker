@@ -13,6 +13,8 @@ RUN  microdnf install -y --nodocs \
      gcc \
      git \
      gzip \
+     perl \
+     perl-ExtUtils-MakeMaker \
      shadow-utils \
      tar \
      unzip \
