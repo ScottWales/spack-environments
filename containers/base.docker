@@ -9,10 +9,17 @@ ENV  SPACK_ENV=jopa
 
 # Base packages
 RUN  microdnf install -y --nodocs \
+     bzip2 \
+     gcc \
+     git \
+     gzip \
      shadow-utils \
-     wget \
      tar \
-&&   microdnf clean
+     unzip \
+     wget \
+     xz \
+     zstd \
+&&   microdnf clean all
 
 # Spack user
 RUN  useradd spack \
