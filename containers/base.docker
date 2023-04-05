@@ -23,19 +23,22 @@ RUN  microdnf install -y --nodocs \
      zstd \
 &&   microdnf clean all
 
-# Copy repos
+# Copy repos and entrypoint
 COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
 
 # Spack user
 RUN  useradd spack \
 &&   mkdir -p $SPACK_ROOT \
 &&   chown -R spack $SPACK_ROOT
+
 USER spack
 
 # Install spack
 COPY etc/spack-bootstrap.sh $SPACK_ROOT/sbin/spack-bootstrap.sh
-COPY etc/entrypoint.sh /bin/entrypoint.sh
-
 RUN  /bin/bash $SPACK_ROOT/sbin/spack-bootstrap.sh
 
-ENTRYPOINT ["/bin/entrypoint.sh"]
+ENTRYPOINT ["/sbin/entrypoint.sh"]
+
+USER root
+COPY etc/entrypoint.sh /sbin/entrypoint.sh
+RUN  chmod 755 /sbin/entrypoint.sh
