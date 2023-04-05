@@ -46,5 +46,5 @@ base:
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --cache=true
     variables:
-        DOCKERFILE=base.docker
-        DEST=jopa-spack-base:latest
+        DOCKERFILE: base.docker
+        DEST: jopa-spack-base:latest
