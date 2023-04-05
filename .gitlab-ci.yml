@@ -44,7 +44,7 @@ base:
             --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
             --destination "${DOCKER_REGISTRY}/${DEST}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
-            --cache=true
+            # --cache=true
     variables:
         DOCKERFILE: base.docker
         DEST: jopa-spack-base:latest
