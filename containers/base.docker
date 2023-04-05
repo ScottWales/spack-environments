@@ -33,9 +33,9 @@ USER spack
 COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
 
 # Install spack
-COPY etc/spack-bootstrap.sh $SPACK_ROOT/bin/spack-bootstrap.sh
-RUN  $SPACK_ROOT/bin/spack-bootstrap.sh
-
-# Install entrypoint
+COPY etc/spack-bootstrap.sh $SPACK_ROOT/sbin/spack-bootstrap.sh
 COPY etc/entrypoint.sh /bin/entrypoint.sh
+
+RUN  /bin/bash $SPACK_ROOT/sbin/spack-bootstrap.sh
+
 ENTRYPOINT ["/bin/entrypoint.sh"]
