@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install Spack
-wget https://github.com/spack/spack/releases/download/v${SPACK_VERSION}/spack-${SPACK_VERSION}.tar.gz | tar -C $SPACK_ROOT -xv
+wget -O - https://github.com/spack/spack/releases/download/v${SPACK_VERSION}/spack-${SPACK_VERSION}.tar.gz | tar xz -C $SPACK_ROOT --strip-components=1 
 
 # Activate Spack
 source $SPACK_ROOT/share/spack/setup-env.sh
