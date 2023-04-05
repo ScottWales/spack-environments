@@ -4,7 +4,7 @@
 # 4. Build full container with all of Jopa
 # 5. Convert Jopa docker container to Apptainer
 
-steps:
+stages:
     - setup
     - base
     - spack-prebuild
@@ -16,6 +16,12 @@ variables:
     DOCKER_REGISTRY: '172.17.0.2:5000'
     DOCKER_PERSIST: '/scratch/gitlab-runner/'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
+
+setup:
+    stage: setup
+    tags: [docker]
+    script:
+        - mkdir -p "${SPACK_CACHE}"
 
 base:
     stage: base
