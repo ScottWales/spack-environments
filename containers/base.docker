@@ -5,6 +5,7 @@ ARG  SPACK_CACHE
 ENV  SPACK_VERSION=0.19.1
 ENV  SPACK_ROOT=/opt/spack
 ENV  SPACK_CACHE=$SPACK_CACHE
+ENV  CONTAINER_ENV=base
 
 # Base packages
 RUN  microdnf install -y --nodocs \
@@ -26,6 +27,9 @@ RUN  microdnf install -y --nodocs \
 # Copy repos and entrypoint
 COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
 
+COPY etc/entrypoint.sh /bin/entrypoint.sh
+RUN  chmod 755 /bin/entrypoint.sh
+
 # Spack user
 RUN  useradd spack \
 &&   mkdir -p $SPACK_ROOT \
@@ -37,8 +41,5 @@ USER spack
 COPY etc/spack-bootstrap.sh $SPACK_ROOT/sbin/spack-bootstrap.sh
 RUN  /bin/bash $SPACK_ROOT/sbin/spack-bootstrap.sh
 
-ENTRYPOINT ["/sbin/entrypoint.sh"]
+ENTRYPOINT ["/bin/entrypoint.sh"]
 
-USER root
-COPY etc/entrypoint.sh /sbin/entrypoint.sh
-RUN  chmod 755 /sbin/entrypoint.sh

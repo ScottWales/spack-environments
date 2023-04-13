@@ -1,0 +1,9 @@
+From spack-base:latest
+
+ARG  CONTAINER_ENV
+ENV  CONTAINER_ENV=$CONTAINER_ENV
+
+COPY envs/$CONTAINER_ENV.lock /build/$CONTAINER_ENV.lock
+RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
+&&   spack env create --without-view $CONTAINER_ENV /build/$CONTAINER_ENV.lock
+&&   spack install --use-buildcache=only

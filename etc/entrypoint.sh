@@ -4,6 +4,6 @@
 source $SPACK_ROOT/share/spack/setup-env.sh
 
 # Load environment
-spack env activate jopa
+spack env activate $CONTAINER_ENV
 
 eval "$@"
