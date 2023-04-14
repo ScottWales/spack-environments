@@ -10,7 +10,9 @@ ENV  CONTAINER_ENV=base
 # Base packages
 RUN  microdnf install -y --nodocs \
      bzip2 \
+     cmake \
      gcc \
+     gcc-c++ \
      git \
      gzip \
      perl \

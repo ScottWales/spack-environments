@@ -9,6 +9,9 @@ spack:
   concretizer:
     unify: false
 
+  config:
+    install_missing_compilers: true
+
   mirrors:
     ngm-gitlab: /scratch/mirror
 

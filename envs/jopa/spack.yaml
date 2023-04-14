@@ -1,4 +1,3 @@
 spack:
   specs:
-    - zlib
-    - bzip2
+    - netcdf-c

@@ -15,8 +15,9 @@ mkdir -p build
 
 # Base enviornment for compilers
 echo base
-spack env create -d build/base
+spack env create --without-view -d build/base
 spack env activate --without-view build/base
+spack config add "config:install_missing_compilers:true"
 spack add gcc@12.2.0
 spack concretize
 spack add intel-oneapi-compilers-classic@2021.8.0%gcc@12.2.0
@@ -37,6 +38,7 @@ for env in envs/*/spack.yaml; do
 
 			# Activate the environment, set the compiler/mpi, and concretize
                         spack env activate --without-view build/ci-$BUILD
+			spack config add "config:install_missing_compilers:true"
                         spack config add "packages:all:require:'%$SPACK_COMPILER'"
                         spack config add "packages:mpi:require:$SPACK_MPI"
                         spack concretize --force --fresh
