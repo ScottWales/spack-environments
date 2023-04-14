@@ -8,6 +8,6 @@ set -o pipefail
 # Bootstraps the environments in this repository into your Spack environment
 spack repo add repos/jopa
 
-for envfile in envs/*.yaml; do
-    spack env create $(basename $envfile .yaml) $envfile
+for envfile in envs/*/spack.yaml.yaml; do
+	spack env create $(basename $(dirname $envfile)) $envfile
 done

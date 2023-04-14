@@ -7,7 +7,8 @@
 stages:
     - setup
     - base
-    - spack-prebuild
+    - generate
+    - spack-build
     - docker
     - apptainer
     - clean
