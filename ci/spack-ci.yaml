@@ -10,14 +10,8 @@ spack:
   gitlab-ci:
     mappings:
       - match:
-          - os=ubuntu18.04
+          - os=amzn2023
         runner-attributes:
           tags:
-            - spack-kube
+            - docker
           image: spack/ubuntu-bionic
-      - match:
-          - os=centos7
-        runner-attributes:
-          tags:
-            - spack-kube
-          image: spack/centos7
