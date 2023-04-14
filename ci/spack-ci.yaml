@@ -1,0 +1,23 @@
+spack:
+  view: false
+
+  concretizer:
+    unify: false
+
+  mirrors:
+    ngm-gitlab: /scratch/mirror
+
+  gitlab-ci:
+    mappings:
+      - match:
+          - os=ubuntu18.04
+        runner-attributes:
+          tags:
+            - spack-kube
+          image: spack/ubuntu-bionic
+      - match:
+          - os=centos7
+        runner-attributes:
+          tags:
+            - spack-kube
+          image: spack/centos7

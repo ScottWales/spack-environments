@@ -1,1 +1,4 @@
 *.swp
+.spack-env
+spack.lock
+artifacts

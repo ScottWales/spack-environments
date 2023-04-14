@@ -1,0 +1,4 @@
+spack:
+  specs:
+    - zlib
+    - bzip2
