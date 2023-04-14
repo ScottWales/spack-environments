@@ -11,7 +11,17 @@ SPACK_MPIS="openmpi@4.1.4"
 
 mkdir -p build
 
-# Concretize each enviornment
+# Base enviornment for compilers
+echo base
+spack env create -d build/base
+spack env activate --without-view build/base
+spack add gcc@12.2.0
+spack concretize
+spack add intel-oneapi-compilers-classic@2021.8.0%gcc@12.2.0
+spack concretize
+spack env deactivate
+
+# Concretize each enviornment separately
 for env in envs/*/spack.yaml; do
         for SPACK_COMPILER in $SPACK_COMPILERS; do
                 for SPACK_MPI in $SPACK_MPIS; do
@@ -38,9 +48,9 @@ done
 
 # Merge lock files from all concretized environments
 echo merged
-mkdir -p build/merged
-bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged build/ci-*/spack.lock
+spack env create -d build/merged
+bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged --base build/base/spack.lock build/ci-*/spack.lock
 
 # CI generate
 spack env activate --without-view build/merged
-spack -d ci generate --artifacts-root $ARTIFACTS --output-file $ARTIFACTS/pipeline.yml
+spack ci generate --check-index-only --artifacts-root $ARTIFACTS --output-file $ARTIFACTS/pipeline.yml

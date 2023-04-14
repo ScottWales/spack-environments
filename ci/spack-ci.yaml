@@ -1,6 +1,11 @@
 spack:
   view: false
 
+  definitions:
+    - compilers:
+      - 'gcc@12.2.0'
+      - 'intel-oneapi-compilers-classic@2021.8.0%gcc@12.2.0'
+
   concretizer:
     unify: false
 
@@ -8,6 +13,8 @@ spack:
     ngm-gitlab: /scratch/mirror
 
   gitlab-ci:
+    bootstrap:
+      - name: compilers
     mappings:
       - match:
           - os=amzn2023

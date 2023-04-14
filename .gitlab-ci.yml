@@ -48,4 +48,14 @@ base:
             --cache=true
     variables:
         DOCKERFILE: base.docker
-        DEST: jopa-spack-base:latest
+        DEST: spack-base:latest
+
+
+generate:
+    stage: generate
+    tags: [docker]
+    image: 
+        name: localhost:5000/spack-base:latest
+        entrypoint: [""]
+    script:
+        - ./ci/generate.sh
