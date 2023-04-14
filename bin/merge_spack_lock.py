@@ -37,7 +37,6 @@ def main():
     with open(os.path.join(args.output, 'spack.lock'), 'w') as f:
         json.dump(merged, f, indent=2)
 
-    specs = [f"{r['spec']}/{r['hash']}" for r in merged['roots']]
     specs = [f"{r['spec']}" for r in merged['roots']]
 
     with open(args.ci_yaml) as f:
