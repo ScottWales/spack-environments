@@ -1,4 +1,5 @@
 *.swp
 .spack-env
 spack.lock
-artifacts
+/artifacts
+/build
