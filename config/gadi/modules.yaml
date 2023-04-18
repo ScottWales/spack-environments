@@ -1,0 +1,10 @@
+modules:
+    default:
+        roots:
+            tcl: /scratch/$PROJECT/$USER/spack/modules
+        enable:
+            - tcl
+
+        tcl:
+            all:
+                autoload: direct

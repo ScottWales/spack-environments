@@ -1,0 +1,10 @@
+name: lfric
+channels:
+    #  - file:///scratch/gitlab-runner/bom/ngm/conda-pkgs/pkgs
+  - conda-forge
+dependencies:
+  - python
+    #  - psyclone
+    #  - lfric-gpl-utils
+    #  - jinja2
+    #

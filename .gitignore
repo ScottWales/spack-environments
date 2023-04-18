@@ -1,4 +1,6 @@
 *.swp
+__pycache__
+*.pyc
 .spack-env
 spack.lock
 /artifacts
