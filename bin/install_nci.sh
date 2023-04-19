@@ -17,8 +17,8 @@ export SPACK_SYSTEM_CONFIG_PATH=$INSTALL_ROOT/config/gadi
 source /home/562/saw562/projects/spack-pipeline/spack/share/spack/setup-env.sh
 
 # Create the environment
-spack env create --without-view -d $ENVPATH/ envs/$ENV/spack.yaml
-spack env activate $ENVPATH/
+spack env create --without-view $ENV envs/$ENV/spack.yaml
+spack env activate $ENV
 
 # Add local repos
 spack repo add $INSTALL_ROOT/repos/jopa
@@ -47,3 +47,4 @@ spack repo add $INSTALL_ROOT/repos/bom-ngm
 # Concretize and install
 spack concretize
 spack install
+spack env loads --dependencies > /dev/null

@@ -1,4 +1,10 @@
 modules:
+    prefix_inspections:
+        ./include:
+            - CPATH
+        ./lib:
+            - LIBRARY_PATH
+            - LD_LIBRARY_PATH
     default:
         roots:
             tcl: /scratch/$PROJECT/$USER/spack/modules
