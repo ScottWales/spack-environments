@@ -127,12 +127,27 @@ packages:
     - spec: ninja@1.8.2
       prefix: /usr
     buildable: false
-  openmpi:
+  zlib:
     externals:
-    - spec: openmpi@4.1.4
-      modules:
-      - openmpi/4.1.4
+    - spec: zlib@1.2.11
+      prefix: /usr
     buildable: false
+  zstd:
+    externals:
+    - spec: zstd@1.4.4
+      prefix: /usr
+    buildable: false
+  ncurses:
+    externals:
+        - spec: ncurses@6.1
+          prefix: /usr
+    buildable: false
+    #openmpi:
+    #  externals:
+    #  - spec: openmpi@4.1.4
+    #    modules:
+    #    - openmpi/4.1.4
+    #  buildable: false
     #netcdf-c:
     #  externals:
     #  - spec: netcdf-c@4.9.0+mpi ^hdf5@1.10.7+mpi
