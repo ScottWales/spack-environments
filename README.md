@@ -1,4 +1,4 @@
-# JOPA Spack Containers
+# NGM Spack Environments & Containers
 
 ## Repository Layout
 
