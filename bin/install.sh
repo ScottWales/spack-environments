@@ -60,8 +60,8 @@ fi
 spack concretize
 spack install ${SPACK_JOBS:+--jobs=$SPACK_JOBS}
 
-spack env loads --dependencies > /dev/null
 spack module tcl refresh -y
+spack env loads --dependencies > /dev/null
 
 cat > $SPACK_ENV/activate.sh << EOF
 spack env activate $ENV

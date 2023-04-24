@@ -35,7 +35,8 @@ To install an environment on EC2 run
 
     ./bin/install_aws.sh ENV
 
-The instance should be running Amazon Linux
+The instance should be running Amazon Linux. Spack, Mamba and their
+dependencies will be installed if not present.
 
 ### Installing environments on a generic system
 
