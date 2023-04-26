@@ -17,7 +17,7 @@ INSTALL_ROOT=$PWD
 ENV=lfric_v0
 ENVPATH=/scratch/$PROJECT/$USER/ngm/envs/$ENV
 
-export SPACK_COMPILER=intel@2020.3.304
+export SPACK_COMPILER=intel@2021.8.0
 export SPACK_MPI=openmpi@4.1.4
 
 # Activate spack
