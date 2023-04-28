@@ -25,13 +25,13 @@ export FPP="cpp -traditional-cpp"
 export LDMPI=mpif90
 #export PSYCLONE_TRANSFORMATION=nci-gadi
 
-APP=gravity_wave
+APP=gungho_model_bare
 
 make -C $LFRICSRC/miniapps/$APP clean
 make -C $LFRICSRC/miniapps/$APP/ -j 4
 
 cd $LFRICSRC/miniapps/$APP/example
-../bin/$APP configuration.nml
+#../bin/$APP configuration.nml
 
 #ldd ../bin/gungho_model > libs
 

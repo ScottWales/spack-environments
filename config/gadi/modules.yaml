@@ -18,3 +18,7 @@ modules:
                 environment:
                     prepend_path:
                         CPATH: '{prefix}/lib'
+            openmpi%intel:
+                environment:
+                    prepend_path:
+                        CPATH: '{prefix}/include/Intel'
