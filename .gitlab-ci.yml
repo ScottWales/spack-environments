@@ -59,4 +59,4 @@ generate:
         entrypoint: [""]
         pull_policy: always
     script:
-        - ./ci/generate.sh
+        - /bin/entrypoint.sh ./ci/generate.sh
