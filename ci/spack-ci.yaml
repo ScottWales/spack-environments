@@ -32,14 +32,14 @@ spack:
           image: spack-base
           before_script:
             - source /bin/entrypoint.sh
-        service-job-attributes:
-          tags:
-            - docker
-          image:
-            name: "localhost:5000/spack-base:latest"
-            entrypoint: ['']
-          image: spack-base
-          before_script:
-            - source /bin/entrypoint.sh
-        enable-artifacts-buildcache: False
-        rebuild-index: True
+    service-job-attributes:
+      tags:
+        - docker
+      image:
+        name: "localhost:5000/spack-base:latest"
+        entrypoint: ['']
+      image: spack-base
+      before_script:
+        - source /bin/entrypoint.sh
+    enable-artifacts-buildcache: False
+    rebuild-index: True
