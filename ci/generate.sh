@@ -49,4 +49,5 @@ bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged build/c
 
 # CI generate
 spack env activate --without-view build/merged
+spack mirror add gitlab file://$SPACK_CACHE
 spack ci generate --check-index-only --artifacts-root $ARTIFACTS --output-file $ARTIFACTS/pipeline.yml

@@ -4,9 +4,6 @@ spack:
   concretizer:
     unify: false
 
-  mirrors:
-    ngm-gitlab: $SPACK_CACHE
-
   gitlab-ci:
     mappings:
       - match:
