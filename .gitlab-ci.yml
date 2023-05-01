@@ -60,3 +60,15 @@ generate:
         pull_policy: always
     script:
         - /bin/entrypoint.sh ./ci/generate.sh
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
+
+spack build:
+    stage: spack-build
+    trigger:
+      include:
+        - artifact: artifacts/pipeline.yml
+          job: generate
+      strategy: depend

@@ -4,7 +4,16 @@ spack:
   concretizer:
     unify: false
 
+  mirrors:
+    gitlab: file://$SPACK_CACHE
+
+  config:
+    source_cache: $SPACK_CACHE
+
   gitlab-ci:
+    script:
+      - spack env activate --without-view ${SPACK_CONCRETE_ENV_DIR}
+      - spack -d ci rebuild --tests
     mappings:
       - match:
           - os=amzn2023
@@ -17,4 +26,20 @@ spack:
         runner-attributes:
           tags:
             - docker
+          image:
+            name: "localhost:5000/spack-base:latest"
+            entrypoint: ['']
           image: spack-base
+          before_script:
+            - source /bin/entrypoint.sh
+        service-job-attributes:
+          tags:
+            - docker
+          image:
+            name: "localhost:5000/spack-base:latest"
+            entrypoint: ['']
+          image: spack-base
+          before_script:
+            - source /bin/entrypoint.sh
+        enable-artifacts-buildcache: False
+        rebuild-index: True
