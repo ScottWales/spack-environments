@@ -57,5 +57,6 @@ generate:
     image: 
         name: localhost:5000/spack-base:latest
         entrypoint: [""]
+        pull_policy: always
     script:
         - ./ci/generate.sh
