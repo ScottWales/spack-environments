@@ -3,6 +3,8 @@ set -eu
 
 source /opt/spack/share/spack/setup-env.sh
 
+env
+
 # Generates Spack CI yaml files
 : ${CI_PROJECT_DIR:=.}
 export CI_PROJECT_DIR
