@@ -2,7 +2,7 @@ FROM rockylinux:8-minimal
 
 ARG  SPACK_CACHE
 
-ENV  SPACK_VERSION=0.19.1
+ENV  SPACK_VERSION=0.19.2
 ENV  SPACK_ROOT=/opt/spack
 ENV  SPACK_CACHE=$SPACK_CACHE
 ENV  CONTAINER_ENV=base
@@ -13,6 +13,7 @@ RUN  microdnf install -y --nodocs \
      cmake \
      gcc \
      gcc-c++ \
+     gcc-gfortran \
      git \
      gzip \
      perl \
@@ -26,11 +27,12 @@ RUN  microdnf install -y --nodocs \
      zstd \
 &&   microdnf clean all
 
-# Copy repos and entrypoint
-COPY repos/jopa $SPACK_ROOT/var/spack/repos/jopa
-
+# Install entrypoint
 COPY etc/entrypoint.sh /bin/entrypoint.sh
 RUN  chmod 755 /bin/entrypoint.sh
+
+# Copy repos
+COPY repos/ $SPACK_ROOT/var/spack/repos/
 
 # Spack user
 RUN  useradd spack \

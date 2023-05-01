@@ -9,6 +9,7 @@ source $SPACK_ROOT/share/spack/setup-env.sh
 # Install the CI mirror and package repos
 spack mirror add --scope site ci-mirror file://$SPACK_CACHE
 spack repo add --scope site $SPACK_ROOT/var/spack/repos/jopa
+spack repo add --scope site $SPACK_ROOT/var/spack/repos/bom-ngm
 
 # Update Spack with system packages
 spack compiler find --scope site /usr
@@ -18,7 +19,15 @@ spack config --scope site add packages:gcc:buildable:true
 
 spack bootstrap now
 
-spack env create --without-view base
+INTEL_COMPILER=intel-oneapi-compilers-classic@2021.8.0
+spack install $INTEL_COMPILER
+
+INTEL_PREFIX=$(spack find --format '{prefix}' $INTEL_COMPILER)
+spack compiler find --scope site $INTEL_PREFIX
+
+spack env create base
+
+spack clean
 
 # List the found environment
 spack compilers
