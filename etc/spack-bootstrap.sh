@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
+
 # Install Spack
 wget -O - https://github.com/spack/spack/releases/download/v${SPACK_VERSION}/spack-${SPACK_VERSION}.tar.gz | tar xz -C $SPACK_ROOT --strip-components=1 
 
