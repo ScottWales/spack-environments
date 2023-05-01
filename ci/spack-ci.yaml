@@ -1,23 +1,13 @@
 spack:
   view: false
 
-  definitions:
-    - compilers:
-      - 'gcc@12.2.0'
-      - 'intel-oneapi-compilers-classic@2021.8.0%gcc@12.2.0'
-
   concretizer:
     unify: false
 
-  config:
-    install_missing_compilers: true
-
   mirrors:
-    ngm-gitlab: /scratch/mirror
+    ngm-gitlab: $SPACK_CACHE
 
   gitlab-ci:
-    bootstrap:
-      - name: compilers
     mappings:
       - match:
           - os=amzn2023
@@ -25,3 +15,9 @@ spack:
           tags:
             - docker
           image: spack/ubuntu-bionic
+      - match:
+          - os=rocky8
+        runner-attributes:
+          tags:
+            - docker
+          image: spack-base

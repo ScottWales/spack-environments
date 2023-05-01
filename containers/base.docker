@@ -5,6 +5,9 @@ ARG  SPACK_CACHE
 ENV  SPACK_VERSION=0.19.2
 ENV  SPACK_ROOT=/opt/spack
 ENV  SPACK_CACHE=$SPACK_CACHE
+
+ENV  MAMBA_ROOT=/opt/mamba
+
 ENV  CONTAINER_ENV=base
 
 # Base packages
@@ -35,9 +38,24 @@ RUN  chmod 755 /bin/entrypoint.sh
 COPY repos/ $SPACK_ROOT/var/spack/repos/
 
 # Spack user
-RUN  useradd spack \
+RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
 &&   mkdir -p $SPACK_ROOT \
 &&   chown -R spack $SPACK_ROOT
+
+# Mamba user
+RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
+&&   mkdir -p $MAMBA_ROOT \
+&&   chown -R mamba $MAMBA_ROOT
+
+USER mamba
+
+# Install mamba
+RUN  cd $MAMBA_ROOT \
+&&   curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh \
+&&   bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT \
+&&   $MAMBA_ROOT/bin/mamba create -n container python pyyaml \
+&&   $MAMBA_ROOT/bin/mamba clean --all \
+&&   rm Mambaforge-Linux-x86_64.sh
 
 USER spack
 

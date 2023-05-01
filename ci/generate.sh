@@ -8,7 +8,7 @@ source /opt/spack/share/spack/setup-env.sh
 export CI_PROJECT_DIR
 ARTIFACTS=${CI_PROJECT_DIR}/artifacts
 
-SPACK_COMPILERS="gcc@8.5.0 intel@2021.8.0"
+SPACK_COMPILERS="gcc@8.5.0"
 SPACK_MPIS="openmpi@4.1.4"
 
 mkdir -p build
