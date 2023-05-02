@@ -79,7 +79,7 @@ spack build:
     trigger:
       include:
         - artifact: artifacts/pipeline.yml
-          job: generate
+          job: generate spack packages
       strategy: depend
 
 # Build Docker containers
