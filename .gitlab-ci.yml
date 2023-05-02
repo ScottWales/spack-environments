@@ -27,6 +27,7 @@ setup:
     script:
         - mkdir -p "${SPACK_CACHE}"
         - chmod a+rwX "$SPACK_CACHE"
+        - mkdir -p $CI_OUTDIR
 
 # Base docker image, used for building the Spack packages
 docker build spack-base:
@@ -101,8 +102,13 @@ apptainer build containers:
         name: quay.io/singularity/singularity:v3.10.2
         entrypoint: [""]
     script:
-        - mkdir -p $CI_OUTDIR
         - singularity build  --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
     variables:
         DEST: lfric-v0-gcc-openmpi:latest
 
+clean:
+    stage: clean
+    tags: [docker]
+    script:
+      - rm -rv $CI_OUTDIR
+    when: always
