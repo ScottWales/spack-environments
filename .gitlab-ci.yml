@@ -52,7 +52,8 @@ docker build spack-base:
             --destination "${DOCKER_REGISTRY}/${DEST}"
             --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
-            --build-arg "CONTAINER_ENV=${CONTAINER_ENV}"
+            --build-arg "ENV=${ENV}"
+            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --cache=true
     variables:
