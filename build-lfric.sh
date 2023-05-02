@@ -23,12 +23,12 @@ module list
 
 export FPP="cpp -traditional-cpp"
 export LDMPI=mpif90
-#export PSYCLONE_TRANSFORMATION=nci-gadi
+export PSYCLONE_TRANSFORMATION=nci-gadi
 
-#make -C $LFRICSRC/miniapps/gungho_model_bare clean
-#make -C $LFRICSRC/miniapps/gungho_model_bare/ -j 4
+make -C $LFRICSRC/miniapps/lfric_atm clean
+make -C $LFRICSRC/miniapps/lfric_atm/ -j 4
 
-cd $LFRICSRC/miniapps/gungho_model_bare/example
+#cd $LFRICSRC/miniapps/gungho_model_bare/example
 #mpirun -n 6 ../bin/gungho_model configuration.nml
 
 ldd ../bin/gungho_model > libs

@@ -17,10 +17,6 @@ spack:
     mappings:
       - match:
           - os=amzn2023
-        runner-attributes:
-          tags:
-            - docker
-          image: spack/ubuntu-bionic
       - match:
           - os=rocky8
         runner-attributes:
@@ -29,7 +25,6 @@ spack:
           image:
             name: "localhost:5000/spack-base:latest"
             entrypoint: ['']
-          image: spack-base
           before_script:
             - source /bin/entrypoint.sh
     service-job-attributes:
@@ -38,7 +33,6 @@ spack:
       image:
         name: "localhost:5000/spack-base:latest"
         entrypoint: ['']
-      image: spack-base
       before_script:
         - source /bin/entrypoint.sh
     enable-artifacts-buildcache: False
