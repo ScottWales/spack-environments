@@ -9,4 +9,4 @@ RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
 &&   spack env create container /build/spack.lock \
 &&   spack env activate container \
 &&   spack mirror add gitlab file://$SPACK_CACHE \
-&&   spack install --use-buildcache=only
+&&   spack install --use-buildcache=only --no-check-signature
