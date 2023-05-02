@@ -73,3 +73,29 @@ spack build:
         - artifact: artifacts/pipeline.yml
           job: generate
       strategy: depend
+
+docker:
+    stage: docker
+    image: &kaniko_image
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    script: &kaniko_build
+        - mkdir -p /kaniko/.docker
+        - |
+            cat > /kaniko/.docker/config.json <<EOF
+            {"auths": {
+                "$CI_DEPENDENCY_PROXY_SERVER": {
+                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
+                }
+            }}
+            EOF
+        - /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
+            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --build-arg "SPACK_CACHE=${SPACK_CACHE}"
+            --cache=true
+    variables:
+        DOCKERFILE: spack-env.docker
+        CONTAINER_ENV: lfric-v0-gcc@8.5.0-openmpi@4.1.4
+        DEST: lfric-v0-gcc-openmpi:latest
