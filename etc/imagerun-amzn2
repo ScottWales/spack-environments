@@ -1,0 +1,27 @@
+#!/bin/bash
+#  Copyright 2023 Bureau of Meteorology
+#  Author Scott Wales
+
+set -eu
+set -o pipefail
+
+echo ${BASH_SOURCE[0]}
+
+# Runs a command inside a singularity image
+SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
+
+
+# Append the current PATH
+export APPTAINERENV_APPEND_PATH=${PATH}
+
+# Fall back to gadi's libraries for things not installed in the container
+export APPTAINERENV_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}
+
+module load mpi/openmpi-x86_64
+export BIND="--bind $MPI_HOME:/host/openmpi@4.1.4"
+
+if [ $1 == "shell" ]; then
+    apptainer shell $BIND $SCRIPT_DIR/image.sif
+else
+    apptainer run $BIND $SCRIPT_DIR/image.sif "$@"
+fi

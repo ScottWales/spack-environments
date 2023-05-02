@@ -12,6 +12,8 @@ stages:
     - package-build
     - docker
     - apptainer
+    - stage
+    - deploy
     - clean
 
 variables:
@@ -91,9 +93,13 @@ docker build containers:
     script: *kaniko_build
     variables:
         DOCKERFILE: spack-env.docker
-        ENV: lfric-v0
-        CONCRETE_ENV: lfric-v0-gcc@8.5.0-openmpi@4.1.4
-        DEST: lfric-v0-gcc-openmpi:latest
+        CONCRETE_ENV: ${ENV}-${SPACK_COMPILER}-${SPACK_MPI}
+        DEST: ${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+    parallel: &build_matrix
+        matrix:
+            - ENV: ['lfric-v0']
+              SPACK_COMPILER: ['gcc@8.5.0']
+              SPACK_MPI: ['openmpi@4.1.4']
 
 # Build Apptainer containers
 apptainer build containers:
@@ -103,9 +109,21 @@ apptainer build containers:
         name: quay.io/singularity/singularity:v3.10.2
         entrypoint: [""]
     script:
-        - singularity build  --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
+        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
     variables:
-        DEST: lfric-v0-gcc-openmpi:latest
+        DEST: ${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+    parallel: *build_matrix
+
+stage gadi:
+    stage: stage
+    tags: [gadi]
+    script:
+        - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
+        - etc/install-gadi-image.sh
+        - rm image.sif
+    variables:
+        DEST: ${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+    parallel: *build_matrix
 
 clean:
     stage: clean

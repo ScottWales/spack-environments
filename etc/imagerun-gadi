@@ -1,0 +1,28 @@
+#!/bin/bash
+#  Copyright 2023 Bureau of Meteorology
+#  Author Scott Wales
+
+set -eu
+set -o pipefail
+
+# Runs a command inside a singularity image
+SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
+
+module load singularity
+
+# Append the current PATH
+export SINGULARITYENV_APPEND_PATH=${PATH}
+
+# Fall back to gadi's libraries for things not installed in the container
+export SINGULARITYENV_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/lib64:/lib:/opt/nci/pbs/default/lib:/gadi/lib64:/gadi/lib
+
+# FCM keywords file with local mirrors
+export SINGULARITYENV_FCM_KEYWORDS=/g/data/access/apps/fcm/2019.09.0/etc/fcm/keyword.cfg
+
+export BIND="--bind /half-root:/gadi --bind /apps/openmpi/4.1.4:/host/openmpi@4.1.4"
+
+if [ $1 == "shell" ]; then
+    singularity shell $BIND $SCRIPT_DIR/image.sif
+else
+    singularity run $BIND $SCRIPT_DIR/image.sif "$@"
+fi
