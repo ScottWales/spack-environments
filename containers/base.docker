@@ -8,8 +8,7 @@ ENV  SPACK_CACHE=$SPACK_CACHE
 
 ENV  MAMBA_ROOT=/opt/mamba
 
-ARG  CONTAINER_ENV
-ENV  CONTAINER_ENV=$CONTAINER_ENV
+ENV  CONTAINER_ENV=base
 
 # Base packages
 RUN  microdnf install -y --nodocs \
