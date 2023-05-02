@@ -7,6 +7,7 @@ ENV  SPACK_ROOT=/opt/spack
 ENV  SPACK_CACHE=$SPACK_CACHE
 
 ENV  MAMBA_ROOT=/opt/mamba
+ARG  MAMBA_REPO
 
 # Base packages
 RUN  microdnf install -y --nodocs \
@@ -56,6 +57,7 @@ RUN  cd $MAMBA_ROOT \
 &&   bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT \
 &&   $MAMBA_ROOT/bin/mamba create -n container python pyyaml \
 &&   $MAMBA_ROOT/bin/mamba clean --all \
+&&   $MAMBA_ROOT/bin/mamba config --system --append channels "$MAMBA_REPO" \
 &&   rm Mambaforge-Linux-x86_64.sh
 
 USER spack

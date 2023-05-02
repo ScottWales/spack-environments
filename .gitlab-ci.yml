@@ -9,6 +9,7 @@ stages:
     - base
     - generate
     - spack-build
+    - package-build
     - docker
     - apptainer
     - clean
@@ -16,7 +17,9 @@ stages:
 variables:
     DOCKER_REGISTRY: '172.17.0.2:5000'
     DOCKER_PERSIST: '/scratch/gitlab-runner/'
+    CI_OUTDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
+    MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
 
 setup:
     stage: setup
@@ -25,7 +28,8 @@ setup:
         - mkdir -p "${SPACK_CACHE}"
         - chmod a+rwX "$SPACK_CACHE"
 
-base:
+# Base docker image, used for building the Spack packages
+docker build spack-base:
     stage: base
     tags: [docker]
     image: &kaniko_image
@@ -48,14 +52,14 @@ base:
             --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "CONTAINER_ENV=${CONTAINER_ENV}"
+            --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --cache=true
     variables:
         DOCKERFILE: base.docker
         DEST: spack-base:latest
-        CONTAINER_ENV: base
 
-
-generate:
+# Generate build tasks for Spack packages
+generate spack packages:
     stage: generate
     tags: [docker]
     image: 
@@ -69,19 +73,36 @@ generate:
         - "$CI_PROJECT_DIR/artifacts"
       expire_in: 1 day
 
+# Build Spack packages
 spack build:
-    stage: spack-build
+    stage: package-build
     trigger:
       include:
         - artifact: artifacts/pipeline.yml
           job: generate
       strategy: depend
 
-docker:
+# Build Docker containers
+docker build containers:
     stage: docker
     image: *kaniko_image
     script: *kaniko_build
     variables:
         DOCKERFILE: spack-env.docker
-        CONTAINER_ENV: lfric-v0-gcc@8.5.0-openmpi@4.1.4
+        ENV: lfric-v0
+        CONCRETE_ENV: lfric-v0-gcc@8.5.0-openmpi@4.1.4
         DEST: lfric-v0-gcc-openmpi:latest
+
+# Build Apptainer containers
+apptainer build containers:
+    stage: apptainer
+    tags: [docker]
+    image:
+        name: quay.io/singularity/singularity:v3.10.2
+        entrypoint: [""]
+    script:
+        - mkdir -p $CI_OUTDIR
+        - singularity build  --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
+    variables:
+        DEST: lfric-v0-gcc-openmpi:latest
+
