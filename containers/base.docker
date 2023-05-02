@@ -19,6 +19,7 @@ RUN  microdnf install -y --nodocs \
      gcc-gfortran \
      git \
      gzip \
+     libtool \
      patch \
      perl \
      perl-ExtUtils-MakeMaker \
