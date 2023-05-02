@@ -9,6 +9,9 @@ source $MAMBA_ROOT/etc/profile.d/mamba.sh
 
 # Load environment
 mamba activate container
-spack env activate container
+
+if [ -d $SPACK_ROOT/var/spack/environments/container ]; then
+    spack env activate container
+fi
 
 eval "$@"
