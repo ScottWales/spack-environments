@@ -8,8 +8,6 @@ ENV  SPACK_CACHE=$SPACK_CACHE
 
 ENV  MAMBA_ROOT=/opt/mamba
 
-ENV  CONTAINER_ENV=base
-
 # Base packages
 RUN  microdnf install -y --nodocs \
      bzip2 \
