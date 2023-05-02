@@ -6,6 +6,6 @@ ENV  CONTAINER_ENV=$CONTAINER_ENV
 COPY artifacts/ci-$CONTAINER_ENV/spack.* /build/
 
 RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
-&&   spack env create $CONTAINER_ENV /build/spack.lock
-&&   spack env activate $CONTAINER_ENV
+&&   spack env create $CONTAINER_ENV /build/spack.lock \
+&&   spack env activate $CONTAINER_ENV \
 &&   spack install --use-buildcache=only
