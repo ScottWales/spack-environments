@@ -41,6 +41,14 @@ base:
                 }
             }}
             EOF
+        - echo /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
+            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
+            --build-arg "SPACK_CACHE=${SPACK_CACHE}"
+            --build-arg "CONTAINER_ENV=${CONTAINER_ENV}"
+            --cache=true
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
             --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
