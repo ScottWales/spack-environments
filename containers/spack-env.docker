@@ -4,8 +4,8 @@ FROM $DOCKER_REGISTRY/spack-base:latest
 ARG  ENV
 ARG  CONCRETE_ENV
 
-COPY envs/$ENV/* /build
-COPY artifacts/ci-$SPACK_ENV/spack.* /build/
+COPY envs/$ENV/* /build/
+COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
 
 USER mamba
 RUN  $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
