@@ -25,6 +25,7 @@ RUN  microdnf install -y --nodocs \
      perl-ExtUtils-MakeMaker \
      python3-devel \
      shadow-utils \
+     subversion \
      tar \
      unzip \
      wget \
