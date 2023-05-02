@@ -23,6 +23,7 @@ setup:
     tags: [docker]
     script:
         - mkdir -p "${SPACK_CACHE}"
+        - chmod a+rwX "$SPACK_CACHE"
 
 base:
     stage: base
