@@ -1,4 +1,5 @@
-From spack-base:latest
+ARG  DOCKER_REGISTRY
+FROM $DOCKER_REGISTRY/spack-base:latest
 
 ARG  CONTAINER_ENV
 ENV  CONTAINER_ENV=$CONTAINER_ENV
@@ -8,4 +9,5 @@ COPY artifacts/ci-$CONTAINER_ENV/spack.* /build/
 RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
 &&   spack env create $CONTAINER_ENV /build/spack.lock \
 &&   spack env activate $CONTAINER_ENV \
+&&   spack mirror add gitlab file://$SPACK_CACHE \
 &&   spack install --use-buildcache=only
