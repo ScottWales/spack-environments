@@ -13,13 +13,15 @@ spack mirror add gitlab file://$SPACK_CACHE
 
 spack install --use-buildcache=only --no-check-signature
 
+export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
+
 # Move MPI libs into a separate directory for Bind mode
 MPI_PATH=$(spack find --format="{prefix}" ${SPACK_MPI})
 HYBRID_MPI_LIB="$MPI_PATH/lib_hybrid_mpi"
 mkdir -pv "$HYBRID_MPI_LIB"
 for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
     mv -v $MPI_PATH/lib/${mpilib}* $HYBRID_MPI_LIB
-    rm -v $SPACK_ENV_ROOT/lib/${mpilib}*
+    rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
 cat > /build/spack.activate.sh << EOF
