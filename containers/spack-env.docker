@@ -10,6 +10,9 @@ COPY envs/$ENV/* /build/
 COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
 COPY etc/spack-container-install.sh /build
 
+USER root
+RUN  chmod a+rwX /build
+
 USER mamba
 RUN  $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
 
