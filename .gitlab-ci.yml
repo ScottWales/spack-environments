@@ -94,7 +94,7 @@ docker build containers:
     variables:
         DOCKERFILE: spack-env.docker
         CONCRETE_ENV: ${ENV}-${SPACK_COMPILER}-${SPACK_MPI}
-        DEST: ${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+        DEST: "$(echo \${ENV}-\${SPACK_COMPILER%@*}-\${SPACK_MPI%@*}:latest)"
     parallel: &build_matrix
         matrix:
             - ENV: ['lfric-v0']
