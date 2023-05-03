@@ -68,3 +68,6 @@ spack env activate $ENV
 source $SPACK_ENV/loads
 EOF
 
+if [ -f envs/$ENV/env.activate.sh ]; then
+    cat envs/$ENV/env.activate.sh >> $SPACK_ENV/activate.sh
+fi

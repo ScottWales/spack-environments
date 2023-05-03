@@ -3,9 +3,12 @@ FROM $DOCKER_REGISTRY/spack-base:latest
 
 ARG  ENV
 ARG  CONCRETE_ENV
+ARG  SPACK_COMPILER
+ARG  SPACK_MPI
 
 COPY envs/$ENV/* /build/
 COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
+COPY etc/spack-container-install.sh /build
 
 USER mamba
 RUN  /opt/mamba/bin/conda config --show
@@ -13,8 +16,4 @@ RUN  $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
 
 USER spack
 
-RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
-&&   spack env create container /build/spack.lock \
-&&   spack env activate container \
-&&   spack mirror add gitlab file://$SPACK_CACHE \
-&&   spack install --use-buildcache=only --no-check-signature
+RUN  /build/spack-container-install.sh
