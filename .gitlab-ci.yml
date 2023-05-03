@@ -50,16 +50,12 @@ docker build spack-base:
             EOF
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
-            --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/base.docker"
             --destination "${DOCKER_REGISTRY}/${DEST}"
-            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
-            --build-arg "ENV=${ENV}"
-            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --cache=true
     variables:
-        DOCKERFILE: base.docker
         DEST: spack-base:latest
 
 # Generate build tasks for Spack packages
@@ -92,9 +88,27 @@ docker build containers:
     image: *kaniko_image
     before_script:
         - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
-    script: *kaniko_build
+    script:
+        - mkdir -p /kaniko/.docker
+        - |
+            cat > /kaniko/.docker/config.json <<EOF
+            {"auths": {
+                "$CI_DEPENDENCY_PROXY_SERVER": {
+                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
+                }
+            }}
+            EOF
+        - /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
+            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
+            --build-arg "SPACK_COMPILER=${SPACK_COMPILER}"
+            --build-arg "SPACK_MPI=${SPACK_MPI}"
+            --build-arg "ENV=${ENV}"
+            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
+            --cache=true
     variables:
-        DOCKERFILE: spack-env.docker
         CONCRETE_ENV: ${ENV}-${SPACK_COMPILER}-${SPACK_MPI}
     parallel: &build_matrix
         matrix:
