@@ -140,7 +140,7 @@ stage gadi:
     after_script:
         - rm image.sif
     variables:
-        NAME=$ENV
+        NAME: $ENV
     parallel: *build_matrix
 
 clean:
