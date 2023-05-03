@@ -139,6 +139,8 @@ stage gadi:
         - etc/install-gadi-image.sh
     after_script:
         - rm image.sif
+    variables:
+        NAME=$ENV
     parallel: *build_matrix
 
 clean:
