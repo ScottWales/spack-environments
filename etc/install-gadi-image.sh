@@ -52,7 +52,7 @@ sed \
     -e "s;_DATE_;${DATE};" \
     -e "s;_SHA_;${SHA};" \
     -e "s;_APPDIR_;${APPDIR};" \
-    install/module > "${MODULE}"
+    etc/module > "${MODULE}"
 
 cat <<EOF
 Install complete

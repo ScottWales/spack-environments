@@ -123,6 +123,7 @@ stage gadi:
     script:
         - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
         - etc/install-gadi-image.sh
+    after_script:
         - rm image.sif
     parallel: *build_matrix
 
