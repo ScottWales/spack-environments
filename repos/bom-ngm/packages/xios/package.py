@@ -132,7 +132,7 @@ OASIS_LIB=""
 
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
             text = r"""
-%CCOMPILER      {MPICXX} -xbroadwell -axbroadwell
+%CCOMPILER      {MPICXX} -march=broadwell -mtune=broadwell
 %FCOMPILER      {MPIFC}
 %LINKER         {MPIFC}
 
