@@ -11,9 +11,7 @@ COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
 COPY etc/spack-container-install.sh /build
 
 USER mamba
-RUN  /opt/mamba/bin/conda config --show
 RUN  $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
 
 USER spack
-
-RUN  /build/spack-container-install.sh
+RUN  bash /build/spack-container-install.sh
