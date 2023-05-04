@@ -10,6 +10,6 @@ set -o pipefail
 export FCM_KEYWORDS=${FCM_KEYWORDS:-$SPACK_ENV_VIEW/etc/fcm/default-keyword.cfg}
 export LDMPI=mpifort
 export FPP="cpp -traditional"
-export FFLAGS="${FFLAGS:-} -I${SPACK_ENV_VIEW}/include -I${MPI_PATH}/lib"
+export FFLAGS="${FFLAGS:-} -I$SPACK_ENV_VIEW/include -I$SPACK_ENV_VIEW/lib"
 export PFUNIT=$SPACK_ENV_VIEW
 
