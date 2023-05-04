@@ -49,13 +49,12 @@ rm /tmp/packages.yaml
 
 spack bootstrap now
 
-# INTEL_COMPILER=intel-oneapi-compilers-classic@2021.8.0
-# spack install $INTEL_COMPILER
-# 
-# INTEL_PREFIX=$(spack find --format '{prefix}' $INTEL_COMPILER)
-# spack compiler find --scope site $INTEL_PREFIX
+INTEL_COMPILER=intel-oneapi-compilers@2023.0.0
+spack install $INTEL_COMPILER intel-oneapi-compilers-classic
 
-spack env create base
+INTEL_PREFIX=$(spack find --format '{prefix}' $INTEL_COMPILER)
+spack compiler find --scope site $INTEL_PREFIX/compiler/latest/linux/bin
+spack compiler find --scope site $INTEL_PREFIX/compiler/latest/linux/bin/intel64
 
 spack clean
 
