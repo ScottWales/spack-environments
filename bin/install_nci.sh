@@ -13,9 +13,7 @@ set -o pipefail
 INSTALL_ROOT=$PWD
 
 # Install an environment at NCI
-#ENV=$1
-ENV=lfric_v0
-ENVPATH=/scratch/$PROJECT/$USER/ngm/envs/$ENV
+ENV=$1
 
 export SPACK_COMPILER=intel@2021.8.0
 export SPACK_MPI=openmpi@4.1.4
