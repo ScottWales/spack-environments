@@ -5,7 +5,7 @@ set -eu
 module purge
 
 : ${PREFIX:=/scratch/$PROJECT/$USER/ngm}
-: ${VERSION:=${CI_COMMIT_BRANCH:-$(git symbolic-ref --short HEAD)}}
+: ${VERSION:=${CI_COMMIT_BRANCH-$CI_COMMIT_SHORT_SHA:-$(git symbolic-ref --short HEAD)}}
 
 REPO=${CI_PROJECT_URL:-$(git remote get-url origin)}
 SHA=$(git rev-parse HEAD)

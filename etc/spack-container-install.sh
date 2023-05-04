@@ -43,6 +43,10 @@ case \${SPACK_COMPILER} in
         ;;
     gcc@8.5.0)
         # System compiler
+        export CC=/bin/gcc
+        export CXX=/bin/g++
+        export FC=/bin/gfortran
+        export F90=/bin/gfortran
         ;;
     *)
         spack load \$SPACK_COMPILER

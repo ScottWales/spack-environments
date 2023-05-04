@@ -7,7 +7,7 @@
 #PBS -l walltime=1:00:00
 #PBS -l jobfs=10gb
 #PBS -l wd
-#PBS -l storage=gdata/access+scratch/hc46
+#PBS -l storage=gdata/access+scratch/hc46+gdata/ki32
 
 
 set -eu
@@ -40,7 +40,7 @@ APP=gravity_wave
 
 echo $CPATH | sed 's/:/\n/g'
 
-make -C $LFRICSRC/lfric_atm clean
+#make -C $LFRICSRC/lfric_atm clean
 make -C $LFRICSRC/lfric_atm/ -j ${PBS_NCPUS:-4} > build.log
 
 #cd $LFRICSRC/miniapps/$APP/example
