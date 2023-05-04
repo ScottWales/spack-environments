@@ -142,12 +142,12 @@ packages:
         - spec: ncurses@6.1
           prefix: /usr
     buildable: false
-    #openmpi:
-    #  externals:
-    #  - spec: openmpi@4.1.4
-    #    modules:
-    #    - openmpi/4.1.4
-    #  buildable: false
+  openmpi:
+    externals:
+    - spec: openmpi@4.1.4
+      modules:
+      - openmpi/4.1.4
+    buildable: false
     #netcdf-c:
     #  externals:
     #  - spec: netcdf-c@4.9.0+mpi ^hdf5@1.10.7+mpi
