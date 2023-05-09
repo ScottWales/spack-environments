@@ -1,3 +1,8 @@
 spack:
     specs:
         - met
+        - hdf@4 +external-xdr ^libtirpc
+    packages:
+        g2c:
+            require: "^jasper@2"
+

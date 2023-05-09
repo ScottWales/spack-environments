@@ -10,6 +10,8 @@ ENV=$1
 SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
 INSTALL_ROOT=$SCRIPT_DIR/..
 
+spack clean -m
+
 # Create the environment
 if ! $(spack env list | grep -w $ENV > /dev/null); then
     spack env create --without-view $ENV envs/$ENV/spack.yaml

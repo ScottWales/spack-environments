@@ -17,7 +17,7 @@ LFRICSRC=/scratch/hc46/saw562/tmp/lfric/
 
 module purge
 
-source bin/activate.sh lfric_v0
+source bin/activate.sh lfric-v0
 
 module load intel-compiler/2021.8.0
 
@@ -41,7 +41,8 @@ APP=gungho_model_bare
 echo $CPATH | sed 's/:/\n/g'
 
 #make -C $LFRICSRC/lfric_atm clean
-make -C $LFRICSRC/lfric_atm/ -j ${PBS_NCPUS:-4} > build.log
+make -C $LFRICSRC/miniapps/gungho_model_bare2/ -j ${PBS_NCPUS:-4}
+#make -C $LFRICSRC/lfric_atm/ -j ${PBS_NCPUS:-4} > build.log
 
 #cd $LFRICSRC/miniapps/$APP/example
 #../bin/$APP configuration.nml
