@@ -9,22 +9,30 @@ stages:
     - base
     - generate
     - spack-build
+    - package-build
     - docker
     - apptainer
+    - stage
+    - deploy
     - clean
 
 variables:
     DOCKER_REGISTRY: '172.17.0.2:5000'
     DOCKER_PERSIST: '/scratch/gitlab-runner/'
+    CI_OUTDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
+    MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
 
 setup:
     stage: setup
     tags: [docker]
     script:
         - mkdir -p "${SPACK_CACHE}"
+        - chmod a+rwX "$SPACK_CACHE"
+        - mkdir -p $CI_OUTDIR
 
-base:
+# Base docker image, used for building the Spack packages
+docker build spack-base:
     stage: base
     tags: [docker]
     image: &kaniko_image
@@ -42,20 +50,102 @@ base:
             EOF
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
-            --dockerfile "${CI_PROJECT_DIR}/containers/${DOCKERFILE}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/base.docker"
             --destination "${DOCKER_REGISTRY}/${DEST}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
+            --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --cache=true
     variables:
-        DOCKERFILE: base.docker
         DEST: spack-base:latest
 
-
-generate:
+# Generate build tasks for Spack packages
+generate spack packages:
     stage: generate
     tags: [docker]
     image: 
         name: localhost:5000/spack-base:latest
         entrypoint: [""]
+        pull_policy: always
     script:
-        - ./ci/generate.sh
+        - /bin/entrypoint.sh ./ci/generate.sh
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
+
+# Build Spack packages
+spack build:
+    stage: package-build
+    trigger:
+      include:
+        - artifact: artifacts/pipeline.yml
+          job: generate spack packages
+      strategy: depend
+
+# Build Docker containers
+docker build containers:
+    stage: docker
+    image: *kaniko_image
+    before_script:
+        - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+    script:
+        - mkdir -p /kaniko/.docker
+        - |
+            cat > /kaniko/.docker/config.json <<EOF
+            {"auths": {
+                "$CI_DEPENDENCY_PROXY_SERVER": {
+                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
+                }
+            }}
+            EOF
+        - /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
+            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
+            --build-arg "SPACK_COMPILER=${SPACK_COMPILER}"
+            --build-arg "SPACK_MPI=${SPACK_MPI}"
+            --build-arg "ENV=${ENV}"
+            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
+            --cache=true
+    variables:
+        CONCRETE_ENV: ${ENV}-${SPACK_COMPILER}-${SPACK_MPI}
+    parallel: &build_matrix
+        matrix:
+            - ENV: ['lfric-v0']
+              SPACK_COMPILER: ['gcc@8.5.0']
+              SPACK_MPI: ['openmpi@4.1.4']
+
+# Build Apptainer containers
+apptainer build containers:
+    stage: apptainer
+    tags: [docker]
+    image:
+        name: quay.io/singularity/singularity:v3.10.2
+        entrypoint: [""]
+    before_script:
+        - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+    script:
+        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
+    parallel: *build_matrix
+
+stage gadi:
+    stage: stage
+    tags: [gadi]
+    before_script:
+        - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+    script:
+        - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
+        - etc/install-gadi-image.sh
+    after_script:
+        - rm image.sif
+    variables:
+        NAME: $ENV
+    parallel: *build_matrix
+
+clean:
+    stage: clean
+    tags: [docker]
+    script:
+      - rm -rv $CI_OUTDIR
+    when: always

@@ -8,21 +8,10 @@ source /opt/spack/share/spack/setup-env.sh
 export CI_PROJECT_DIR
 ARTIFACTS=${CI_PROJECT_DIR}/artifacts
 
-SPACK_COMPILERS="gcc@12.2.0 intel@2021.8.0"
+SPACK_COMPILERS="gcc@8.5.0"
 SPACK_MPIS="openmpi@4.1.4"
 
 mkdir -p build
-
-# Base enviornment for compilers
-echo base
-spack env create --without-view -d build/base
-spack env activate --without-view build/base
-spack config add "config:install_missing_compilers:true"
-spack add gcc@12.2.0
-spack concretize
-spack add intel-oneapi-compilers-classic@2021.8.0%gcc@12.2.0
-spack concretize
-spack env deactivate
 
 # Concretize each enviornment separately
 for env in envs/*/spack.yaml; do
@@ -41,6 +30,7 @@ for env in envs/*/spack.yaml; do
 			spack config add "config:install_missing_compilers:true"
                         spack config add "packages:all:require:'%$SPACK_COMPILER'"
                         spack config add "packages:mpi:require:$SPACK_MPI"
+			spack compilers
                         spack concretize --force --fresh
                         spack env deactivate
 
@@ -53,8 +43,9 @@ done
 # Merge lock files from all concretized environments
 echo merged
 spack env create -d build/merged
-bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged --base build/base/spack.lock build/ci-*/spack.lock
+bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged build/ci-*/spack.lock
 
 # CI generate
 spack env activate --without-view build/merged
+
 spack ci generate --check-index-only --artifacts-root $ARTIFACTS --output-file $ARTIFACTS/pipeline.yml

@@ -1,27 +1,39 @@
 spack:
   view: false
 
-  definitions:
-    - compilers:
-      - 'gcc@12.2.0'
-      - 'intel-oneapi-compilers-classic@2021.8.0%gcc@12.2.0'
-
   concretizer:
     unify: false
 
-  config:
-    install_missing_compilers: true
-
   mirrors:
-    ngm-gitlab: /scratch/mirror
+    gitlab: file://$SPACK_CACHE
+
+  config:
+    source_cache: $SPACK_CACHE
 
   gitlab-ci:
-    bootstrap:
-      - name: compilers
+    script:
+      - spack env activate --without-view ${SPACK_CONCRETE_ENV_DIR}
+      - spack -d ci rebuild --tests
     mappings:
       - match:
           - os=amzn2023
+      - match:
+          - os=rocky8
         runner-attributes:
           tags:
             - docker
-          image: spack/ubuntu-bionic
+          image:
+            name: "localhost:5000/spack-base:latest"
+            entrypoint: ['']
+          before_script:
+            - source /bin/entrypoint.sh
+    service-job-attributes:
+      tags:
+        - docker
+      image:
+        name: "localhost:5000/spack-base:latest"
+        entrypoint: ['']
+      before_script:
+        - source /bin/entrypoint.sh
+    enable-artifacts-buildcache: False
+    rebuild-index: True

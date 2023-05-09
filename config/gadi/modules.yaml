@@ -14,10 +14,6 @@ modules:
         tcl:
             all:
                 autoload: direct
-            openmpi:
-                environment:
-                    prepend_path:
-                        CPATH: '{prefix}/lib'
             openmpi%intel:
                 environment:
                     prepend_path:

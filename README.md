@@ -4,11 +4,30 @@
 
 * `bin/`: User scripts
 * `ci/`: CI scripts
+* `config/`: Spack config files
 * `containers/`: Dockerfiles
 * `envs/`: Environments
+* `etc/`: Config files and build scripts
 * `repos/`: Spack Packages
 
 ## Using containers
+
+### Run container on Gadi
+
+Load the container module
+
+    module use /scratch/hc46/hc46_gitlab/ngm/modules
+    module load lfric-v0/gcc-openmpi
+
+The `imagerun` helper script will run a command in the container
+
+    imagerun unifiedmodel_hofx.x
+
+`imagerun` will also set up bind mode MPI automatically, use it inside of `mpirun`
+
+    mpirun -n 4 imagerun unifiedmodel_hofx.x
+
+### Run container on a generic system
 
 Run from a container using Apptainer
 
@@ -57,12 +76,6 @@ variables, e.g.
     export SPACK_COMPILER=intel@2021.8.0
     export SPACK_MPI=openmpi@4.1.4
 
-    ./bin/install.sh lfric_v0
+    ./bin/install.sh lfric-v0
 
-will install the `lfric_v0` environment with that compiler and MPI.
-
-## Using the envionment
-
-To load an environment run
-
-    ./bin/activate.sh ENV
+will install the `lfric-v0` environment with that compiler and MPI.

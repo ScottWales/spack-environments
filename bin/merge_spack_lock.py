@@ -29,15 +29,9 @@ def main():
     parser.add_argument('input', nargs='+')
     parser.add_argument('--ci-yaml')
     parser.add_argument('--output')
-    parser.add_argument('--base')
 
     args = parser.parse_args()
     merged = merge_locks(args.input)
-
-    # Just add specs from the base file, not roots
-    with open(args.base) as f:
-        l = json.load(f)
-        merged['concrete_specs'].update(l['concrete_specs'])
 
     with open(os.path.join(args.output, 'spack.lock'), 'w') as f:
         json.dump(merged, f, indent=2)
@@ -45,7 +39,7 @@ def main():
     specs = [f"{r['spec']}" for r in merged['roots']]
 
     with open(args.ci_yaml) as f:
-        env = yaml.load(f)
+        env = yaml.safe_load(f)
 
     env['spack']['specs'] = specs
 

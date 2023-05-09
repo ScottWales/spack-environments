@@ -1,9 +1,20 @@
-From spack-base:latest
+ARG  DOCKER_REGISTRY
+FROM $DOCKER_REGISTRY/spack-base:latest
 
-ARG  CONTAINER_ENV
-ENV  CONTAINER_ENV=$CONTAINER_ENV
+ARG  ENV
+ARG  CONCRETE_ENV
+ARG  SPACK_COMPILER
+ARG  SPACK_MPI
 
-COPY envs/$CONTAINER_ENV.lock /build/$CONTAINER_ENV.lock
-RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
-&&   spack env create --without-view $CONTAINER_ENV /build/$CONTAINER_ENV.lock
-&&   spack install --use-buildcache=only
+COPY envs/$ENV/* /build/
+COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
+COPY etc/spack-container-install.sh /build
+
+USER root
+RUN  chmod a+rwX /build
+
+USER mamba
+RUN  $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
+
+USER spack
+RUN  bash /build/spack-container-install.sh
