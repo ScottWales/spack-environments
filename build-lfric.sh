@@ -36,7 +36,7 @@ export PSYCLONE_TRANSFORMATION=nci-gadi
 
 export FCM_KEYWORDS=/g/data/access/apps/fcm/2019.09.0/etc/fcm/keyword.cfg
 
-APP=gravity_wave
+APP=gungho_model_bare
 
 echo $CPATH | sed 's/:/\n/g'
 
