@@ -54,7 +54,7 @@ docker build spack-base:
             --destination "${DOCKER_REGISTRY}/${DEST}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
-            --cache=true
+            # --cache=true
     variables:
         DEST: spack-base:latest
 
