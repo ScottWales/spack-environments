@@ -173,12 +173,12 @@ packages:
     #          modules: 
     #          - hdf4/4.2.15
     #    buildable: false
-  hdf-eos2:
-      externals:
-          - spec: hdf-eos2@2.20v1.00
-            modules:
-                - hdf-eos/2.20
-      buildable: false
+    #hdf-eos2:
+    #    externals:
+    #        - spec: hdf-eos2@2.20v1.00
+    #          modules:
+    #              - hdf-eos/2.20
+    #    buildable: false
   perl:
       externals:
           - spec: perl@5.26.3
