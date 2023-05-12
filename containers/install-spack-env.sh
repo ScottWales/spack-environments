@@ -24,7 +24,7 @@ for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
     rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
-cat > /build/spack.activate.sh << EOF
+cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
 export SPACK_COMPILER=$SPACK_COMPILER
 export SPACK_MPI=$SPACK_MPI
@@ -80,11 +80,6 @@ LIB_PREPEND=\$SPACK_ENV_VIEW/lib:\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
 export LIBRARY_PATH=\$LIB_PREPEND:\$LIBRARY_PATH
 export LD_LIBRARY_PATH=\$LIB_PREPEND:\$LD_LIBRARY_PATH
 export LD_RUN_PATH=\$LIB_PREPEND:\$LD_RUN_PATH
-
-if [ -f /build/env.activate.sh ]; then
-    # Add any definitions from the environment
-    source /build/env.activate.sh
-fi
 EOF
 
 
