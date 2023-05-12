@@ -37,7 +37,7 @@ COMMANDS=""
 # COMMANDS=$(/opt/singularity/bin/singularity exec $APPDIR/etc/image.sif ls /opt/conda/bin)
 # or limited commands
 # COMMANDS="cylc rose rosa rosie"
-COMMANDS="$($APPDIR/bin/imagerun "[ -f /build/exportcommands.sh ] && /build/exportcommands.sh")"
+COMMANDS="$($APPDIR/bin/imagerun "/build/exportcommands.sh" || true)"
 
 for f in $COMMANDS; do
     ln -sf "../etc/run-image-command.sh" "$APPDIR/bin/$(basename $f)"
