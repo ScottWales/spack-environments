@@ -26,7 +26,7 @@ spack:
             name: "localhost:5000/spack-base:latest"
             entrypoint: ['']
           before_script:
-            - source /bin/entrypoint.sh
+            - source /build/entrypoint.sh
     service-job-attributes:
       tags:
         - docker
@@ -34,6 +34,6 @@ spack:
         name: "localhost:5000/spack-base:latest"
         entrypoint: ['']
       before_script:
-        - source /bin/entrypoint.sh
+        - source /build/entrypoint.sh
     enable-artifacts-buildcache: False
     rebuild-index: True
