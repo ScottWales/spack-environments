@@ -34,8 +34,8 @@ RUN  microdnf install -y --nodocs \
 &&   microdnf clean all
 
 # Install entrypoint
-COPY etc/entrypoint.sh /bin/entrypoint.sh
-RUN  chmod 755 /bin/entrypoint.sh
+COPY containers/*.sh /build/
+RUN  chmod 755 /build/*.sh
 
 # Copy repos
 COPY repos/ $SPACK_ROOT/var/spack/repos/
@@ -50,22 +50,13 @@ RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
 &&   mkdir -p $MAMBA_ROOT \
 &&   chown -R mamba $MAMBA_ROOT
 
-USER mamba
-
 # Install mamba
-RUN  cd $MAMBA_ROOT \
-&&   curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh \
-&&   bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT \
-&&   $MAMBA_ROOT/bin/mamba create -n container python pyyaml \
-&&   $MAMBA_ROOT/bin/mamba clean --all \
-&&   $MAMBA_ROOT/bin/conda config --system --append channels "$MAMBA_REPO" \
-&&   rm Mambaforge-Linux-x86_64.sh
-
-USER spack
+USER mamba
+RUN  /build/install-mamba.sh
 
 # Install spack
-COPY etc/spack-bootstrap.sh $SPACK_ROOT/sbin/spack-bootstrap.sh
-RUN  /bin/bash $SPACK_ROOT/sbin/spack-bootstrap.sh
+USER spack
+RUN  /build/install-spack.sh
 
-ENTRYPOINT ["/bin/entrypoint.sh"]
+ENTRYPOINT ["/build/entrypoint.sh"]
 
