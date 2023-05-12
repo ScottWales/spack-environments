@@ -115,6 +115,9 @@ docker build containers:
             - ENV: ['lfric-v0']
               SPACK_COMPILER: ['gcc@8.5.0']
               SPACK_MPI: ['openmpi@4.1.4']
+            - ENV: ['metplus-v5']
+              SPACK_COMPILER: ['gcc@8.5.0']
+              SPACK_MPI: ['openmpi@4.1.4']
 
 # Build Apptainer containers
 apptainer build containers:
