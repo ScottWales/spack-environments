@@ -38,6 +38,7 @@ COPY containers/*.sh /build/
 RUN  chmod 755 /build/*.sh
 
 # Mamba user
+USER root
 RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
 &&   mkdir -p $MAMBA_ROOT \
 &&   chown -R mamba $MAMBA_ROOT
@@ -50,6 +51,7 @@ RUN  /build/install-mamba.sh
 COPY repos/ $SPACK_ROOT/var/spack/repos/
 
 # Spack user
+USER root
 RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
 &&   mkdir -p $SPACK_ROOT \
 &&   chown -R spack $SPACK_ROOT
