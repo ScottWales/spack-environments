@@ -67,7 +67,7 @@ generate spack packages:
         entrypoint: [""]
         pull_policy: always
     script:
-        - /bin/entrypoint.sh ./ci/generate.sh
+        - /build/entrypoint.sh ./ci/generate.sh
     artifacts:
       paths:
         - "$CI_PROJECT_DIR/artifacts"
