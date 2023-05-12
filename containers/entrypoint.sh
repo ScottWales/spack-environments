@@ -9,7 +9,6 @@ source $MAMBA_ROOT/etc/profile.d/mamba.sh
 
 # Load Mamba environment
 mamba activate container
-spack env activate container
 
 # Load Spack environment if installed
 if [ -f $SPACK_ROOT/bin/activate.sh ]; then
