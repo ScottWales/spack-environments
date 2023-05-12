@@ -14,7 +14,7 @@ USER root
 RUN  chmod a+rwX /build
 
 USER mamba
-RUN  $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
+RUN  [ -f /build/mamba.yaml ] && $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
 
 USER spack
 RUN  bash /build/spack-container-install.sh
