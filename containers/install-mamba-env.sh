@@ -5,4 +5,6 @@
 set -eu
 set -o pipefail
 
-[ -f /build/mamba.yaml ] && $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
+if [ -f /build/mamba.yaml ]; then
+    $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
+fi

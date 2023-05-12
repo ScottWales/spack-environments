@@ -33,19 +33,10 @@ RUN  microdnf install -y --nodocs \
      zstd \
 &&   microdnf clean all
 
-# Spack user
-RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
-&&   mkdir -p $SPACK_ROOT \
-&&   chown -R spack $SPACK_ROOT
-
 # Mamba user
 RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
 &&   mkdir -p $MAMBA_ROOT \
 &&   chown -R mamba $MAMBA_ROOT
-
-# Install container setup scripts
-COPY containers/*.sh /build/
-RUN  chmod 755 /build/*.sh
 
 # Install mamba
 USER mamba
@@ -53,6 +44,17 @@ RUN  /build/install-mamba.sh
 
 # Copy repos
 COPY repos/ $SPACK_ROOT/var/spack/repos/
+
+# Copy repos
+COPY repos/ $SPACK_ROOT/var/spack/repos/
+# Spack user
+RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
+&&   mkdir -p $SPACK_ROOT \
+&&   chown -R spack $SPACK_ROOT
+
+# Install container setup scripts
+COPY containers/*.sh /build/
+RUN  chmod 755 /build/*.sh
 
 # Install spack
 USER spack
