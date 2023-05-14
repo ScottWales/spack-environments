@@ -10,7 +10,9 @@ ARG  SPACK_MPI
 COPY envs/$ENV/* /build/
 
 # Copy Spack lock file
+USER root
 COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
+RUN  chmod 755 /build/*.sh
 
 USER mamba
 RUN  /build/install-mamba-env.sh
