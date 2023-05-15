@@ -1,0 +1,10 @@
+dependencies:
+    - python
+    - python-dateutil
+    - xarray
+    - numpy
+    - pandas
+    - netcdf4
+    - cartopy
+    - matplotlib
+    - jupyterlab
