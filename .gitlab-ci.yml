@@ -148,6 +148,8 @@ stage gadi:
         - rm image.sif
     variables:
         NAME: $ENV
+        SPACK_DISABLE_LOCAL_CONFIG: "true"
+        SPACK_USER_CACHE_PATH: "$PWD/cache"
     parallel: *build_matrix
 
 clean:
