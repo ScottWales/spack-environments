@@ -24,6 +24,11 @@ dependencies:
     - python-dateutil
     - pytz
     - pyyaml
+    - r-boot
+    - r-data.table
+    - r-gsl
+    - r-plotrix
+    - r-verification
     - scikit-image
     - scikit-learn
     - scipy
