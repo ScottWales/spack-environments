@@ -2,6 +2,7 @@
 ## Scott Wales 2023
 
 from spack.package import *
+import llnl.util.filesystem as fsys
 import os
 
 class Metplus(Package):
