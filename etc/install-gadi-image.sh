@@ -38,6 +38,7 @@ COMMANDS=""
 # or limited commands
 # COMMANDS="cylc rose rosa rosie"
 COMMANDS="$($APPDIR/bin/imagerun "/build/exportcommands.sh" || true)"
+echo "COMMANDS=$COMMANDS"
 
 for f in $COMMANDS; do
     ln -sf "../etc/run-image-command.sh" "$APPDIR/bin/$(basename $f)"

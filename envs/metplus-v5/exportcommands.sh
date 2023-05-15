@@ -10,7 +10,7 @@ set -o pipefail
 METPATH=$(spack find --format '{prefix}' met)
 METPLUSPATH=$(spack find --format '{prefix}' metplus)
 
-ls $METPATH/bin
+ls -1 $METPATH/bin
 
 echo run_metplus.py
 echo validate_config.py

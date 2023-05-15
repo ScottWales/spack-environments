@@ -4,4 +4,4 @@
 
 : ${SPACK_ENV_VIEW:=$SPACK_ENV/.spack-env/view}
 
-export PATH=$SPACK_ENV_VIEW/ush:$PATH
+export PATH=$SPACK_ENV_VIEW/metplus/ush:$PATH
