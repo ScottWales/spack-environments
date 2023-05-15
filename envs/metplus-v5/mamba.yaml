@@ -7,7 +7,6 @@ dependencies:
     - imutils
     - iniconfig
     - jupyterlab
-    - kaleido
     - lxml
     - matplotlib
     - metpy
@@ -22,6 +21,7 @@ dependencies:
     - pytest
     - python
     - python-dateutil
+    - python-kaleido
     - pytz
     - pyyaml
     - r-boot

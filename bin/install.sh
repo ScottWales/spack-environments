@@ -33,30 +33,30 @@ if [ -n "${SPACK_MPI:-}" ]; then
 fi
 
 # Setup Mamba
-if [ -f envs/$ENV/mamba.yaml ]; then
-    if ! [ -d $SPACK_ENV/mamba ]; then
-        mamba env create -p $SPACK_ENV/mamba -f envs/$ENV/mamba.yaml
-    else
-        mamba env update -p $SPACK_ENV/mamba -f envs/$ENV/mamba.yaml
-    fi
-
-    PYTHON_VERSION=$($SPACK_ENV/mamba/bin/python3 --version | cut -d ' ' -f 2)
-
-    CONFIG=$(mktemp)
-
-    cat > $CONFIG <<EOF
-packages:
-    python:
-        externals:
-            - spec: python@${PYTHON_VERSION}.mamba
-              prefix: "$SPACK_ENV/mamba"
-        buildable: False
-        require: 'python@${PYTHON_VERSION}.mamba'
-EOF
-    spack config add --file $CONFIG
-
-    rm $CONFIG
-fi
+#if [ -f envs/$ENV/mamba.yaml ]; then
+#    if ! [ -d $SPACK_ENV/mamba ]; then
+#        mamba env create -p $SPACK_ENV/mamba -f envs/$ENV/mamba.yaml
+#    else
+#        mamba env update -p $SPACK_ENV/mamba -f envs/$ENV/mamba.yaml
+#    fi
+#
+#    PYTHON_VERSION=$($SPACK_ENV/mamba/bin/python3 --version | cut -d ' ' -f 2)
+#
+#    CONFIG=$(mktemp)
+#
+#    cat > $CONFIG <<EOF
+#packages:
+#    python:
+#        externals:
+#            - spec: python@${PYTHON_VERSION}.mamba
+#              prefix: "$SPACK_ENV/mamba"
+#        buildable: False
+#        require: 'python@${PYTHON_VERSION}.mamba'
+#EOF
+#    spack config add --file $CONFIG
+#
+#    rm $CONFIG
+#fi
 
 # Concretize and install
 spack concretize --force --fresh

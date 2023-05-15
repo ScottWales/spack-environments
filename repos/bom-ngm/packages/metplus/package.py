@@ -32,8 +32,8 @@ class Metplus(Package):
         install_prefix = os.path.join(prefix, 'METplus')
         which("mkdir")("-p", install_prefix)
 
-        install = which("cp")
-        install("-r", self.stage.source_path, install_prefix)
+        install = which("rsync")
+        install("-a", self.stage.source_path + '/', install_prefix)
 
         with fsys.working_dir(install_prefix):
-            which("bash")("manage_externals/checkout_externals", "--externals", "build_components/Externals.cfg")
+            which("python3")("manage_externals/checkout_externals", "--externals", "build_components/Externals.cfg")
