@@ -23,12 +23,12 @@ mkdir -p "$(dirname $MODULE)"
 # Install image
 mkdir -p "$APPDIR/etc"
 cp image.sif $APPDIR/etc
-cp etc/run-image-command.sh $APPDIR/etc
 cp etc/imagerun-* $APPDIR/etc
 
 # Create bin directory and link in any binaries
 mkdir -p $APPDIR/bin
 rm -f $APPDIR/bin/*
+cp etc/run-image-command.sh $APPDIR/bin
 ln -s ../etc/imagerun-gadi $APPDIR/bin/imagerun
 
 COMMANDS=""
@@ -41,7 +41,7 @@ COMMANDS="$($APPDIR/bin/imagerun "/build/exportcommands.sh" || true)"
 echo "COMMANDS=$COMMANDS"
 
 for f in $COMMANDS; do
-    ln -sf "../etc/run-image-command.sh" "$APPDIR/bin/$(basename $f)"
+    ln -sf "run-image-command.sh" "$APPDIR/bin/$(basename $f)"
 done
 
 # Create module

@@ -59,6 +59,10 @@ docker build spack-base:
             #--cache=true
     variables:
         DEST: spack-base:latest
+    only:
+        changes:
+            - containers/base.docker
+            - containers/*.sh
 
 # Generate build tasks for Spack packages
 generate spack packages:
