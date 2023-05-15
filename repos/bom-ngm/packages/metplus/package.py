@@ -17,7 +17,7 @@ class Metplus(Package):
     depends_on('python')
 
     def setup_dependent_run_environment(self, env, dependendent_spec):
-        env.prepend_path('PATH', os.path.join(self.prefix, 'metplus/ush'))
+        env.prepend_path('PATH', os.path.join(self.prefix, 'METplus/ush'))
 
     def install(self, spec, prefix):
         sed = which("sed")
@@ -28,11 +28,11 @@ class Metplus(Package):
         sed('-i', f"s:^#!/usr/bin/env python3:#!{python}/bin/python3:", 'ush/validate_config.py')
         sed('-i', f"s:^MET_INSTALL_DIR\s*=.*:MET_INSTALL_DIR = {met}:", 'parm/metplus_config/defaults.conf')
 
-        install_prefix = os.path.join(prefix, 'metplus')
+        install_prefix = os.path.join(prefix, 'METplus')
         which("mkdir")("-p", install_prefix)
 
         install = which("cp")
-        install("-r", "metplus", install_prefix)
-        install("-r", "parm", install_prefix)
-        install("-r", "produtil", install_prefix)
-        install("-r", "ush", install_prefix)
+        install("-r", self.stage.source_path, install_prefix)
+
+        with fsys.working_dir(install_prefix):
+            which("bash")("manage_externals/checkout_externals", "--externals", "build_components/Externals.cfg")

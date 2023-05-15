@@ -12,5 +12,11 @@ METPLUSPATH=$(spack find --format '{prefix}' metplus)
 
 ls -1 $METPATH/bin
 
+# METplus commands
 echo run_metplus.py
 echo validate_config.py
+
+# Python commands
+echo python
+echo python3
+echo jupyter
