@@ -149,7 +149,7 @@ stage gadi:
     variables:
         NAME: $ENV
         SPACK_DISABLE_LOCAL_CONFIG: "true"
-        SPACK_USER_CACHE_PATH: "$PWD/cache"
+        SPACK_USER_CACHE_PATH: "$CI_PROJECT_DIR/cache"
     parallel: *build_matrix
 
 clean:
