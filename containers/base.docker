@@ -28,6 +28,7 @@ RUN  microdnf install -y --nodocs \
      subversion \
      tar \
      unzip \
+     which \
      wget \
      xz \
      zstd \
