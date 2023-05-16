@@ -3,6 +3,7 @@ dependencies:
     - cartopy
     - eofs
     - exceptiongroup
+    - h5py
     - imageio
     - imutils
     - iniconfig
@@ -24,6 +25,7 @@ dependencies:
     - python-kaleido
     - pytz
     - pyyaml
+    - r
     - r-boot
     - r-data.table
     - r-gsl
