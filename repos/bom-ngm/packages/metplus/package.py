@@ -16,6 +16,7 @@ class Metplus(Package):
 
     depends_on('met@11:', when="@5:")
     depends_on('python')
+    depends_on('rsync', type='build')
 
     def setup_dependent_run_environment(self, env, dependendent_spec):
         env.prepend_path('PATH', os.path.join(self.prefix, 'METplus/ush'))
