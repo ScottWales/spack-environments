@@ -13,6 +13,7 @@ ARG  MAMBA_REPO
 RUN  microdnf install -y --nodocs \
      bzip2 \
      cmake \
+     curl-devel \
      gcc \
      gcc-c++ \
      gcc-gfortran \
