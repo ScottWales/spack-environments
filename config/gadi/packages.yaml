@@ -167,6 +167,18 @@ packages:
       - python3/3.11.0
       - python3-as-python
     buildable: false
+    #hdf:
+    #    externals:
+    #        - spec: hdf@4.2.15
+    #          modules: 
+    #          - hdf4/4.2.15
+    #    buildable: false
+    #hdf-eos2:
+    #    externals:
+    #        - spec: hdf-eos2@2.20v1.00
+    #          modules:
+    #              - hdf-eos/2.20
+    #    buildable: false
   perl:
       externals:
           - spec: perl@5.26.3

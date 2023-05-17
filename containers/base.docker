@@ -13,12 +13,14 @@ ARG  MAMBA_REPO
 RUN  microdnf install -y --nodocs \
      bzip2 \
      cmake \
+     curl-devel \
      gcc \
      gcc-c++ \
      gcc-gfortran \
      git \
      gzip \
      libtool \
+     openssl-devel \
      patch \
      perl \
      perl-ExtUtils-MakeMaker \
@@ -27,44 +29,38 @@ RUN  microdnf install -y --nodocs \
      subversion \
      tar \
      unzip \
+     which \
      wget \
      xz \
      zstd \
 &&   microdnf clean all
 
-# Install entrypoint
-COPY etc/entrypoint.sh /bin/entrypoint.sh
-RUN  chmod 755 /bin/entrypoint.sh
+# Install container setup scripts
+COPY containers/*.sh /build/
+RUN  chmod 755 /build/*.sh
+
+# Mamba user
+USER root
+RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
+&&   mkdir -p $MAMBA_ROOT \
+&&   chown -R mamba $MAMBA_ROOT
+
+# Install mamba
+USER mamba
+RUN  /build/install-mamba.sh
 
 # Copy repos
 COPY repos/ $SPACK_ROOT/var/spack/repos/
 
 # Spack user
+USER root
 RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
 &&   mkdir -p $SPACK_ROOT \
 &&   chown -R spack $SPACK_ROOT
 
-# Mamba user
-RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
-&&   mkdir -p $MAMBA_ROOT \
-&&   chown -R mamba $MAMBA_ROOT
-
-USER mamba
-
-# Install mamba
-RUN  cd $MAMBA_ROOT \
-&&   curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh \
-&&   bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT \
-&&   $MAMBA_ROOT/bin/mamba create -n container python pyyaml \
-&&   $MAMBA_ROOT/bin/mamba clean --all \
-&&   $MAMBA_ROOT/bin/conda config --system --append channels "$MAMBA_REPO" \
-&&   rm Mambaforge-Linux-x86_64.sh
-
-USER spack
-
 # Install spack
-COPY etc/spack-bootstrap.sh $SPACK_ROOT/sbin/spack-bootstrap.sh
-RUN  /bin/bash $SPACK_ROOT/sbin/spack-bootstrap.sh
+USER spack
+RUN  /build/install-spack.sh
 
-ENTRYPOINT ["/bin/entrypoint.sh"]
+ENTRYPOINT ["/build/entrypoint.sh"]
 

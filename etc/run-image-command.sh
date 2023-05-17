@@ -10,10 +10,8 @@
 set -eu
 set -o pipefail
 
-# Only use libraries inside the image
-# SETUP: Comment out to allow user libraries
-export PYTHONNOUSERSITE=1
-export PYTHONPATH=""
+# Allow user packages to affect the container
+export PYTHON_DONT_ISOLATE=true
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
 
