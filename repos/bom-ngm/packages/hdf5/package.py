@@ -178,10 +178,10 @@ class Hdf5(CMakePackage):
     variant("shared", default=True, description="Builds a shared version of the library")
 
     variant("hl", default=False, description="Enable the high-level library")
-    variant("cxx", default=False, description="Enable C++ support")
-    variant("fortran", default=False, description="Enable Fortran support")
+    variant("cxx", default=True, description="Enable C++ support")
+    variant("fortran", default=True, description="Enable Fortran support")
     variant("java", when="@1.10:", default=False, description="Enable Java support")
-    variant("threadsafe", default=False, description="Enable thread-safe capabilities")
+    variant("threadsafe", default=True, description="Enable thread-safe capabilities")
     variant("tools", default=True, description="Enable building tools")
     variant("mpi", default=True, description="Enable MPI support")
     variant("szip", default=False, description="Enable szip support")
@@ -493,6 +493,8 @@ class Hdf5(CMakePackage):
             self.define_from_variant("HDF5_BUILD_JAVA", "java"),
             self.define_from_variant("HDF5_BUILD_TOOLS", "tools"),
             self.define("HDF5_ENABLE_DIRECT_VFD", True)
+            self.define("HDF5_ENABLE_ROS3_VFD", True)
+            self.define("HDF5_BUILD_HL_GIF_TOOLS", True)
         ]
 
         api = spec.variants["api"].value
