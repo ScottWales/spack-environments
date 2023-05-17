@@ -20,15 +20,12 @@ class Metplus(Package):
 
     def setup_dependent_run_environment(self, env, dependendent_spec):
         env.prepend_path('PATH', os.path.join(self.prefix, 'METplus/ush'))
+        env.prepend_path('PATH', os.path.join(self.prefix, 'METviewer/bin'))
 
     def install(self, spec, prefix):
         sed = which("sed")
         python = spec['python'].prefix
         met = spec['met'].prefix
-
-        sed('-i', f"s:^#!/usr/bin/env python3:#!{python}/bin/python3:", 'ush/run_metplus.py')
-        sed('-i', f"s:^#!/usr/bin/env python3:#!{python}/bin/python3:", 'ush/validate_config.py')
-        sed('-i', f"s:^MET_INSTALL_DIR\s*=.*:MET_INSTALL_DIR = {met}:", 'parm/metplus_config/defaults.conf')
 
         install_prefix = os.path.join(prefix, 'METplus')
         which("mkdir")("-p", install_prefix)
@@ -38,3 +35,27 @@ class Metplus(Package):
 
         with fsys.working_dir(install_prefix):
             which("python3")("manage_externals/checkout_externals", "--externals", "build_components/Externals.cfg")
+
+            sed('-i', f"s:^#!/usr/bin/env python3:#!{python}/bin/python3:",
+                    'ush/run_metplus.py')
+            sed('-i', f"s:^#!/usr/bin/env python3:#!{python}/bin/python3:",
+                    'ush/validate_config.py')
+            sed('-i', f"s:^MET_INSTALL_DIR\s*=.*:MET_INSTALL_DIR = {met}:",
+                    'parm/metplus_config/defaults.conf')
+
+            sed('-i', f"s:^i\(PYTHON_ENV\)\s*=.*:\1={python}:", 
+                    '../METviewer/bin/mv_batch.sh')
+            sed('-i', f"s:^i\(METCALCPY_HOME\)\s*=.*:\1={prefix}/METcalcpy:", 
+                    '../METviewer/bin/mv_batch.sh')
+            sed('-i', f"s:^i\(METPLOTPY_HOME\)\s*=.*:\1={prefix}/METplotpy:", 
+                    '../METviewer/bin/mv_batch.sh')
+
+            sed('-i', f"s:^i\(PYTHON_ENV\)\s*=.*:\1={python}:", 
+                    '../METviewer/bin/mv_load.sh')
+            sed('-i', f"s:^i\(METDATAIO_HOME\)\s*=.*:\1={prefix}/METdataio:", 
+                    '../METviewer/bin/mv_load.sh')
+
+            sed('-i', f"s:^i\(PYTHON_ENV\)\s*=.*:\1={python}:", 
+                    '../METviewer/bin/mv_scorecard.sh')
+            sed('-i', f"s:^i\(METDATAIO_HOME\)\s*=.*:\1={prefix}/METdataio:", 
+                    '../METviewer/bin/mv_scorecard.sh')
