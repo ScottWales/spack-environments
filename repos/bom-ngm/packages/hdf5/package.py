@@ -492,8 +492,8 @@ class Hdf5(CMakePackage):
             self.define_from_variant("HDF5_BUILD_FORTRAN", "fortran"),
             self.define_from_variant("HDF5_BUILD_JAVA", "java"),
             self.define_from_variant("HDF5_BUILD_TOOLS", "tools"),
-            self.define("HDF5_ENABLE_DIRECT_VFD", True)
-            self.define("HDF5_ENABLE_ROS3_VFD", True)
+            self.define("HDF5_ENABLE_DIRECT_VFD", True),
+            self.define("HDF5_ENABLE_ROS3_VFD", True),
             self.define("HDF5_BUILD_HL_GIF_TOOLS", True)
         ]
 
