@@ -3,6 +3,7 @@ dependencies:
     - cartopy
     - eofs
     - exceptiongroup
+    - ghostscript
     - h5py
     - imageio
     - imutils

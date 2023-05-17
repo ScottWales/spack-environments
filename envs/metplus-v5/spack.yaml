@@ -2,7 +2,6 @@ spack:
     specs:
         - met
         - metplus
-        - ghostscript
     packages:
         g2c:
             require: "^jasper@2"
