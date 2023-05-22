@@ -34,6 +34,7 @@ docker build containers:
             --single-snapshot
             --snapshotMode=redo
             --compressed-caching=false
+            --no-push
     needs:
         - job: generate spack packages
           pipeline: "__PIPELINE_ID__"
