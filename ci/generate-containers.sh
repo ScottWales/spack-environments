@@ -37,22 +37,18 @@ for env in envs/*/spack.yaml; do
         # TODO: Remove disable
         if [ $ENV = "metplus-v5" ]; then continue; fi
 
+        # If there is a conda environment copy the lock to this variant
+        if [ -f envs/$ENV/mamba.yaml ]; then
+            mkdir -p artifacts/$BUILD
+            cp artifacts/$ENV/mamba.lock artifacts/$BUILD/mamba.lock
+        fi
+
         # See if this container was already built
         if [ -d "$BRANCH_CACHE/$BUILD" ]; then
-            if diff -q "$BRANCH_CACHE/$BUILD/spack.lock" "artifacts/$BUILD/spack.lock"; then
+            if diff -q "$BRANCH_CACHE/$BUILD" "artifacts/$BUILD"; then
                 HAS_DIFF="yes"
             else
                 HAS_DIFF="no"
-            fi
-
-            # If there is a conda environment lock it and check for differences
-            if [ -f envs/$ENV/mamba.yaml ]; then
-                mkdir -p artifacts/$BUILD
-                cp artifacts/$ENV/mamba.lock artifacts/$BUILD/mamba.lock
-
-                if diff -q $BRANCH_CACHE/$BUILD/mamba.lock artifacts/$BUILD/mamba.lock; then
-                    HAS_DIFF="yes"
-                fi
             fi
         else
             HAS_DIFF="yes"
