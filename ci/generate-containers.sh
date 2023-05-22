@@ -39,7 +39,7 @@ for env in envs/*/spack.yaml; do
 
         # Copy config files to this variant
         cp -r envs/$ENV/* artifacts/ci-$BUILD/
-        cp container/spack-env.docker artifacts/ci-$BUILD
+        cp containers/spack-env.docker artifacts/ci-$BUILD
 
         # If there is a conda environment copy the lock to this variant
         if [ -f envs/$ENV/mamba.yaml ]; then
