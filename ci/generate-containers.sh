@@ -37,15 +37,19 @@ for env in envs/*/spack.yaml; do
         # TODO: Remove disable
         if [ $ENV = "metplus-v5" ]; then continue; fi
 
+        # Copy config files to this variant
+        cp -r envs/$ENV/* artifacts/ci-$BUILD/
+        cp container/spack-env.docker artifacts/ci-$BUILD
+
         # If there is a conda environment copy the lock to this variant
         if [ -f envs/$ENV/mamba.yaml ]; then
-            mkdir -p artifacts/$BUILD
-            cp artifacts/$ENV/mamba.lock artifacts/$BUILD/mamba.lock
+            mkdir -p artifacts/ci-$BUILD
+            cp artifacts/$ENV/mamba.lock artifacts/ci-$BUILD/mamba.lock
         fi
 
         # See if this container was already built
-        if [ -d "$BRANCH_CACHE/$BUILD" ]; then
-            if diff -q "$BRANCH_CACHE/$BUILD" "artifacts/$BUILD"; then
+        if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
+            if diff -q "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
             else
                 HAS_DIFF="no"

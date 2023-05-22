@@ -7,9 +7,10 @@ ARG  CONCRETE_ENV
 # Copy environment definition
 COPY envs/$ENV/* /build/
 
-# Copy Spack lock file
+# Copy lock files
 USER root
 COPY artifacts/ci-$CONCRETE_ENV/spack.* /build/
+COPY artifacts/ci-$CONCRETE_ENV/mamba.* /build/
 RUN  chmod 755 /build/*.sh
 
 USER mamba

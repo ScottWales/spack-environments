@@ -25,7 +25,8 @@ docker build containers:
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
             --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
-            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --destination "${DEST}"
+            --tar-path "${CI_OUTDIR}/${CONCRETE_ENV}.tar"
             --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
             --build-arg "ENV=${ENV}"
             --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
@@ -49,7 +50,7 @@ apptainer build containers:
     before_script:
         - export DEST=${CONCRETE_ENV}:latest
     script:
-        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
+        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker-archive://${CI_OUTDIR}/${CONCRETE_ENV}.tar"
     parallel: *build_matrix
 
 # Copy container to Gadi
@@ -71,6 +72,6 @@ cache build:
     tags: [docker]
     script:
         - mkdir -p $BRANCH_CACHE/$CONCRETE_ENV
-        - cp artifacts/$CONCRETE_ENV/* $BRANCH_CACHE/$CONCRETE_ENV
+        - cp artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
     parallel: *build_matrix
 
