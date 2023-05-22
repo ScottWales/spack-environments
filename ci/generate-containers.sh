@@ -18,7 +18,7 @@ for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
     if [ -f envs/$ENV/mamba.yaml ]; then
         mkdir -p artifacts/$ENV
-        $MAMBA_ROOT/bin/conda-lock --mamba -f envs/$ENV/mamba.yaml --lockfile artifacts/$ENV/mamba.lock
+        $MAMBA_ROOT/bin/conda-lock --mamba -f envs/$ENV/mamba.yaml -p linux-64 --lockfile artifacts/$ENV/mamba.lock
     fi
 
     for variant in $(dirname $env)/variants/*.yaml; do
