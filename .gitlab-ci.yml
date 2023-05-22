@@ -96,6 +96,10 @@ generate containers:
         pull_policy: always
     script:
         - ./ci/generate-containers.sh
+    needs:
+        # Get the lock files for the spack environments
+        - job: generate spack packages
+          artifacts: true
     artifacts:
       paths:
         - "$CI_PROJECT_DIR/artifacts"

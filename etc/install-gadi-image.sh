@@ -11,6 +11,7 @@ REPO=${CI_PROJECT_URL:-$(git remote get-url origin)}
 SHA=$(git rev-parse HEAD)
 DATE=$(date --iso-8601=minutes)
 
+NAME="${ENV}"
 APPDIR="${PREFIX}/apps/${NAME}/${VARIANT}"
 MODULE="${PREFIX}/modules/${NAME}/${VARIANT}"
 

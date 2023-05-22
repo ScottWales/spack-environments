@@ -2,7 +2,7 @@ stages:
     - docker
     - apptainer
     - stage
-    - deploy
+    - clean
 
 # Build Docker containers
 docker build containers:
@@ -33,8 +33,6 @@ docker build containers:
             --single-snapshot
             --snapshotMode=redo
             --compressed-caching=false
-    variables:
-        CONCRETE_ENV: ${ENV}-${VARIANT}
     needs:
         - job: generate spack packages
           pipeline: "__PIPELINE_ID__"
@@ -52,10 +50,9 @@ apptainer build containers:
         - export DEST=${CONCRETE_ENV}:latest
     script:
         - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
-    variables:
-        CONCRETE_ENV: ${ENV}-${VARIANT}
     parallel: *build_matrix
 
+# Copy container to Gadi
 stage gadi:
     stage: stage
     tags: [gadi]
@@ -66,8 +63,14 @@ stage gadi:
         - etc/install-gadi-image.sh
     after_script:
         - rm image.sif
-    variables:
-        NAME: $ENV
-        CONCRETE_ENV: ${ENV}-${VARIANT}
+    parallel: *build_matrix
+
+# Cache lock files
+cache build:
+    stage: clean
+    tags: [docker]
+    script:
+        - mkdir -p $BRANCH_CACHE/$CONCRETE_ENV
+        - cp artifacts/$CONCRETE_ENV/* $BRANCH_CACHE/$CONCRETE_ENV
     parallel: *build_matrix
 

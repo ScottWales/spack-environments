@@ -5,8 +5,22 @@
 set -eu
 set -o pipefail
 
+mkdir -p artifacts
+
+# Default to master branch cache if this branch doesn't have one
+if ! [ -d "$BRANCH_CACHE" ]; then
+    BRANCH_CACHE="$BRANCH_CACHE/../master"
+fi
+echo "BRANCH_CACHE=$BRANCH_CACHE"
+
 MATRIX="["
 for env in envs/*/spack.yaml; do
+    ENV=$(basename $(dirname $env))
+    if [ -f envs/$ENV/mamba.yaml ]; then
+        mkdir -p artifacts/$ENV
+        conda-lock --mamba -f envs/$ENV/mamba.yaml --lockfile artifacts/$ENV/mamba.lock
+    fi
+
     for variant in $(dirname $env)/variants/*.yaml; do
         if [ -f $variant ]; then
             VAR=$(basename --suffix=.yaml $variant)
@@ -14,19 +28,43 @@ for env in envs/*/spack.yaml; do
             VAR=default
         fi
 
-        ENV=$(basename $(dirname $env))
         BUILD=$ENV-$VAR
         echo $BUILD
 
         # Skip 'base' environment
         if [ $ENV = "base" ]; then continue; fi
 
-        MATRIX="$MATRIX {'ENV':'$ENV', 'VARIANT':'$VAR'},"
+        # TODO: Remove disable
+        if [ $ENV = "metplus-v5" ]; then continue; fi
+
+        # See if this container was already built
+        if [ -d "$BRANCH_CACHE/$BUILD" ]; then
+            if diff -q "$BRANCH_CACHE/$BUILD/spack.lock" "artifacts/$BUILD/spack.lock"; then
+                HAS_DIFF="yes"
+            else
+                HAS_DIFF="no"
+            fi
+
+            # If there is a conda environment lock it and check for differences
+            if [ -f envs/$ENV/mamba.yaml ]; then
+                mkdir -p artifacts/$BUILD
+                cp artifacts/$ENV/mamba.lock artifacts/$BUILD/mamba.lock
+
+                if diff -q $BRANCH_CACHE/$BUILD/mamba.lock artifacts/$BUILD/mamba.lock; then
+                    HAS_DIFF="yes"
+                fi
+            fi
+        else
+            HAS_DIFF="yes"
+        fi
+
+        if [ $HAS_DIFF = "yes" ]; then
+            MATRIX="$MATRIX {'ENV':'$ENV', 'VARIANT':'$VAR', 'CONCRETE_ENV':'$BUILD'},"
+        fi
     done
 done
 MATRIX="$MATRIX ]"
 
-mkdir -p artifacts
 sed -e "s?__MATRIX__?${MATRIX}?" \
     -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
     ci/containers.yml > artifacts/containers.yml
