@@ -16,6 +16,7 @@ echo "BRANCH_CACHE=$BRANCH_CACHE"
 MATRIX="["
 for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
+    echo "ENV=$ENV"
     if [ -f envs/$ENV/mamba.yaml ]; then
         mkdir -p artifacts/$ENV
         $MAMBA_ROOT/bin/conda-lock --mamba --platform linux-64 --file envs/$ENV/mamba.yaml --lockfile artifacts/$ENV/mamba.lock
@@ -29,7 +30,7 @@ for env in envs/*/spack.yaml; do
         fi
 
         BUILD=$ENV-$VAR
-        echo $BUILD
+        echo "VAR=$VAR"
 
         # Skip 'base' environment
         if [ $ENV = "base" ]; then continue; fi

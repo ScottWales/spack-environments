@@ -95,7 +95,7 @@ generate containers:
         entrypoint: [""]
         pull_policy: always
     script:
-        - ./ci/generate-containers.sh
+        - /build/entrypoint.sh ./ci/generate-containers.sh
     needs:
         # Get the lock files for the spack environments
         - job: generate spack packages
