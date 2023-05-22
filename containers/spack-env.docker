@@ -3,8 +3,6 @@ FROM $DOCKER_REGISTRY/spack-base:latest
 
 ARG  ENV
 ARG  CONCRETE_ENV
-ARG  SPACK_COMPILER
-ARG  SPACK_MPI
 
 # Copy environment definition
 COPY envs/$ENV/* /build/

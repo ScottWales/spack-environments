@@ -1,0 +1,73 @@
+stages:
+    - docker
+    - apptainer
+    - stage
+    - deploy
+
+# Build Docker containers
+docker build containers:
+    stage: docker
+    image:
+        name: gcr.io/kaniko-project/executor:debug
+        entrypoint: [""]
+    before_script:
+        - export DEST=${CONCRETE_ENV}:latest
+    script:
+        - mkdir -p /kaniko/.docker
+        - |
+            cat > /kaniko/.docker/config.json <<EOF
+            {"auths": {
+                "$CI_DEPENDENCY_PROXY_SERVER": {
+                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
+                }
+            }}
+            EOF
+        - /kaniko/executor
+            --context "${CI_PROJECT_DIR}"
+            --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
+            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
+            --build-arg "ENV=${ENV}"
+            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
+            --use-new-run
+            --single-snapshot
+            --snapshotMode=redo
+            --compressed-caching=false
+    variables:
+        CONCRETE_ENV: ${ENV}-${VARIANT}
+    needs:
+        - job: generate spack packages
+          pipeline: "__PIPELINE_ID__"
+    parallel: &build_matrix
+        matrix: __MATRIX__
+
+# Build Apptainer containers
+apptainer build containers:
+    stage: apptainer
+    tags: [docker]
+    image:
+        name: quay.io/singularity/singularity:v3.10.2
+        entrypoint: [""]
+    before_script:
+        - export DEST=${CONCRETE_ENV}:latest
+    script:
+        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
+    variables:
+        CONCRETE_ENV: ${ENV}-${VARIANT}
+    parallel: *build_matrix
+
+stage gadi:
+    stage: stage
+    tags: [gadi]
+    before_script:
+        - export DEST=${CONCRETE_ENV}:latest
+    script:
+        - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
+        - etc/install-gadi-image.sh
+    after_script:
+        - rm image.sif
+    variables:
+        NAME: $ENV
+        CONCRETE_ENV: ${ENV}-${VARIANT}
+    parallel: *build_matrix
+
