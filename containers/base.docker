@@ -62,5 +62,13 @@ RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
 USER spack
 RUN  /build/install-spack.sh
 
+# Install intel compilers
+RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
+&&   spack install --no-check-signature intel-oneapi-compilers-classic \
+&&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux \
+&&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers-classic) \
+&&   rm -r $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux/lib/oclfpga \
+&&   spack clean
+
 ENTRYPOINT ["/build/entrypoint.sh"]
 

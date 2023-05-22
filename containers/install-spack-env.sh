@@ -15,8 +15,11 @@ spack install --use-buildcache=only --no-check-signature
 
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
+SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
+SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
+
 # Move MPI libs into a separate directory for Bind mode
-MPI_PATH=$(spack find --format="{prefix}" ${SPACK_MPI})
+MPI_PATH=$(spack find --format="{prefix}" mpi)
 HYBRID_MPI_LIB="$MPI_PATH/lib_hybrid_mpi"
 mkdir -pv "$HYBRID_MPI_LIB"
 for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do

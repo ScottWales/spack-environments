@@ -8,18 +8,15 @@ stages:
     - setup
     - base
     - generate
-    - spack-build
     - package-build
-    - docker
-    - apptainer
-    - stage
-    - deploy
+    - container-build
     - clean
 
 variables:
     DOCKER_REGISTRY: '172.17.0.2:5000'
     DOCKER_PERSIST: '/scratch/gitlab-runner/'
     CI_OUTDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}'
+    BRANCH_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_BRANCH}'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
     MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
 
@@ -27,9 +24,10 @@ setup:
     stage: setup
     tags: [docker]
     script:
-        - mkdir -p "${SPACK_CACHE}"
+        - mkdir -p "$SPACK_CACHE"
+        - mkdir -p "$BRANCH_CACHE"
         - chmod a+rwX "$SPACK_CACHE"
-        - mkdir -p $CI_OUTDIR
+        - mkdir -p "$CI_OUTDIR"
 
 # Base docker image, used for building the Spack packages
 docker build spack-base:
@@ -51,14 +49,13 @@ docker build spack-base:
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
             --dockerfile "${CI_PROJECT_DIR}/containers/base.docker"
-            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --destination "${DOCKER_REGISTRY}/spack-base:latest"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --use-new-run
+            --single-snapshot
             --snapshotMode=redo
-            #--cache=true
-    variables:
-        DEST: spack-base:latest
+            --compressed-caching=false
     only:
         changes:
             - containers/base.docker
@@ -74,7 +71,7 @@ generate spack packages:
         entrypoint: [""]
         pull_policy: always
     script:
-        - /build/entrypoint.sh ./ci/generate.sh
+        - /build/entrypoint.sh ./ci/generate-spack.sh
     artifacts:
       paths:
         - "$CI_PROJECT_DIR/artifacts"
@@ -89,73 +86,29 @@ spack build:
           job: generate spack packages
       strategy: depend
 
-# Build Docker containers
-docker build containers:
-    stage: docker
-    image: *kaniko_image
-    before_script:
-        - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
-    script:
-        - mkdir -p /kaniko/.docker
-        - |
-            cat > /kaniko/.docker/config.json <<EOF
-            {"auths": {
-                "$CI_DEPENDENCY_PROXY_SERVER": {
-                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
-                }
-            }}
-            EOF
-        - /kaniko/executor
-            --context "${CI_PROJECT_DIR}"
-            --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
-            --destination "${DOCKER_REGISTRY}/${DEST}"
-            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
-            --build-arg "SPACK_COMPILER=${SPACK_COMPILER}"
-            --build-arg "SPACK_MPI=${SPACK_MPI}"
-            --build-arg "ENV=${ENV}"
-            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
-            --use-new-run
-            --snapshotMode=redo
-            --cache=false
-    variables:
-        CONCRETE_ENV: ${ENV}-${SPACK_COMPILER}-${SPACK_MPI}
-    parallel: &build_matrix
-        matrix:
-            - ENV: ['lfric-v0']
-              SPACK_COMPILER: ['gcc@8.5.0']
-              SPACK_MPI: ['openmpi@4.1.4']
-            - ENV: ['metplus-v5']
-              SPACK_COMPILER: ['gcc@8.5.0']
-              SPACK_MPI: ['openmpi@4.1.4']
-
-# Build Apptainer containers
-apptainer build containers:
-    stage: apptainer
+# Generate build tasks for containers
+generate containers:
+    stage: generate
     tags: [docker]
-    image:
-        name: quay.io/singularity/singularity:v3.10.2
+    image: 
+        name: localhost:5000/spack-base:latest
         entrypoint: [""]
-    before_script:
-        - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
+        pull_policy: always
     script:
-        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
-    parallel: *build_matrix
+        - ./ci/generate-containers.sh
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
 
-stage gadi:
-    stage: stage
-    tags: [gadi]
-    before_script:
-        - export DEST=${ENV}-${SPACK_COMPILER%@*}-${SPACK_MPI%@*}:latest
-    script:
-        - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
-        - etc/install-gadi-image.sh
-    after_script:
-        - rm image.sif
-    variables:
-        NAME: $ENV
-        SPACK_DISABLE_LOCAL_CONFIG: "true"
-        SPACK_USER_CACHE_PATH: "$CI_PROJECT_DIR/cache"
-    parallel: *build_matrix
+# Build containers
+container build:
+    stage: container-build
+    trigger:
+      include:
+        - artifact: artifacts/containers.yml
+          job: generate containers
+      strategy: depend
 
 clean:
     stage: clean

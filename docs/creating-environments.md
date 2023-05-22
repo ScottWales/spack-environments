@@ -8,6 +8,23 @@ the following files:
 * `envs.activate.sh`: Extra environment variable settings
 * `exportcommands.sh`: Script that lists commands to make available in the
   module
+* `variants/*.yaml`: Defines container variants
+
+## Variants
+
+Variants allow the same container to be created using different compilers and
+MPI implementations. They are defined in the enviornment's `variants/`
+subdirectory as Spack configurations that get merged into the main `spack.yaml`
+file for that enviornment. For example, `lfric-v0/variants/intel-openmpi.yaml`
+defines the `intel-openmpi` variant for the `lfric-v0` container, and looks like
+```yaml
+spack:
+    packages:
+        all:
+            require: "%intel@2021.8.0"
+        mpi:
+            require: "openmpi@4.1.4"
+```
 
 ## Installing Environments on Gadi
 
