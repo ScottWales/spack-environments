@@ -16,6 +16,7 @@ class Xios(Package):
 
     version("develop", svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk")
     version("2.5.2252", revision=2252, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/trunk")
+    version("2.5.2252_lfric", revision=2252, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/trunk")
     version(
         "2.5", revision=1860, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/branches/xios-2.5"
     )
@@ -45,6 +46,9 @@ class Xios(Package):
 
     # Fix for recent gcc
     patch("gcc_remap.patch", when="@2.5:")
+
+    # Fix for lfric to avoid run time segmentation fault reported at 'CMesh::createMeshEpsilon()' due to CMesh::createHashes()
+    patch("mesh_cpp.patch", when="@:lfric")
 
     depends_on("netcdf-c+mpi")
     depends_on("netcdf-fortran")
@@ -131,8 +135,12 @@ OASIS_LIB=""
             param["LIBCXX"] = "-lstdc++"
 
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
+            if spec.satisfies("@:lfric"):
+                param.update({"MICROARCHITECTURE": " "})
+            else:
+                param.update({"MICROARCHITECTURE": "-march=broadwell -mtune=broadwell"})
             text = r"""
-%CCOMPILER      {MPICXX} -march=broadwell -mtune=broadwell
+%CCOMPILER      {MPICXX} {MICROARCHITECTURE}
 %FCOMPILER      {MPIFC}
 %LINKER         {MPIFC}
 
@@ -193,7 +201,7 @@ OASIS_LIB=""
             )
         else:
             raise InstallError("Unsupported compiler.")
-
+        
         with open(file, "w") as f:
             f.write(text)
 
