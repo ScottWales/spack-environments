@@ -19,7 +19,7 @@ for env in envs/*/spack.yaml; do
     echo "ENV=$ENV"
     if [ -f envs/$ENV/mamba.yaml ]; then
         mkdir -p artifacts/$ENV
-        $MAMBA_ROOT/bin/conda-lock --mamba --platform linux-64 --file envs/$ENV/mamba.yaml --lockfile artifacts/$ENV/mamba.lock --virtual-packages ci/virtual-packages.yml
+        $MAMBA_ROOT/bin/conda-lock --mamba --platform linux-64 --file envs/$ENV/mamba.yaml --lockfile artifacts/$ENV/mamba.lock --virtual-package-spec ci/virtual-packages.yml
     fi
 
     for variant in $(dirname $env)/variants/*.yaml; do
