@@ -2,4 +2,4 @@
 subdirs:
   linux-64:
     packages:
-      __glibc: 0
+      __glibc: 2.28
