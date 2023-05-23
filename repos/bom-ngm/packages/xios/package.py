@@ -32,6 +32,9 @@ class Xios(Package):
         default="dev",
         description="Build for debugging, development or production",
     )
+
+    variant("lfric", default=False, description="Add patch for LFRic grid coordinates")
+
     # NOTE: oasis coupler could be supported with a variant
 
     # Use spack versions of blitz and netcdf-c for compatibility
@@ -45,6 +48,9 @@ class Xios(Package):
 
     # Fix for recent gcc
     patch("gcc_remap.patch", when="@2.5:")
+
+    # Fix for lfric to avoid run time segmentation fault reported at 'CMesh::createMeshEpsilon()' due to CMesh::createHashes()
+    patch("mesh_cpp.patch", when="+lfric")
 
     depends_on("netcdf-c+mpi")
     depends_on("netcdf-fortran")
@@ -131,8 +137,12 @@ OASIS_LIB=""
             param["LIBCXX"] = "-lstdc++"
 
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
+            if "+lfric" in spec:
+                param.update({"MICROARCHITECTURE": " "})
+            else:
+                param.update({"MICROARCHITECTURE": "-march=broadwell -mtune=broadwell"})
             text = r"""
-%CCOMPILER      {MPICXX} -march=broadwell -mtune=broadwell
+%CCOMPILER      {MPICXX} {MICROARCHITECTURE}
 %FCOMPILER      {MPIFC}
 %LINKER         {MPIFC}
 
@@ -193,7 +203,7 @@ OASIS_LIB=""
             )
         else:
             raise InstallError("Unsupported compiler.")
-
+        
         with open(file, "w") as f:
             f.write(text)
 
