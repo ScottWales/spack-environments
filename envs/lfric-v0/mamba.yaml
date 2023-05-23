@@ -1,8 +1,5 @@
-channels:
-  - conda-forge
 dependencies:
   - python
-    #  - psyclone
-    #  - lfric-gpl-utils
-    #  - jinja2
-  
+  - psyclone
+  - lfric-gpl-utils
+  - jinja2
