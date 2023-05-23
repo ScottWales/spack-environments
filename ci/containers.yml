@@ -38,6 +38,8 @@ docker build containers:
     needs:
         - job: generate spack packages
           pipeline: "__PIPELINE_ID__"
+        - job: generate containers
+          pipeline: "__PIPELINE_ID__"
     parallel: &build_matrix
         matrix: __MATRIX__
 
@@ -76,6 +78,8 @@ cache build:
         - cp artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
     needs:
         - job: generate spack packages
+          pipeline: "__PIPELINE_ID__"
+        - job: generate containers
           pipeline: "__PIPELINE_ID__"
     parallel: *build_matrix
 
