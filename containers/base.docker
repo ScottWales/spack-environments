@@ -28,6 +28,7 @@ RUN  microdnf install -y --nodocs \
      shadow-utils \
      subversion \
      tar \
+     time \
      unzip \
      which \
      wget \
