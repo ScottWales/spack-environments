@@ -16,7 +16,6 @@ class Xios(Package):
 
     version("develop", svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk")
     version("2.5.2252", revision=2252, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/trunk")
-    version("2.5.2252_lfric", revision=2252, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/trunk")
     version(
         "2.5", revision=1860, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/branches/xios-2.5"
     )
@@ -33,6 +32,9 @@ class Xios(Package):
         default="dev",
         description="Build for debugging, development or production",
     )
+
+    variant("lfric", default=False, description="Add patch for LFRic grid coordinates")
+
     # NOTE: oasis coupler could be supported with a variant
 
     # Use spack versions of blitz and netcdf-c for compatibility
@@ -48,7 +50,7 @@ class Xios(Package):
     patch("gcc_remap.patch", when="@2.5:")
 
     # Fix for lfric to avoid run time segmentation fault reported at 'CMesh::createMeshEpsilon()' due to CMesh::createHashes()
-    patch("mesh_cpp.patch", when="@:lfric")
+    patch("mesh_cpp.patch", when="+lfric")
 
     depends_on("netcdf-c+mpi")
     depends_on("netcdf-fortran")
@@ -135,7 +137,7 @@ OASIS_LIB=""
             param["LIBCXX"] = "-lstdc++"
 
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
-            if spec.satisfies("@:lfric"):
+            if "+lfric" in spec:
                 param.update({"MICROARCHITECTURE": " "})
             else:
                 param.update({"MICROARCHITECTURE": "-march=broadwell -mtune=broadwell"})
