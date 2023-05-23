@@ -74,5 +74,8 @@ cache build:
     script:
         - mkdir -p $BRANCH_CACHE/$CONCRETE_ENV
         - cp artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
+    needs:
+        - job: generate spack packages
+          pipeline: "__PIPELINE_ID__"
     parallel: *build_matrix
 
