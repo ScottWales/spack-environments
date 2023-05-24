@@ -19,7 +19,7 @@ SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
 SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 
 # Move MPI libs into a separate directory for Bind mode
-MPI_PATH=/opt/containermpi
+MPI_PATH=$SPACK_ROOT/containermpi
 mkdir -pv "$MPI_PATH/lib_hybrid_mpi"
 for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
     mv -v $MPI_PATH/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
@@ -28,8 +28,9 @@ done
 
 # Link host's mpirun and mpiexec so they can be put onto PATH
 BIND_MPI_PATH=/host/$SPACK_MPI
-mkdir -pv "$MPI_PATH/bin_hybrid_mpi"
-ln -s $BIND_MPI_PATH/bin/mpi{run,exec} "$MPI_PATH/bin_hybrid_mpi"
+mkdir -pv "$MPI_PATH/bin"
+ln -s $BIND_MPI_PATH/bin/mpi{run,exec} "$MPI_PATH/bin"
+ln -s $BIND_MPI_PATH/lib "$MPI_PATH/lib"
 
 cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
@@ -79,7 +80,7 @@ export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
 # Add environment to paths
-export PATH=$MPI_PATH/bin_hybrid_mpi:\$SPACK_ENV_VIEW/bin:\$PATH
+export PATH=$MPI_PATH/bin:\$SPACK_ENV_VIEW/bin:\$PATH
 export CPATH=\$SPACK_ENV_VIEW/include:\$SPACK_ENV_VIEW/lib:\$CPATH
 
 LIB_PREPEND=\$SPACK_ENV_VIEW/lib:\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
