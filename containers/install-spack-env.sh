@@ -22,7 +22,7 @@ SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 MPI_PATH=$SPACK_ROOT/containermpi
 mkdir -pv "$MPI_PATH/lib_hybrid_mpi"
 for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
-    mv -v $MPI_PATH/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
+    mv -v $(spack find --format="{prefix}" mpi)/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
     rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
@@ -30,7 +30,7 @@ done
 BIND_MPI_PATH=/host/$SPACK_MPI
 mkdir -pv "$MPI_PATH/bin"
 ln -s $BIND_MPI_PATH/bin/mpi{run,exec} "$MPI_PATH/bin"
-ln -s $BIND_MPI_PATH/lib "$MPI_PATH/lib"
+ln -s $BIND_MPI_PATH/lib "$MPI_PATH/lib_bind_mpi"
 
 cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
