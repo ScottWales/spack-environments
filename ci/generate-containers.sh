@@ -21,6 +21,9 @@ for env in envs/*/spack.yaml; do
         # Skip 'base' environment
         if [ $ENV = "base" ]; then continue; fi
 
+        # Skip metplus for the moment
+        if [ $ENV = "metplus-v5" ]; then continue; fi
+
         MATRIX="$MATRIX {'ENV':'$ENV', 'VARIANT':'$VAR'},"
     done
 done
