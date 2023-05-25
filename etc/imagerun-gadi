@@ -6,23 +6,49 @@ set -eu
 set -o pipefail
 
 # Runs a command inside a singularity image
+
 SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
+CONTAINER=$SCRIPT_DIR/image.sif
+
+# Are we already in a container?
+if [ -d /.singularity.d ]; then
+
+    # Are we in the correct container?
+    if [ "$SINGULARITY_CONTAINER" != "$CONTAINER" ]; then
+        echo "Already inside container '$SINGULARITY_CONTAINER'"
+        echo "Cannot start container '$CONTAINER'"
+        exit 1
+    fi
+
+    # Already in the right container, just exec
+    exec "$@"
+    return "$?"
+fi
 
 module load singularity
+
+# Any extra directories to mount in the container beyond the site defaults
+BIND=""
 
 # Append the current PATH
 export SINGULARITYENV_APPEND_PATH=${PATH}
 
 # Fall back to gadi's libraries for things not installed in the container
+BIND="$BIND --bind /half-root:/gadi"
 export SINGULARITYENV_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/lib64:/lib:/opt/nci/pbs/default/lib:/gadi/lib64:/gadi/lib
 
 # FCM keywords file with local mirrors
 export SINGULARITYENV_FCM_KEYWORDS=/g/data/access/apps/fcm/2019.09.0/etc/fcm/keyword.cfg
 
-export BIND="--bind /half-root:/gadi --bind /apps/openmpi/4.1.4:/host/openmpi@4.1.4"
+# Make mpirun work inside the container
+export SINGULARITYENV_HOST_MPI=$OPENMPI_ROOT
+BIND="$BIND --bind /sys/fs/cgroup"
+if [ -d /local/spool ]; then
+    BIND="$BIND --bind /local/spool"
+fi
 
 if [ $1 == "shell" ]; then
-    singularity shell $BIND $SCRIPT_DIR/image.sif
+    singularity shell $BIND "$CONTAINER"
 else
-    singularity run $BIND $SCRIPT_DIR/image.sif "$@"
+    singularity run $BIND "$CONTAINER" "$@"
 fi

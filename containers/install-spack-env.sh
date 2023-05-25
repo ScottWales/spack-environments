@@ -26,17 +26,21 @@ for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
     rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
-# Link host's mpirun and mpiexec so they can be put onto PATH
-BIND_MPI_PATH=/host/$SPACK_MPI
-mkdir -pv "$MPI_PATH/bin"
-ln -s $BIND_MPI_PATH/bin/mpi{run,exec} "$MPI_PATH/bin"
-ln -s $BIND_MPI_PATH/lib "$MPI_PATH/lib_bind_mpi"
-
+# Create activate script
 cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
+
+# Compiler used by Spack
 export SPACK_COMPILER=$SPACK_COMPILER
+
+# MPI used by Spack
 export SPACK_MPI=$SPACK_MPI
+
+# Path to the Spack environment's view
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
+
+# Container MPI library path
+HYBRID_MPI_LIB=$MPI_PATH/lib_hybrid_mpi
 
 # Activate Spack
 source /opt/spack/share/spack/setup-env.sh
@@ -61,18 +65,14 @@ case \${SPACK_COMPILER} in
         ;;
 esac
 
-# Path to mount host MPI
-export BIND_MPI_PATH=$BIND_MPI_PATH
-
-# Host MPI library path
-if [ -z "\${MPI_HYBRID_MODE_ONLY:-}" ]; then
-    BIND_MPI_LIB=\$BIND_MPI_PATH/lib
-else
-    BIND_MPI_LIB=""
+# Connect to host mpi
+if [ -n "\$HOST_MPI" ]; then
+    if [ -z "\${MPI_HYBRID_MODE_ONLY:-}" ]; then
+        BIND_MPI_LIB=\$HOST_MPI/lib
+    else
+        BIND_MPI_LIB=""
+    fi
 fi
-
-# Container MPI library path
-HYBRID_MPI_LIB=$MPI_PATH/lib_hybrid_mpi
 
 # Make sure container compilers are used in bind mode
 export OMPI_FC=\$FC
@@ -80,7 +80,7 @@ export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
 # Add environment to paths
-export PATH=$MPI_PATH/bin:\$SPACK_ENV_VIEW/bin:\$PATH
+export PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 export CPATH=\$SPACK_ENV_VIEW/include:\$SPACK_ENV_VIEW/lib:\$CPATH
 
 LIB_PREPEND=\$SPACK_ENV_VIEW/lib:\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
