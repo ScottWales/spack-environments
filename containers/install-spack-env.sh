@@ -26,6 +26,22 @@ for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
     rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
+# Wrapper to use the host MPIRUN
+mkdir "$MPI_PATH/bin"
+cat > "$MPI_PATH/bin/mpirun" << EOF
+#!/bin/bash
+
+if [ -n "\$HOST_MPI" ]; then
+    # Use the host's mpirun
+    "\$HOST_MPI/bin/mpirun" "\$@"
+else
+    # Use the container's mpirun
+    "$(spack find --format="{prefix}" mpi)/bin/mpirun" "\$@"
+fi
+EOF
+chmod +x "$MPI_PATH/bin/mpirun"
+ln -s "$MPI_PATH/bin/mpirun" "$MPI_PATH/bin/mpiexec"
+
 # Create activate script
 cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
@@ -80,7 +96,7 @@ export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
 # Add environment to paths
-export PATH=\$SPACK_ENV_VIEW/bin:\$PATH
+export PATH=$MPI_PATH/bin:\$SPACK_ENV_VIEW/bin:\$PATH
 export CPATH=\$SPACK_ENV_VIEW/include:\$SPACK_ENV_VIEW/lib:\$CPATH
 
 LIB_PREPEND=\$SPACK_ENV_VIEW/lib:\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
