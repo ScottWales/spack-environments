@@ -16,6 +16,7 @@ spack repo add --scope site $SPACK_ROOT/var/spack/repos/bom-ngm
 # Update Spack with system packages
 spack compiler find --scope site /usr
 spack external find --scope site --all --path /usr --not-buildable
+spack external find --scope site --all --path /opt/rh/gcc-toolset-12/root/usr --not-buildable
 
 spack config --scope site add packages:gcc:buildable:true
 

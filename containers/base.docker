@@ -14,9 +14,9 @@ RUN  microdnf install -y --nodocs \
      bzip2 \
      cmake \
      curl-devel \
-     gcc \
-     gcc-c++ \
-     gcc-gfortran \
+     gcc-toolset-12-gcc \
+     gcc-toolset-12-gcc-c++ \
+     gcc-toolset-12-gcc-gfortran \
      git \
      gzip \
      libtool \
