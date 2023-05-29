@@ -14,6 +14,9 @@ modules:
         tcl:
             all:
                 autoload: direct
+            python:
+                filter:
+                    exclude_env_vars: ['CPATH','LIBRARY_PATH','LD_LIBRARY_PATH','PKG_CONFIG_PATH','CMAKE_PREFIX_PATH','MANPATH']
             openmpi%intel:
                 environment:
                     prepend_path:
