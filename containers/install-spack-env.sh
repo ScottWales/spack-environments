@@ -58,9 +58,6 @@ export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 # Container MPI library path
 HYBRID_MPI_LIB=$MPI_PATH/lib_hybrid_mpi
 
-# Activate Spack
-source /opt/spack/share/spack/setup-env.sh
-
 # Intel compiler spack packages have different names
 case \${SPACK_COMPILER} in
     oneapi@*)
@@ -96,7 +93,7 @@ export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
 # Add environment to paths
-export PATH=$MPI_PATH/bin:\$SPACK_ENV_VIEW/bin:\$PATH
+export PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 export CPATH=\$SPACK_ENV_VIEW/include:\$SPACK_ENV_VIEW/lib:\$CPATH
 
 LIB_PREPEND=\$SPACK_ENV_VIEW/lib:\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
