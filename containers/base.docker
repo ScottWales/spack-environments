@@ -36,6 +36,8 @@ RUN  microdnf install -y --nodocs \
      zstd \
 &&   microdnf clean all
 
+RUN microdnf uninstall gcc
+
 # Install container setup scripts
 COPY containers/*.sh /build/
 RUN  chmod 755 /build/*.sh
