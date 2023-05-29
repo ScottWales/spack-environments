@@ -36,8 +36,6 @@ RUN  microdnf install -y --nodocs \
      zstd \
 &&   microdnf clean all
 
-RUN microdnf remove gcc
-
 # Install container setup scripts
 COPY containers/*.sh /build/
 RUN  chmod 755 /build/*.sh
@@ -67,7 +65,7 @@ RUN  /build/install-spack.sh
 
 # Install intel compilers
 RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
-&&   spack install --no-check-signature intel-oneapi-compilers-classic%gcc@12.2.1 \
+&&   spack install --no-check-signature intel-oneapi-compilers-classic%gcc@12 \
 &&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux \
 &&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers-classic) \
 &&   rm -r $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux/lib/oclfpga \
