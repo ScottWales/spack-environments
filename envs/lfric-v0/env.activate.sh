@@ -9,4 +9,4 @@ export LDMPI=mpifort
 export FPP="cpp -traditional"
 export FFLAGS="${FFLAGS:-} -I$SPACK_ENV_VIEW/include -I$SPACK_ENV_VIEW/lib"
 export PFUNIT=$SPACK_ENV_VIEW
-
+export PSYCLONE_CONFIG=${PSYCLONE_CONFIG:-/build/psyclone.cfg}

@@ -94,16 +94,22 @@ export OMPI_CXX=\$CXX
 
 # Add environment to paths
 export PATH=\$SPACK_ENV_VIEW/bin:\$PATH
+
+CPATH=\${CPATH:-}:/include
+LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
+LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
 EOF
 
 for prefix in $(spack find --format '{prefix}'); do
+    if ! [[ "$prefix" =~ ^$SPACK_ROOT ]]; then
+        continue
+    fi
     if [ -d "$prefix/include" ]; then
         echo "CPATH=$prefix/include:\$CPATH" >> $SPACK_ROOT/bin/activate.sh
     fi
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate.sh
-        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate.sh
     fi
 done
 
@@ -113,7 +119,6 @@ MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
 CPATH=$(spack find --format="{prefix}" mpi)/lib:\$CPATH
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
-LD_RUN_PATH=\$MPI_LIB_PREPEND:\$LD_RUN_PATH
 
 export CPATH LIBRARY_PATH LD_LIBRARY_PATH LD_RUN_PATH
 EOF
