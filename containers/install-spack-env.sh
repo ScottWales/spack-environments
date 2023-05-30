@@ -78,22 +78,13 @@ case \${SPACK_COMPILER} in
         ;;
 esac
 
-# Connect to host mpi
-if [ -n "\$HOST_MPI" ]; then
-    if [ -z "\${MPI_HYBRID_MODE_ONLY:-}" ]; then
-        BIND_MPI_LIB=\$HOST_MPI/lib
-    else
-        BIND_MPI_LIB=""
-    fi
-fi
-
 # Make sure container compilers are used in bind mode
 export OMPI_FC=\$FC
 export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
 # Add environment to paths
-export PATH=\$SPACK_ENV_VIEW/bin:\$PATH
+PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 
 CPATH=\${CPATH:-}:/include
 LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
@@ -114,13 +105,23 @@ for prefix in $(spack find --format '{prefix}'); do
 done
 
 cat >> $SPACK_ROOT/bin/activate.sh << EOF
+# Connect to host mpi
+if [ -n "\$HOST_MPI" ]; then
+    if [ -z "\${MPI_HYBRID_MODE_ONLY:-}" ]; then
+        BIND_MPI_LIB=\$HOST_MPI/lib
+    else
+        BIND_MPI_LIB=""
+    fi
+fi
+
 # Add MPI to path & export
+PATH=$MPI_PATH/bin:$PATH
 MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
 CPATH=$(spack find --format="{prefix}" mpi)/lib:\$CPATH
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 
-export CPATH LIBRARY_PATH LD_LIBRARY_PATH LD_RUN_PATH
+export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
 EOF
 
 
