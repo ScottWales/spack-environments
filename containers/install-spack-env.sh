@@ -124,4 +124,7 @@ LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
 EOF
 
-
+# Run any post-install scripts
+if [ -f /build/post-install.sh ]; then
+    /build/post-install.sh
+fi
