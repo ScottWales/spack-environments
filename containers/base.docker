@@ -24,6 +24,7 @@ RUN  microdnf install -y --nodocs \
      patch \
      perl \
      perl-ExtUtils-MakeMaker \
+     perl-XML-Parser \
      python3-devel \
      shadow-utils \
      subversion \
