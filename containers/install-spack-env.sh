@@ -115,7 +115,7 @@ if [ -n "\$HOST_MPI" ]; then
 fi
 
 # Add MPI to path & export
-PATH=$MPI_PATH/bin:$PATH
+PATH=$MPI_PATH/bin:\$PATH
 MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
 CPATH=$(spack find --format="{prefix}" mpi)/lib:\$CPATH
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
