@@ -41,7 +41,7 @@ export SINGULARITYENV_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/lib64:/lib:/opt/nci/
 export SINGULARITYENV_FCM_KEYWORDS=/g/data/access/apps/fcm/2019.09.0/etc/fcm/keyword.cfg
 
 # Make mpirun work inside the container
-export SINGULARITYENV_HOST_MPI=$OPENMPI_ROOT
+export SINGULARITYENV_HOST_MPI=${OPENMPI_ROOT:-/apps/openmpi/4.1.4}
 BIND="$BIND --bind /sys/fs/cgroup"
 if [ -d /local/spool ]; then
     BIND="$BIND --bind /local/spool"
