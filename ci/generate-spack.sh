@@ -24,9 +24,6 @@ for env in envs/*/spack.yaml; do
         BUILD=$ENV-$VAR
         echo $BUILD
 
-        # Skip metplus for the moment
-        if [ $ENV = "metplus-v5" ]; then continue; fi
-
         # Setup the build directory
         mkdir -p build/ci-$BUILD/
         cp $env build/ci-$BUILD/
