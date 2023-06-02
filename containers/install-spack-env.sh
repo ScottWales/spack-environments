@@ -26,21 +26,22 @@ for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
     rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
-# Wrapper to use the host MPIRUN
+# Wrapper to use the host MPIRUN etc
 mkdir "$MPI_PATH/bin"
-cat > "$MPI_PATH/bin/mpirun" << EOF
+for cmd in mpirun mpiexec orted; do
+cat > "$MPI_PATH/bin/$cmd" << EOF
 #!/bin/bash
 
 if [ -n "\$HOST_MPI" ]; then
-    # Use the host's mpirun
-    "\$HOST_MPI/bin/mpirun" "\$@"
+    # Use the host's $cmd
+    "\$HOST_MPI/bin/$cmd" "\$@"
 else
-    # Use the container's mpirun
-    "$(spack find --format="{prefix}" mpi)/bin/mpirun" "\$@"
+    # Use the container's $cmd
+    "$(spack find --format="{prefix}" mpi)/bin/$cmd" "\$@"
 fi
 EOF
-chmod +x "$MPI_PATH/bin/mpirun"
-ln -s "$MPI_PATH/bin/mpirun" "$MPI_PATH/bin/mpiexec"
+chmod +x "$MPI_PATH/bin/$cmd"
+done
 
 # Create activate script
 cat > $SPACK_ROOT/bin/activate.sh << EOF
@@ -107,7 +108,7 @@ done
 cat >> $SPACK_ROOT/bin/activate.sh << EOF
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
-    if [ -z "\${MPI_HYBRID_MODE_ONLY:-}" ]; then
+    if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then
         BIND_MPI_LIB=\$HOST_MPI/lib
     else
         BIND_MPI_LIB=""

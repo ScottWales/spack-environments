@@ -27,5 +27,6 @@ setenv ${name_upcase}_ROOT "$appdir"
 setenv ${name_upcase}_VERSION "$version"
 
 setenv IMAGERUN "$appdir/bin/imagerun"
+setenv OMPI_MCA_orte_launch_agent "$appdir/bin/orted"
 
 prepend-path PATH "$appdir/bin"
