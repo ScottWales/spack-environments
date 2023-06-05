@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# This script gets run *outside* the container
+# It will find the real rose, and run its command inside the container
+
+function find_wrapped_cmd() {
+    CMD="$1"
+
+    hash "$CMD"
+    ORIGINAL=$(hash -t "$CMD")
+
+    PATH=$(echo ":$PATH:" | sed -e "s#:$(dirname "$ORIGINAL"):#:#g" -e "s#^:\(.*\):\$#\1#")
+
+    hash "$CMD"
+    WRAPPED=$(hash -t "$CMD")
+
+    echo "$WRAPPED"
+}
+
+REAL=$(find_wrapped_cmd rose)
+
+# Give the full path to the host mpirun to 'rose mpi-launch' - otherwise remote nodes will fail
+export ROSE_LAUNCHER=$(type -P ${ROSE_LAUNCHER:-mpirun})
+
+imagerun $REAL "$@"

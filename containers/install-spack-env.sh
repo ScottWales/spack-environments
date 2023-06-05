@@ -19,22 +19,45 @@ SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
 SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 
 # Move MPI libs into a separate directory for Bind mode
-MPI_PATH=$(spack find --format="{prefix}" mpi)
-HYBRID_MPI_LIB="$MPI_PATH/lib_hybrid_mpi"
-mkdir -pv "$HYBRID_MPI_LIB"
+MPI_PATH=$SPACK_ROOT/containermpi
+mkdir -pv "$MPI_PATH/lib_hybrid_mpi"
 for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
-    mv -v $MPI_PATH/lib/${mpilib}* $HYBRID_MPI_LIB
+    mv -v $(spack find --format="{prefix}" mpi)/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
     rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
 done
 
+# Wrapper to use the host MPIRUN etc
+mkdir "$MPI_PATH/bin"
+for cmd in mpirun mpiexec orted; do
+cat > "$MPI_PATH/bin/$cmd" << EOF
+#!/bin/bash
+
+if [ -n "\$HOST_MPI" ]; then
+    # Use the host's $cmd
+    "\$HOST_MPI/bin/$cmd" "\$@"
+else
+    # Use the container's $cmd
+    "$(spack find --format="{prefix}" mpi)/bin/$cmd" "\$@"
+fi
+EOF
+chmod +x "$MPI_PATH/bin/$cmd"
+done
+
+# Create activate script
 cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
+
+# Compiler used by Spack
 export SPACK_COMPILER=$SPACK_COMPILER
+
+# MPI used by Spack
 export SPACK_MPI=$SPACK_MPI
+
+# Path to the Spack environment's view
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
-# Activate Spack
-source /opt/spack/share/spack/setup-env.sh
+# Container MPI library path
+HYBRID_MPI_LIB=$MPI_PATH/lib_hybrid_mpi
 
 # Intel compiler spack packages have different names
 case \${SPACK_COMPILER} in
@@ -56,33 +79,53 @@ case \${SPACK_COMPILER} in
         ;;
 esac
 
-# Path to mount host MPI
-export BIND_MPI_PATH=/host/$SPACK_MPI
-
-# Host MPI library path
-if [ -z "\${MPI_HYBRID_MODE_ONLY:-}" ]; then
-    BIND_MPI_LIB=\$BIND_MPI_PATH/lib
-else
-    BIND_MPI_LIB=""
-fi
-
-# Container MPI library path
-HYBRID_MPI_LIB=$HYBRID_MPI_LIB
-
 # Make sure container compilers are used in bind mode
 export OMPI_FC=\$FC
 export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
 # Add environment to paths
-export PATH=\$SPACK_ENV_VIEW/bin:\$PATH
-export CPATH=\$SPACK_ENV_VIEW/include:\$SPACK_ENV_VIEW/lib:\$CPATH
+PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 
-LIB_PREPEND=\$SPACK_ENV_VIEW/lib:\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
-
-export LIBRARY_PATH=\$LIB_PREPEND:\$LIBRARY_PATH
-export LD_LIBRARY_PATH=\$LIB_PREPEND:\$LD_LIBRARY_PATH
-export LD_RUN_PATH=\$LIB_PREPEND:\$LD_RUN_PATH
+CPATH=\${CPATH:-}:/include
+LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
+LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
 EOF
 
+for prefix in $(spack find --format '{prefix}'); do
+    if ! [[ "$prefix" =~ ^$SPACK_ROOT ]]; then
+        continue
+    fi
+    if [ -d "$prefix/include" ]; then
+        echo "CPATH=$prefix/include:\$CPATH" >> $SPACK_ROOT/bin/activate.sh
+    fi
+    if [ -d "$prefix/lib" ]; then
+        echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate.sh
+        echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate.sh
+    fi
+done
 
+cat >> $SPACK_ROOT/bin/activate.sh << EOF
+# Connect to host mpi
+if [ -n "\$HOST_MPI" ]; then
+    if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then
+        BIND_MPI_LIB=\$HOST_MPI/lib
+    else
+        BIND_MPI_LIB=""
+    fi
+fi
+
+# Add MPI to path & export
+PATH=$MPI_PATH/bin:\$PATH
+MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
+CPATH=$(spack find --format="{prefix}" mpi)/lib:\$CPATH
+LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
+LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
+
+export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
+EOF
+
+# Run any post-install scripts
+if [ -f /build/post-install.sh ]; then
+    /build/post-install.sh
+fi

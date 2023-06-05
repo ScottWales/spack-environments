@@ -16,18 +16,22 @@ spack repo add --scope site $SPACK_ROOT/var/spack/repos/bom-ngm
 # Update Spack with system packages
 spack compiler find --scope site /usr
 spack external find --scope site --all --path /usr --not-buildable
-spack external find --scope site --all --path $MAMBA_ROOT/envs/container --not-buildable
 
 spack config --scope site add packages:gcc:buildable:true
 
 function mamba_vn () {
     source $MAMBA_ROOT/etc/profile.d/conda.sh
     source $MAMBA_ROOT/etc/profile.d/mamba.sh
-    mamba list $1 --json | sed -n 's/.*"version": "\([^"]\+\)".*/\1/p'
+    mamba list "^$1\$" --json | sed -n 's/.*"version": "\([^"]\+\)".*/\1/p'
 }
 
 cat > /tmp/packages.yaml << EOF
 packages:
+  python:
+    externals:
+    - spec: 'python@$(mamba_vn python)'
+      prefix: $MAMBA_ROOT/envs/container
+    buildable: False
   py-pip:
     externals:
     - spec: 'py-pip@$(mamba_vn pip)'

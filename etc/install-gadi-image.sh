@@ -28,6 +28,7 @@ cp etc/imagerun-* $APPDIR/etc
 mkdir -p $APPDIR/bin
 rm -f $APPDIR/bin/*
 cp etc/run-image-command.sh $APPDIR/bin
+cp etc/rose $APPDIR/bin
 ln -s ../etc/imagerun-gadi $APPDIR/bin/imagerun
 
 COMMANDS=""
@@ -36,7 +37,7 @@ COMMANDS=""
 # COMMANDS=$(/opt/singularity/bin/singularity exec $APPDIR/etc/image.sif ls /opt/conda/bin)
 # or limited commands
 # COMMANDS="cylc rose rosa rosie"
-COMMANDS="$($APPDIR/bin/imagerun "/build/exportcommands.sh" || true)"
+COMMANDS="$($APPDIR/bin/imagerun "/build/exportcommands.sh" || true) orted"
 echo "COMMANDS=$COMMANDS"
 
 for f in $COMMANDS; do
