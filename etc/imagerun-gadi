@@ -63,6 +63,6 @@ else
     singularity run $BIND "$CONTAINER" "$@"
 fi
 
-if [ -n "$NGMENV_DEBUG" ]; then
+if [ -n "${NGMENV_DEBUG:-}" ]; then
     echo EXITING "$CONTAINER"
 fi
