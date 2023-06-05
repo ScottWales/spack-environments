@@ -26,10 +26,9 @@ class Yaxt(AutotoolsPackage):
         env.set('CFLAGS', '-g')
         env.set('FCFLAGS', '-g')
 
-        # Allow mpirun to work in the build environment
-        env.set('OMPI_ALLOW_RUN_AS_ROOT', '1')
-        env.set('OMPI_ALLOW_RUN_AS_ROOT_CONFIRM', '1')
-
+        if 'intel-oneapi-mpi' in self.spec:
+            env.prepend_path('PATH', self.spec['intel-oneapi-mpi'].package.component_prefix.bin)
+            env.unset('I_MPI_ROOT')
 
     def configure_args(self):
         options = []
