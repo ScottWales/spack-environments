@@ -75,7 +75,7 @@ cache build:
     tags: [docker]
     script:
         - mkdir -p $BRANCH_CACHE/ci-$CONCRETE_ENV
-        - cp artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
+        - cp -r artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
     needs:
         - job: generate spack environments
           pipeline: "__PIPELINE_ID__"
