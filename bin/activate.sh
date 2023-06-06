@@ -2,14 +2,15 @@
 #  Copyright 2023 Bureau of Meteorology
 #  Author Scott Wales
 
-INSTALL_ROOT=$PWD
+SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
 
 # Install an environment at NCI
 ENV=$1
 ENVPATH=/scratch/$PROJECT/$USER/ngm/envs/$ENV
 
 # Activate spack
-export SPACK_SYSTEM_CONFIG_PATH=$INSTALL_ROOT/config/gadi
+export SPACK_SYSTEM_CONFIG_PATH=$SCRIPT_DIR/../config/gadi
+
 #source /g/data/access/spack/0.19.0/share/spack/setup-env.sh
 source /home/562/saw562/projects/spack-pipeline/spack/share/spack/setup-env.sh
 

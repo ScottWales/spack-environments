@@ -23,6 +23,9 @@ class Yaxt(AutotoolsPackage):
         env.set('F77', self.spec['mpi'].mpif77)
         env.set('FC', self.spec['mpi'].mpifc)
 
+        env.set('CFLAGS', '-g')
+        env.set('FCFLAGS', '-g')
+
         # Allow mpirun to work in the build environment
         env.set('OMPI_ALLOW_RUN_AS_ROOT', '1')
         env.set('OMPI_ALLOW_RUN_AS_ROOT_CONFIRM', '1')

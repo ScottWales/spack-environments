@@ -1,11 +1,11 @@
 #!/bin/bash
 
-if [ -z "${SPACK_DONT_ISOLATE:-}" ]; then
+if [ -z "${NGMENV_SPACK_DONT_ISOLATE:-}" ]; then
     # Don't consider the user's ~/.spack directory
     export SPACK_DISABLE_LOCAL_CONFIG=1
 fi
 
-if [ -z "${PYTHON_DONT_ISOLATE:-}" ]; then
+if [ -z "${NGMENV_PYTHON_DONT_ISOLATE:-}" ]; then
     # Don't consider the user's ~/.local directory
     export PYTHONNOUSERSITE=1
     export PYTHONPATH=""
@@ -31,4 +31,13 @@ if [ -f /build/env.activate.sh ]; then
     source /build/env.activate.sh
 fi
 
-eval "$@"
+# Allow things like '()' in arguments
+function token_quote {
+  local quoted=()
+  for token; do
+    quoted+=( "$(printf '%q' "$token")" )
+  done
+  printf '%s\n' "${quoted[*]}"
+}
+
+eval $(token_quote "$@")
