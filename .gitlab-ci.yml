@@ -62,16 +62,31 @@ docker build spack-base:
             - containers/*.sh
             - repos/**/*
 
-# Generate build tasks for Spack packages
-generate spack packages:
+# Generate lock files for Spack packages
+generate spack environments:
     stage: generate
     tags: [docker]
-    image: 
+    image:
         name: localhost:5000/spack-base:latest
         entrypoint: [""]
         pull_policy: always
     script:
         - /build/entrypoint.sh ./ci/generate-spack.sh
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
+
+# Generate lock files for Spack packages
+generate mamba environments:
+    stage: generate
+    tags: [docker]
+    image:
+        name: localhost:5000/spack-base:latest
+        entrypoint: [""]
+        pull_policy: always
+    script:
+        - /build/entrypoint.sh ./ci/generate-mamba.sh
     artifacts:
       paths:
         - "$CI_PROJECT_DIR/artifacts"
@@ -83,7 +98,7 @@ spack build:
     trigger:
       include:
         - artifact: artifacts/pipeline.yml
-          job: generate spack packages
+          job: generate spack environments
       strategy: depend
 
 # Generate build tasks for containers
@@ -97,8 +112,10 @@ generate containers:
     script:
         - /build/entrypoint.sh ./ci/generate-containers.sh
     needs:
-        # Get the lock files for the spack environments
-        - job: generate spack packages
+        # Get the lock files for the environments
+        - job: generate spack environments
+          artifacts: true
+        - job: generate mamba environments
           artifacts: true
     artifacts:
       paths:
