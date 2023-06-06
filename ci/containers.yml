@@ -74,12 +74,13 @@ cache build:
     stage: clean
     tags: [docker]
     script:
-        - mkdir -p $BRANCH_CACHE/$CONCRETE_ENV
+        - mkdir -p $BRANCH_CACHE/ci-$CONCRETE_ENV
         - cp artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
     needs:
         - job: generate spack environments
           pipeline: "__PIPELINE_ID__"
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
+        - job: apptainer build containers
     parallel: *build_matrix
 
