@@ -7,6 +7,6 @@ set -o pipefail
 
 if [ -f /build/mamba.lock ]; then
     $MAMBA_ROOT/bin/mamba env remove -n container
-    $MAMBA_ROOT/bin/conda-lock install -n container /build/mamba.lock 
+    $MAMBA_ROOT/bin/conda-lock install --platform linux-64 -n container /build/mamba.lock 
     $MAMBA_ROOT/bin/mamba clean --all
 fi
