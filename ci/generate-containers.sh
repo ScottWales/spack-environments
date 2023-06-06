@@ -65,3 +65,15 @@ MATRIX="$MATRIX ]"
 sed -e "s?__MATRIX__?${MATRIX}?" \
     -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
     ci/containers.yml > artifacts/containers.yml
+
+if [ "$MATRIX" = "[ ]" ]; then
+# Nothing to build
+cat > artifacts/containers.yml << EOF
+stages:
+ - noop
+nothing to build:
+  stage: noop
+  tags: [docker]
+  script: true
+EOF
+fi
