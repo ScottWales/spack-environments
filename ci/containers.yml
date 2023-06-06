@@ -56,18 +56,18 @@ apptainer build containers:
         - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker-archive://${CI_OUTDIR}/${CONCRETE_ENV}.tar"
     parallel: *build_matrix
 
-# Copy container to Gadi
-stage gadi:
-    stage: stage
-    tags: [gadi]
-    before_script:
-        - export DEST=${CONCRETE_ENV}:latest
-    script:
-        - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
-        - etc/install-gadi-image.sh
-    after_script:
-        - rm image.sif
-    parallel: *build_matrix
+    # # Copy container to Gadi
+    # stage gadi:
+    #     stage: stage
+    #     tags: [gadi]
+    #     before_script:
+    #         - export DEST=${CONCRETE_ENV}:latest
+    #     script:
+    #         - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
+    #         - etc/install-gadi-image.sh
+    #     after_script:
+    #         - rm image.sif
+    #     parallel: *build_matrix
 
 # Cache lock files
 cache build:
