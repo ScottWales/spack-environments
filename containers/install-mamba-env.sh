@@ -7,6 +7,10 @@ set -o pipefail
 
 if [ -f /build/mamba.lock ]; then
     $MAMBA_ROOT/bin/mamba env remove -n container
-    $MAMBA_ROOT/bin/conda-lock install --no-validate-platform -n container /build/mamba.lock 
+
+    # Needs a specific file name for conda-lock
+    ln -s /build/mamba.lock $MAMBA_ROOT/conda-lock.yml
+    $MAMBA_ROOT/bin/conda-lock install -n container $MAMBA_ROOT/conda-lock.yml
+
     $MAMBA_ROOT/bin/mamba clean --all
 fi
