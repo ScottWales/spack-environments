@@ -36,7 +36,7 @@ docker build containers:
             --compressed-caching=false
             --no-push
     needs:
-        - job: generate spack packages
+        - job: generate spack environments
           pipeline: "__PIPELINE_ID__"
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
@@ -77,7 +77,7 @@ cache build:
         - mkdir -p $BRANCH_CACHE/$CONCRETE_ENV
         - cp artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
     needs:
-        - job: generate spack packages
+        - job: generate spack environments
           pipeline: "__PIPELINE_ID__"
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
