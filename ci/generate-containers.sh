@@ -53,7 +53,7 @@ for env in envs/*/spack.yaml; do
         fi
 
         if [ $HAS_DIFF = "yes" ]; then
-            MATRIX="$MATRIX {'ENV':'$ENV', 'VARIANT':'$VAR', 'CONCRETE_ENV':'$BUILD'},"
+            MATRIX="$MATRIX {'BASE_ENV':'$ENV', 'VARIANT':'$VAR', 'CONCRETE_ENV':'$BUILD'},"
         fi
     done
 done
