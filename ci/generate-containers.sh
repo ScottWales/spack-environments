@@ -43,7 +43,7 @@ for env in envs/*/spack.yaml; do
 
         # See if this container was already built
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
-            if diff -q "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
+            if diff -q -r "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
             else
                 HAS_DIFF="no"
@@ -51,6 +51,8 @@ for env in envs/*/spack.yaml; do
         else
             HAS_DIFF="yes"
         fi
+
+        echo "HAS_DIFF=$HAS_DIFF"
 
         if [ $HAS_DIFF = "yes" ]; then
             MATRIX="$MATRIX {'BASE_ENV':'$ENV', 'VARIANT':'$VAR', 'CONCRETE_ENV':'$BUILD'},"
