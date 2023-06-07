@@ -74,6 +74,6 @@ stages:
 nothing to build:
   stage: noop
   tags: [docker]
-  script: true
+  script: "/bin/true"
 EOF
 fi
