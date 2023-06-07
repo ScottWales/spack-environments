@@ -31,9 +31,6 @@ for env in envs/*/spack.yaml; do
         # Skip 'base' environment
         if [ $ENV = "base" ]; then continue; fi
 
-        # TODO: Remove disable
-        if [ $ENV = "metplus-v5" ]; then continue; fi
-
         # Copy config files to this variant
         cp -r envs/$ENV/* artifacts/ci-$BUILD/
         cp containers/spack-env.docker artifacts/ci-$BUILD
