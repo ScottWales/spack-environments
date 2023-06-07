@@ -67,6 +67,9 @@ stage gadi:
         - etc/install-gadi-image.sh
     after_script:
         - rm image.sif
+    variables:
+        SPACK_DISABLE_LOCAL_CONFIG: "true"
+        SPACK_USER_CACHE_PATH: "$CI_PROJECT_DIR/cache"
     parallel: *build_matrix
 
 # Cache lock files
