@@ -26,6 +26,8 @@ spack:
             require: "openmpi@4.1.4"
 ```
 
+Containers will only be built using CI if their environments change.
+
 ## Installing Environments on Gadi
 
 The container will be created automatically by Gitlab CI and installed to the

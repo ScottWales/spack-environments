@@ -2,7 +2,7 @@ stages:
     - docker
     - apptainer
     - stage
-    - deploy
+    - clean
 
 # Build Docker containers
 docker build containers:
@@ -25,18 +25,20 @@ docker build containers:
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
             --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
-            --destination "${DOCKER_REGISTRY}/${DEST}"
+            --destination "${DEST}"
+            --tar-path "${CI_OUTDIR}/${CONCRETE_ENV}.tar"
             --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
-            --build-arg "ENV=${ENV}"
+            --build-arg "BASE_ENV=${BASE_ENV}"
             --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
             --use-new-run
             --single-snapshot
             --snapshotMode=redo
             --compressed-caching=false
-    variables:
-        CONCRETE_ENV: ${ENV}-${VARIANT}
+            --no-push
     needs:
-        - job: generate spack packages
+        - job: generate spack environments
+          pipeline: "__PIPELINE_ID__"
+        - job: generate containers
           pipeline: "__PIPELINE_ID__"
     parallel: &build_matrix
         matrix: __MATRIX__
@@ -51,11 +53,10 @@ apptainer build containers:
     before_script:
         - export DEST=${CONCRETE_ENV}:latest
     script:
-        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/${DEST}"
-    variables:
-        CONCRETE_ENV: ${ENV}-${VARIANT}
+        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker-archive://${CI_OUTDIR}/${CONCRETE_ENV}.tar"
     parallel: *build_matrix
 
+# Copy container to Gadi
 stage gadi:
     stage: stage
     tags: [gadi]
@@ -67,7 +68,22 @@ stage gadi:
     after_script:
         - rm image.sif
     variables:
-        NAME: $ENV
-        CONCRETE_ENV: ${ENV}-${VARIANT}
+        SPACK_DISABLE_LOCAL_CONFIG: "true"
+        SPACK_USER_CACHE_PATH: "$CI_PROJECT_DIR/cache"
+    parallel: *build_matrix
+
+# Cache lock files
+cache build:
+    stage: clean
+    tags: [docker]
+    script:
+        - mkdir -p $BRANCH_CACHE/ci-$CONCRETE_ENV
+        - cp -r artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
+    needs:
+        - job: generate spack environments
+          pipeline: "__PIPELINE_ID__"
+        - job: generate containers
+          pipeline: "__PIPELINE_ID__"
+        - job: apptainer build containers
     parallel: *build_matrix
 
