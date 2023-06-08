@@ -5,12 +5,14 @@ dependencies:
     - cartopy
     - eofs
     - exceptiongroup
+    - geovista
     - ghostscript
     - h5py
     - hdf5=1.12.2 # Must match spack
     - imageio
     - imutils
     - iniconfig
+    - iris
     - jupyterlab
     - lxml
     - matplotlib
@@ -22,12 +24,14 @@ dependencies:
     - pint
     - plotly
     - pluggy
+    - pykdtree
     - pymysql
     - pytest
     - python
     - python-dateutil
     - python-kaleido
     - pytz
+    - pyvista
     - pyyaml
     - r
     - r-boot
