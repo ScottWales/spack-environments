@@ -42,7 +42,7 @@ RUN  microdnf install -y --nodocs \
 &&   microdnf clean all
 
 # Install container setup scripts
-COPY containers/*.sh /build/
+COPY containers/base/*.sh /build/
 RUN  chmod 755 /build/*.sh
 
 # Mamba user
