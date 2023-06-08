@@ -20,7 +20,10 @@ RUN  microdnf install -y --nodocs \
      git \
      gzip \
      libasan \
+     liblsan \
      libtool \
+     libtsan \
+     libubsan \
      openssl-devel \
      patch \
      perl \
@@ -32,8 +35,8 @@ RUN  microdnf install -y --nodocs \
      tar \
      time \
      unzip \
-     which \
      wget \
+     which \
      xz \
      zstd \
 &&   microdnf clean all
