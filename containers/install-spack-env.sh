@@ -20,8 +20,8 @@ SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 
 # Move MPI libs into a separate directory for Bind mode
 MPI_PATH=$SPACK_ROOT/containermpi
-mkdir "$MPI_PATH/bin"
-mkdir "$MPI_PATH/lib_hybrid_mpi"
+mkdir -p "$MPI_PATH/bin"
+mkdir -p "$MPI_PATH/lib_hybrid_mpi"
 
 if [[ "$SPACK_MPI" =~ openmpi ]]; then
     for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
