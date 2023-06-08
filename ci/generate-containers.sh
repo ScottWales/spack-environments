@@ -32,7 +32,7 @@ for env in envs/*/spack.yaml; do
         if [ $ENV = "base" ]; then continue; fi
 
         # Copy config files to this variant
-        cp -r envs/$ENV/* artifacts/ci-$BUILD/
+        cp -r --no-clobber envs/$ENV/* artifacts/ci-$BUILD/
         cp containers/spack-env.docker artifacts/ci-$BUILD
 
         # If there is a conda environment copy the lock to this variant
