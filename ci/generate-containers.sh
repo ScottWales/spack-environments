@@ -43,7 +43,7 @@ for env in envs/*/spack.yaml; do
 
         # See if this container was already built
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
-            if diff -q -r "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
+            if ! diff -q -r "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
             else
                 HAS_DIFF="no"
