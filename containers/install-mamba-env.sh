@@ -5,7 +5,12 @@
 set -eu
 set -o pipefail
 
-if [ -f /build/mamba.yaml ]; then
-    $MAMBA_ROOT/bin/mamba env update -n container -f /build/mamba.yaml
+if [ -f /build/mamba.lock ]; then
+    $MAMBA_ROOT/bin/mamba env remove -n container
+
+    # Needs a specific file name for conda-lock
+    ln -s /build/mamba.lock $MAMBA_ROOT/conda-lock.yml
+    $MAMBA_ROOT/bin/conda-lock install --prefix $MAMBA_ROOT/envs/container $MAMBA_ROOT/conda-lock.yml
+
     $MAMBA_ROOT/bin/mamba clean --all
 fi

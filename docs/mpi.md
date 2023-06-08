@@ -9,22 +9,19 @@ There are two modes that containers can run in for MPI:
 Generally Bind mode will have higher performance as it can use fabric
 optimisations from the host HPC.
 
-At NCI the container is preset to use bind-mode MPI with the `imagerun`
-command. `mpirun` can also be run from inside the container if needed, inside
-the container it uses a wrapper to call out to the host `mpirun`.
+At NCI the container is preset to use bind-mode MPI. With the container module
+loaded `mpirun` commands will automatically start the container on all nodes.
+`mpirun` can also be run from inside the container if needed, inside the
+container it uses a wrapper to call out to the host `mpirun`.
 
-It's important that the container's `mpirun` is not used as that will not be
-able to start processes across multiple nodes.
+Bind-mode MPI can be disabled by setting the variable
+`NGMENV_MPI_HYBRID_MODE_ONLY` to a non-empty value
 
-The `$IMAGERUN` environment variable can be useful to make configurations that
-work both inside and outside the container. The environment module sets this to
-`imagerun` when the container is available, so you can do something like:
-
-```
-mpirun -n 6 ${IMAGERUN:-} gungho_model : -n 2 ${IMAGERUN:-} xios_server
-```
-
-When the container is not loaded the `${IMAGERUN:-}`s will be discarded.
+When setting up the container on a new site it's important that the container's
+`mpirun` is not used as that will not be able to start processes across
+multiple nodes. With OpenMPI the environment variable
+`OMPI_MCA_orte_launch_agent` can be used to configure how nodes start, this should
+eventually call `orted`.
 
 ## Implementation
 
