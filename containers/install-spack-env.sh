@@ -18,18 +18,18 @@ export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
 SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 
-if [[ "$SPACK_MPI" =~ openmpi ]]; then
+# Move MPI libs into a separate directory for Bind mode
+MPI_PATH=$SPACK_ROOT/containermpi
+mkdir "$MPI_PATH/bin"
+mkdir "$MPI_PATH/lib_hybrid_mpi"
 
-    # Move MPI libs into a separate directory for Bind mode
-    MPI_PATH=$SPACK_ROOT/containermpi
-    mkdir -pv "$MPI_PATH/lib_hybrid_mpi"
+if [[ "$SPACK_MPI" =~ openmpi ]]; then
     for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
         mv -v $(spack find --format="{prefix}" mpi)/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
         rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
     done
 
     # Wrapper to use the host MPIRUN etc
-    mkdir "$MPI_PATH/bin"
     for cmd in mpirun mpiexec orted; do
         cat > "$MPI_PATH/bin/$cmd" << EOF
 #!/bin/bash
