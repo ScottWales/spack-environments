@@ -20,16 +20,21 @@ SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 
 # Move MPI libs into a separate directory for Bind mode
 MPI_PATH=$SPACK_ROOT/containermpi
-mkdir -p "$MPI_PATH/bin"
 mkdir -p "$MPI_PATH/lib_hybrid_mpi"
 
 if [[ "$SPACK_MPI" =~ openmpi ]]; then
+    # Shift the container MPI libraries so the host libraries can shadow them if needed
     for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
         mv -v $(spack find --format="{prefix}" mpi)/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
         rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
     done
 
+    # Put include files in a findable location
+    mkdir -p "$MPI_PATH/include"
+    ln -s $(spack find --format="{prefix}" mpi)/lib/*.mod $MPI_PATH/include
+
     # Wrapper to use the host MPIRUN etc
+    mkdir -p "$MPI_PATH/bin"
     for cmd in mpirun mpiexec orted; do
         cat > "$MPI_PATH/bin/$cmd" << EOF
 #!/bin/bash
@@ -45,6 +50,10 @@ EOF
         chmod +x "$MPI_PATH/bin/$cmd"
     done
 
+elif [[ "$SPACK_MPI" =~ intel-oneapi-mpi ]]; then
+
+    ln -s $(spack find --format="{prefix}" mpi)/mpi/latest/bin "$MPI_PATH/bin"
+    ln -s $(spack find --format="{prefix}" mpi)/mpi/latest/include "$MPI_PATH/include"
 fi
 
 # Create activate script
@@ -60,8 +69,10 @@ export SPACK_MPI=$SPACK_MPI
 # Path to the Spack environment's view
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
+export MPI_PATH=$MPI_PATH
+
 # Container MPI library path
-HYBRID_MPI_LIB=$MPI_PATH/lib_hybrid_mpi
+HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
 
 # Intel compiler spack packages have different names
 case \${SPACK_COMPILER} in
@@ -84,9 +95,15 @@ case \${SPACK_COMPILER} in
 esac
 
 # Make sure container compilers are used in bind mode
-export OMPI_FC=\$FC
 export OMPI_CC=\$CC
+export OMPI_FC=\$FC
+export OMPI_F90=\$FC
 export OMPI_CXX=\$CXX
+
+export I_MPI_CC=\$CC
+export I_MPI_FC=\$FC
+export I_MPI_F90=\$FC
+export I_MPI_CXX=\$CXX
 
 export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
 
@@ -121,10 +138,13 @@ if [ -n "\$HOST_MPI" ]; then
     fi
 fi
 
+export I_MPI_HYDRA_BOOTSTRAP_EXE=\$MPI_PATH/rsh
+
 # Add MPI to path & export
-PATH=$MPI_PATH/bin:\$PATH
+PATH=\$MPI_PATH/bin:\$PATH
+CPATH=\$MPI_PATH/include:\$CPATH
+
 MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
-CPATH=$(spack find --format="{prefix}" mpi)/lib:\$CPATH
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 EOF
