@@ -34,4 +34,7 @@ class Yaxt(AutotoolsPackage):
         options = []
         options.append('--with-idxtype='+self.spec.variants['idxtype'].value)
 
+        # Ignore MPI errors on build machine
+        options.append('--without-regard-for-quality')
+
         return options
