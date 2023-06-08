@@ -18,18 +18,20 @@ export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
 SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
 
-# Move MPI libs into a separate directory for Bind mode
-MPI_PATH=$SPACK_ROOT/containermpi
-mkdir -pv "$MPI_PATH/lib_hybrid_mpi"
-for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
-    mv -v $(spack find --format="{prefix}" mpi)/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
-    rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
-done
+if [[ "$SPACK_MPI" =~ openmpi ]]; then
 
-# Wrapper to use the host MPIRUN etc
-mkdir "$MPI_PATH/bin"
-for cmd in mpirun mpiexec orted; do
-cat > "$MPI_PATH/bin/$cmd" << EOF
+    # Move MPI libs into a separate directory for Bind mode
+    MPI_PATH=$SPACK_ROOT/containermpi
+    mkdir -pv "$MPI_PATH/lib_hybrid_mpi"
+    for mpilib in libmpi.so libopen-rte.so libopen-pal.so; do
+        mv -v $(spack find --format="{prefix}" mpi)/lib/${mpilib}* $MPI_PATH/lib_hybrid_mpi
+        rm -v $SPACK_ENV_VIEW/lib/${mpilib}*
+    done
+
+    # Wrapper to use the host MPIRUN etc
+    mkdir "$MPI_PATH/bin"
+    for cmd in mpirun mpiexec orted; do
+        cat > "$MPI_PATH/bin/$cmd" << EOF
 #!/bin/bash
 
 if [ -n "\$HOST_MPI" ]; then
@@ -40,8 +42,10 @@ else
     "$(spack find --format="{prefix}" mpi)/bin/$cmd" "\$@"
 fi
 EOF
-chmod +x "$MPI_PATH/bin/$cmd"
-done
+        chmod +x "$MPI_PATH/bin/$cmd"
+    done
+
+fi
 
 # Create activate script
 cat > $SPACK_ROOT/bin/activate.sh << EOF
@@ -84,6 +88,8 @@ export OMPI_FC=\$FC
 export OMPI_CC=\$CC
 export OMPI_CXX=\$CXX
 
+export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
+
 # Add environment to paths
 PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 
@@ -121,8 +127,6 @@ MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
 CPATH=$(spack find --format="{prefix}" mpi)/lib:\$CPATH
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
-
-export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
 EOF
 
 # Run any post-install scripts
