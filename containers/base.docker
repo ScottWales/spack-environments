@@ -68,12 +68,17 @@ RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
 USER spack
 RUN  /build/install-spack.sh
 
-# Install intel compilers
+# Install intel compilers and minimise footprint
 RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
 &&   spack install --no-check-signature intel-oneapi-compilers-classic \
 &&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux \
 &&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers-classic) \
 &&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux/lib/oclfpga \
+&&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux/lib/*_emu.so* \
+&&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux/bin-llvm \
+&&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/intel \
+&&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/conda_channel \
+&&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/debugger \
 &&   spack clean
 
 ENTRYPOINT ["/build/entrypoint.sh"]
