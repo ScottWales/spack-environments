@@ -1,8 +1,0 @@
-spack:
-    specs:
-        - intel-oneapi-compilers
-        - openmpi
-        - netcdf
-        - hdf5
-        - xios
-        - oasis3-mct
