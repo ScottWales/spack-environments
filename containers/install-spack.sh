@@ -13,6 +13,12 @@ spack mirror add --scope site ci-mirror file://$SPACK_CACHE
 spack repo add --scope site $SPACK_ROOT/var/spack/repos/jopa
 spack repo add --scope site $SPACK_ROOT/var/spack/repos/bom-ngm
 
+# Download JCSDA definitions
+JCSDA_SPACK_STACK=1.4.0
+wget -O - https://github.com/JCSDA/spack/archive/refs/tags/spack-stack-$JCSDA_SPACK_STACK.tar.gz | tar xz -C $SPACK_ROOT --strip-components=1 spack-spack-stack-$JCSDA_SPACK_STACK/var/spack/repos/jcsda-emc spack-spack-stack-$JCSDA_SPACK_STACK/var/spack/repos/jcsda-emc-bundles
+spack repo add --scope site $SPACK_ROOT/var/spack/repos/jcsda-emc
+spack repo add --scope site $SPACK_ROOT/var/spack/repos/jcsda-emc-bundles
+
 # Update Spack with system packages
 spack compiler find --scope site /usr
 spack external find --scope site --all --path /usr --not-buildable
