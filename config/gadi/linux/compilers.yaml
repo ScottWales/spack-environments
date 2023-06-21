@@ -16,3 +16,4 @@ compilers:
     environment:
       append_path:
         LD_LIBRARY_PATH:: "/apps/intel-ct/2021.8.0/compiler/linux/compiler/lib/intel64_lin:/apps/openmpi/4.1.4/lib/Intel"
+# Added an MPI path to extra_rpaths and LD_LIBRARY_PATH to enable building of Pfunit. 
