@@ -10,3 +10,13 @@ class EcmwfAtlas(CMakePackage):
     depends_on('cmake@3.12:', type='build')
     depends_on('ecbuild', type='build')
     depends_on('eckit')
+    depends_on('fckit')
+    depends_on('eigen')
+    depends_on('python@3', type='build')
+
+    def cmake_args(self):
+        args = []
+
+        args.append(self.define('PYTHON_EXECUTABLE', self.spec['python'].prefix + '/bin/python3'))
+
+        return args

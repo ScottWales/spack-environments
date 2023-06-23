@@ -11,3 +11,11 @@ class Fckit(CMakePackage):
     depends_on('ecbuild', type='build')
 
     depends_on('eckit+mpi')
+    depends_on('python@3', type='build')
+
+    def cmake_args(self):
+        args = []
+
+        args.append(self.define('PYTHON_EXECUTABLE', self.spec['python'].prefix + '/bin/python3'))
+
+        return args

@@ -1,3 +1,11 @@
 spack:
     specs:
-        - oops
+        - fv3-bundle
+    concretizer:
+        unify: when_possible
+
+    packages:
+        git-lfs:
+            require: '%gcc'
+        go:
+            require: '%gcc'

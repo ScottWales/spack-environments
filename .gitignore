@@ -1,4 +1,4 @@
-*.swp
+*.sw?
 __pycache__
 *.pyc
 .spack-env

@@ -17,12 +17,12 @@ INSTALL_ROOT=$PWD
 ENV=jopa-v0
 
 export SPACK_COMPILER=intel@2021.8.0
-export SPACK_MPI=openmpi@4.1.4
+export SPACK_MPI=nci-openmpi@4.1.4
 
 # Activate spack
 export SPACK_SYSTEM_CONFIG_PATH=$INSTALL_ROOT/config/gadi
 #source /g/data/access/spack/0.19.0/share/spack/setup-env.sh
-source /home/562/saw562/projects/spack-pipeline/spack/share/spack/setup-env.sh
+source /scratch/hc46/saw562/spack-base/share/spack/setup-env.sh
 
 export SPACK_JOBS=${PBS_NCPUS:-4}
 
