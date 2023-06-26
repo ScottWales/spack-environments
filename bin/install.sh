@@ -58,6 +58,8 @@ fi
 #    rm $CONFIG
 #fi
 
+echo $SPACK_ENV
+
 # Concretize and install
 spack concretize --force --fresh
 spack install ${SPACK_JOBS:+--jobs=$SPACK_JOBS}

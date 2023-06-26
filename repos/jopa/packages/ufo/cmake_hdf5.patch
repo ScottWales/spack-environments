@@ -1,0 +1,12 @@
+--- a/CMakeLists.txt	2023-06-26 15:44:33.000000000 +1000
++++ b/CMakeLists.txt	2023-06-26 15:44:48.000000000 +1000
+@@ -38,6 +38,9 @@
+ # Boost
+ find_package( Boost REQUIRED )
+ 
++# HDF5
++find_package( Hdf5 REQUIRED)
++
+ # NetCDF
+ find_package( NetCDF REQUIRED COMPONENTS C Fortran)
+ 

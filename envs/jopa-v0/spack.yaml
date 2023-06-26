@@ -1,8 +1,18 @@
 spack:
     specs:
-        - fv3-bundle
-    concretizer:
-        unify: when_possible
+        - eckit
+        - fckit
+        - ecmwf-atlas
+        - crtm@2.3-jedi.1
+        - oops@1.1.0
+          #- saber@1.1.2
+        - ioda@2.0.2
+        - ufo@1.1.0
+        #- fms@1.1.0.jcsda
+        #- fv3@1.1.0.jcsda
+        #- femps@1.1.0
+        #- fv3-jedi-lm@1.1.0
+        #- fv3-jedi@1.1.0
 
     packages:
         git-lfs:

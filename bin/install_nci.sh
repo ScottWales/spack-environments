@@ -3,7 +3,7 @@
 #  Author Scott Wales
 #PBS -l wd
 #PBS -l ncpus=8
-#PBS -l mem=32gb
+#PBS -l mem=64gb
 #PBS -l jobfs=100gb
 #PBS -l walltime=1:00:00
 
