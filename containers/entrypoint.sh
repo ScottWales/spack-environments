@@ -14,6 +14,7 @@ if [ -z "${NGMENV_SPACK_DONT_ISOLATE:-}" ]; then
     # Don't consider the user's ~/.spack directory
     debug  spack is isolated
     export SPACK_DISABLE_LOCAL_CONFIG=1
+    export SPACK_USER_CACHE_PATH=${TMPDIR:-/tmp}/spack-cache
 else
     debug  spack is not isolated
 fi

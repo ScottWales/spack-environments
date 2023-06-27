@@ -16,7 +16,7 @@ spack install --use-buildcache=only --no-check-signature
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
 SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
-SPACK_COMPILER=$(spack find --format="{compiler}" mpi)
+SPACK_COMPILER=$(spack find --format="{compiler}" mpi | sed 's/@=/@/')
 
 # Move MPI libs into a separate directory for Bind mode
 MPI_PATH=$SPACK_ROOT/containermpi
