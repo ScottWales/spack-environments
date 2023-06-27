@@ -1,0 +1,11 @@
+diff -u a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2023-06-27 13:11:03.480580000 +1000
++++ b/CMakeLists.txt	2023-06-27 13:11:57.095578000 +1000
+@@ -84,6 +84,7 @@
+ ################################################################################
+ 
+ # prepares a tar.gz of the sources and/or binaries
++install(DIRECTORY ${CMAKE_Fortran_MODULE_DIRECTORY}/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} )
+ ecbuild_install_project( NAME femps )
+ 
+ # print the summary of the configuration

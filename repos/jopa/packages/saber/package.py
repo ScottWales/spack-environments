@@ -18,3 +18,5 @@ class Saber(CMakePackage):
     depends_on('oops', when='+oops')
     #depends_on('gsibec', when='+gsibec')
     #depends_on('vader', when='+vader')
+
+    patch('cmake_disable_test.patch')

@@ -6,3 +6,14 @@ class Fv3(CMakePackage):
 
     depends_on('ecbuild', type='build')
     depends_on('jedi-cmake', type='build')
+
+    depends_on('mpi')
+    depends_on('netcdf-fortran')
+    depends_on('fms')
+
+    def cmake_args(self):
+        args = [
+            self.define('CMAKE_MODULE_PATH', self.spec['ecbuild'].prefix + '/share/ecbuild/cmake'),
+            ]
+
+        return args

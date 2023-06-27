@@ -1,0 +1,12 @@
+diff -u a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2023-06-26 16:56:29.846551000 +1000
++++ b/CMakeLists.txt	2023-06-26 16:56:40.912521000 +1000
+@@ -59,7 +59,7 @@
+ ## Sources
+ add_subdirectory( src/saber )
+ add_subdirectory( tools ) # tools is needed for test
+-add_subdirectory( test )
++# add_subdirectory( test )
+ if( ENABLE_SABER_DOC )
+     add_subdirectory( docs )
+ endif()

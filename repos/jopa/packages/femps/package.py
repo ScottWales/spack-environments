@@ -7,6 +7,10 @@ class Femps(CMakePackage):
     depends_on('ecbuild', type='build')
     depends_on('jedi-cmake', type='build')
 
+    depends_on('netcdf-fortran')
+
+    patch('cmake_install_modules.patch')
+
     def cmake_args(self):
         args = [
             self.define('CMAKE_MODULE_PATH', self.spec['ecbuild'].prefix + '/share/ecbuild/cmake'),

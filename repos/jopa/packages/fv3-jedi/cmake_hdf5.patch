@@ -1,0 +1,13 @@
+diff -u a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	2023-06-27 14:57:28.824059000 +1000
++++ b/CMakeLists.txt	2023-06-27 14:58:17.936099000 +1000
+@@ -56,6 +56,9 @@
+ # jedi-cmake
+ find_package( jedicmake QUIET )
+ 
++# HDF5
++find_package( Hdf5 REQUIRED)
++
+ # NetCDF
+ find_package( NetCDF REQUIRED COMPONENTS Fortran )
+ 
