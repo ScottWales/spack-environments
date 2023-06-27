@@ -3,7 +3,6 @@
 
 class NciOpenmpi(Package):
 
-    provides('openmpi@4.1.4')
     provides('mpi@:3')
 
     def setup_run_environment(self, env):
