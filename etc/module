@@ -28,5 +28,6 @@ setenv ${name_upcase}_VERSION "$version"
 
 setenv IMAGERUN "$appdir/bin/imagerun"
 setenv OMPI_MCA_orte_launch_agent "$appdir/bin/orted"
+setenv I_MPI_HYDRA_BOOTSTRAP_EXEC "$appdir/bin/imagerun-rsh"
 
 prepend-path PATH "$appdir/bin"
