@@ -65,11 +65,10 @@ export SPACK_COMPILER=$SPACK_COMPILER
 
 # MPI used by Spack
 export SPACK_MPI=$SPACK_MPI
+export MPI_PATH=$MPI_PATH
 
 # Path to the Spack environment's view
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
-
-export MPI_PATH=$MPI_PATH
 
 # Container MPI library path
 HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
@@ -137,8 +136,6 @@ if [ -n "\$HOST_MPI" ]; then
         BIND_MPI_LIB=""
     fi
 fi
-
-export I_MPI_HYDRA_BOOTSTRAP_EXE=\$MPI_PATH/rsh
 
 # Add MPI to path & export
 PATH=\$MPI_PATH/bin:\$PATH

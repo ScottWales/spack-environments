@@ -66,7 +66,7 @@ rm -rf $ONEAPI_PREFIX/conda_channel
 rm -rf $ONEAPI_PREFIX/debugger
 
 # Setup compilers
-echo >> /opt/spack/etc/spack/compilers.yaml << EOF
+cat >> /opt/spack/etc/spack/compilers.yaml << EOF
 - compiler:
     spec: oneapi@=$(spack find --format '{version}' intel-oneapi-compilers)
     paths:
