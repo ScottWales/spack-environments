@@ -53,12 +53,51 @@ rm /tmp/packages.yaml
 
 spack bootstrap now
 
-#INTEL_COMPILER=intel-oneapi-compilers@2023.0.0
-#spack install $INTEL_COMPILER intel-oneapi-compilers-classic
-#
-#INTEL_PREFIX=$(spack find --format '{prefix}' $INTEL_COMPILER)
-#spack compiler find --scope site $INTEL_PREFIX/compiler/latest/linux/bin
-#spack compiler find --scope site $INTEL_PREFIX/compiler/latest/linux/bin/intel64
+# Install intel compilers
+spack install --no-check-signature intel-oneapi-compilers-classic
+ONEAPI_PREFIX=$(spack find --format '{prefix}' intel-oneapi-compilers)
+
+# Minimise footprint
+rm -rf $ONEAPI_PREFIX/compiler/latest/linux/lib/oclfpga
+rm -rf $ONEAPI_PREFIX/compiler/latest/linux/lib/*_emu.so*
+rm -rf $ONEAPI_PREFIX/compiler/latest/linux/bin-llvm
+rm -rf $ONEAPI_PREFIX/intel
+rm -rf $ONEAPI_PREFIX/conda_channel
+rm -rf $ONEAPI_PREFIX/debugger
+
+# Setup compilers
+echo >> /opt/spack/etc/spack/compilers.yaml << EOF
+- compiler:
+    spec: oneapi@=$(spack find --format '{version}' intel-oneapi-compilers)
+    paths:
+      cc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/icx
+      cxx: $ONEAPI_PREFIX/compiler/latest/linux/bin/icpx
+      f77: $ONEAPI_PREFIX/compiler/latest/linux/bin/ifx
+      fc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/ifx
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment:
+      prepend_path:
+        LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
+    extra_rpaths: []
+- compiler:
+    spec: intel@=$(spack find --format '{version}' intel-oneapi-compilers-classic)
+    paths:
+      cc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/icc
+      cxx: $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/icpc
+      f77: $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/ifort
+      fc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/ifort
+    flags: {}
+    operating_system: rocky8
+    target: x86_64
+    modules: []
+    environment:
+      prepend_path:
+        LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
+    extra_rpaths: []
+EOF
 
 spack clean
 
