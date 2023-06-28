@@ -16,8 +16,7 @@ INSTALL_ROOT=$PWD
 ENV=$1
 
 export SPACK_COMPILER=intel@2021.8.0
-#export SPACK_MPI=openmpi@4.1.4
-export SPACK_MPI=intel-oneapi-mpi
+export SPACK_MPI=openmpi@4.1.4
 
 # Activate spack
 export SPACK_SYSTEM_CONFIG_PATH=$INSTALL_ROOT/config/gadi
