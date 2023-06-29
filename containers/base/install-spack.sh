@@ -54,7 +54,7 @@ rm /tmp/packages.yaml
 spack bootstrap now
 
 # Install intel compilers
-spack install --no-check-signature intel-oneapi-compilers-classic
+spack install --no-check-signature intel-oneapi-compilers-classic@2021.8.0
 ONEAPI_PREFIX=$(spack find --format '{prefix}' intel-oneapi-compilers)
 
 # Minimise footprint
