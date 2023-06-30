@@ -6,7 +6,7 @@ set -eu
 set -o pipefail
 
 # Base packages
-microdnf install -y --nodocs
+microdnf install -y --nodocs \
      bzip2 \
      cmake \
      curl-devel \
