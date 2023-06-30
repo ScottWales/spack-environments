@@ -14,18 +14,25 @@ COPY containers/base/*.sh /build/
 RUN  chmod 755 /build/*.sh
 
 # Setup system packages
-RUN  /build/system.sh
+COPY containers/base/system.sh /build
+RUN  /bin/bash /build/system.sh
 
 # Install mamba
 USER mamba
+COPY containers/base/install-mamba.sh /build
 RUN  /build/install-mamba.sh
 
 # Install spack
 USER spack
+COPY containers/base/install-spack.sh /build
 RUN  /build/install-spack.sh
 
 # Copy repos
 COPY repos/ $SPACK_ROOT/var/spack/repos/
 
+# Install entrypoint
+USER root
+COPY containers/base/entrypoint.sh /build
+RUN  chmod 755 /build/entrypoint.sh
 ENTRYPOINT ["/build/entrypoint.sh"]
 
