@@ -39,12 +39,12 @@ microdnf install -y --nodocs \
 microdnf clean all
 
 # Mamba user
-useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
-mkdir -p $MAMBA_ROOT \
+useradd mamba --home-dir $MAMBA_ROOT --no-create-home
+mkdir -p $MAMBA_ROOT
 chown -R mamba $MAMBA_ROOT
 
 # Spack user
-useradd spack --home-dir $SPACK_ROOT --no-create-home \
-mkdir -p $SPACK_ROOT \
+useradd spack --home-dir $SPACK_ROOT --no-create-home
+mkdir -p $SPACK_ROOT
 chown -R spack $SPACK_ROOT
 
