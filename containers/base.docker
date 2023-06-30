@@ -9,6 +9,8 @@ ENV  SPACK_CACHE=$SPACK_CACHE
 ENV  MAMBA_ROOT=/opt/mamba
 ARG  MAMBA_REPO
 
+RUN  mkdir /build
+
 # Setup system packages
 COPY containers/base/system.sh /build
 RUN  /bin/bash /build/system.sh
