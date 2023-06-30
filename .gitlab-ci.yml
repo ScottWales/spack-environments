@@ -53,7 +53,6 @@ docker build spack-base:
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --use-new-run
-            --single-snapshot
             --snapshotMode=redo
             --compressed-caching=false
             --cache=true

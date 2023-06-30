@@ -9,65 +9,23 @@ ENV  SPACK_CACHE=$SPACK_CACHE
 ENV  MAMBA_ROOT=/opt/mamba
 ARG  MAMBA_REPO
 
-# Base packages
-RUN  microdnf install -y --nodocs \
-     bzip2 \
-     cmake \
-     curl-devel \
-     gcc \
-     gcc-c++ \
-     gcc-gfortran \
-     git \
-     gzip \
-     libasan \
-     liblsan \
-     libtool \
-     libtsan \
-     libubsan \
-     openssl-devel \
-     patch \
-     perl \
-     perl-ExtUtils-MakeMaker \
-     perl-XML-Parser \
-     procps \
-     python3-devel \
-     shadow-utils \
-     subversion \
-     tar \
-     time \
-     unzip \
-     wget \
-     which \
-     xz \
-     zstd \
-&&   microdnf clean all
-
 # Install container setup scripts
 COPY containers/base/*.sh /build/
 RUN  chmod 755 /build/*.sh
 
-# Mamba user
-USER root
-RUN  useradd mamba --home-dir $MAMBA_ROOT --no-create-home \
-&&   mkdir -p $MAMBA_ROOT \
-&&   chown -R mamba $MAMBA_ROOT
+# Setup system packages
+RUN  /build/system.sh
 
 # Install mamba
 USER mamba
 RUN  /build/install-mamba.sh
 
-# Copy repos
-COPY repos/ $SPACK_ROOT/var/spack/repos/
-
-# Spack user
-USER root
-RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
-&&   mkdir -p $SPACK_ROOT \
-&&   chown -R spack $SPACK_ROOT
-
 # Install spack
 USER spack
 RUN  /build/install-spack.sh
+
+# Copy repos
+COPY repos/ $SPACK_ROOT/var/spack/repos/
 
 ENTRYPOINT ["/build/entrypoint.sh"]
 
