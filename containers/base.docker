@@ -20,12 +20,12 @@ RUN  /bin/bash /build/system.sh
 # Install mamba
 USER mamba
 COPY containers/base/install-mamba.sh /build
-RUN  /build/install-mamba.sh
+RUN  /bin/bash /build/install-mamba.sh
 
 # Install spack
 USER spack
 COPY containers/base/install-spack.sh /build
-RUN  /build/install-spack.sh
+RUN  /bin/bash /build/install-spack.sh
 
 # Copy repos
 COPY repos/ $SPACK_ROOT/var/spack/repos/
