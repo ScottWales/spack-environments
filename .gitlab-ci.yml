@@ -33,10 +33,10 @@ setup:
 docker build spack-base:
     stage: base
     tags: [docker]
-    image: &kaniko_image
-        name: gcr.io/kaniko-project/executor:debug
+    image:
+        name: quay.io/buildah/stable:latest
         entrypoint: [""]
-    script: &kaniko_build
+    script:
         - mkdir -p /kaniko/.docker
         - |
             cat > /kaniko/.docker/config.json <<EOF
@@ -46,94 +46,84 @@ docker build spack-base:
                 }
             }}
             EOF
-        - /kaniko/executor
-            --context "${CI_PROJECT_DIR}"
-            --dockerfile "${CI_PROJECT_DIR}/containers/base.docker"
-            --destination "${DOCKER_REGISTRY}/spack-base:latest"
+        - buildah build
+            --file "${CI_PROJECT_DIR}/containers/base.docker"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
-            --use-new-run
-            --single-snapshot
-            --snapshotMode=redo
-            --compressed-caching=false
-    only:
-        changes:
-            - containers/base.docker
-            - containers/base/*.sh
-            - repos/**/*
+            "${CI_PROJECT_DIR}"
 
-# Generate lock files for Spack packages
-generate spack environments:
-    stage: generate
-    tags: [docker]
-    image:
-        name: localhost:5000/spack-base:latest
-        entrypoint: [""]
-        pull_policy: always
-    script:
-        - /build/entrypoint.sh ./ci/generate-spack.sh
-    artifacts:
-      paths:
-        - "$CI_PROJECT_DIR/artifacts"
-      expire_in: 1 day
-
-# Generate lock files for Spack packages
-generate mamba environments:
-    stage: generate
-    tags: [docker]
-    image:
-        name: localhost:5000/spack-base:latest
-        entrypoint: [""]
-        pull_policy: always
-    script:
-        - /build/entrypoint.sh ./ci/generate-mamba.sh
-    artifacts:
-      paths:
-        - "$CI_PROJECT_DIR/artifacts"
-      expire_in: 1 day
-
-# Build Spack packages
-spack build:
-    stage: package-build
-    trigger:
-      include:
-        - artifact: artifacts/pipeline.yml
-          job: generate spack environments
-      strategy: depend
-
-# Generate build tasks for containers
-generate containers:
-    stage: generate
-    tags: [docker]
-    image: 
-        name: localhost:5000/spack-base:latest
-        entrypoint: [""]
-        pull_policy: always
-    script:
-        - /build/entrypoint.sh ./ci/generate-containers.sh
-    needs:
-        # Get the lock files for the environments
-        - job: generate spack environments
-          artifacts: true
-        - job: generate mamba environments
-          artifacts: true
-    artifacts:
-      paths:
-        - "$CI_PROJECT_DIR/artifacts"
-      expire_in: 1 day
-
-# Build containers
-container build:
-    stage: container-build
-    trigger:
-      include:
-        - artifact: artifacts/containers.yml
-          job: generate containers
-      strategy: depend
-
-clean:
-    stage: clean
-    tags: [docker]
-    script:
-      - rm -rv $CI_OUTDIR
-    when: always
+              # # Generate lock files for Spack packages
+              # generate spack environments:
+              #     stage: generate
+              #     tags: [docker]
+              #     image:
+              #         name: localhost:5000/spack-base:latest
+              #         entrypoint: [""]
+              #         pull_policy: always
+              #     script:
+              #         - /build/entrypoint.sh ./ci/generate-spack.sh
+              #     artifacts:
+              #       paths:
+              #         - "$CI_PROJECT_DIR/artifacts"
+              #       expire_in: 1 day
+              # 
+              # # Generate lock files for Spack packages
+              # generate mamba environments:
+              #     stage: generate
+              #     tags: [docker]
+              #     image:
+              #         name: localhost:5000/spack-base:latest
+              #         entrypoint: [""]
+              #         pull_policy: always
+              #     script:
+              #         - /build/entrypoint.sh ./ci/generate-mamba.sh
+              #     artifacts:
+              #       paths:
+              #         - "$CI_PROJECT_DIR/artifacts"
+              #       expire_in: 1 day
+              # 
+              # # Build Spack packages
+              # spack build:
+              #     stage: package-build
+              #     trigger:
+              #       include:
+              #         - artifact: artifacts/pipeline.yml
+              #           job: generate spack environments
+              #       strategy: depend
+              # 
+              # # Generate build tasks for containers
+              # generate containers:
+              #     stage: generate
+              #     tags: [docker]
+              #     image: 
+              #         name: localhost:5000/spack-base:latest
+              #         entrypoint: [""]
+              #         pull_policy: always
+              #     script:
+              #         - /build/entrypoint.sh ./ci/generate-containers.sh
+              #     needs:
+              #         # Get the lock files for the environments
+              #         - job: generate spack environments
+              #           artifacts: true
+              #         - job: generate mamba environments
+              #           artifacts: true
+              #     artifacts:
+              #       paths:
+              #         - "$CI_PROJECT_DIR/artifacts"
+              #       expire_in: 1 day
+              # 
+              # # Build containers
+              # container build:
+              #     stage: container-build
+              #     trigger:
+              #       include:
+              #         - artifact: artifacts/containers.yml
+              #           job: generate containers
+              #       strategy: depend
+              # 
+              # clean:
+              #     stage: clean
+              #     tags: [docker]
+              #     script:
+              #       - rm -rv $CI_OUTDIR
+              #     when: always
