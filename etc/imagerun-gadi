@@ -50,8 +50,12 @@ export SINGULARITYENV_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/lib64:/lib:/opt/nci/
 # FCM keywords file with local mirrors
 export SINGULARITYENV_FCM_KEYWORDS=/g/data/access/apps/fcm/2019.09.0/etc/fcm/keyword.cfg
 
-# Make mpirun work inside the container
-export SINGULARITYENV_HOST_MPI=${OPENMPI_ROOT:-/apps/openmpi/4.1.4}
+if [ "${SPACK_MPI_TYPE:-openmpi}" = "openmpi" ]; then
+    export SINGULARITYENV_HOST_MPI=${OPENMPI_ROOT:-/apps/openmpi/4.1.4}
+elif [ "$SPACK_MPI_TYPE" = "intelmpi" ]; then
+    export SINGULARITYENV_HOST_MPI=${INTEL_MPI_ROOT:-/apps/intel-mpi/2021.8.0}
+fi
+
 BIND="$BIND --bind /sys/fs/cgroup"
 if [ -d /local/spool ]; then
     BIND="$BIND --bind /local/spool"

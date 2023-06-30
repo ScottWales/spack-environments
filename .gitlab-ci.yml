@@ -59,7 +59,7 @@ docker build spack-base:
     only:
         changes:
             - containers/base.docker
-            - containers/*.sh
+            - containers/base/*.sh
             - repos/**/*
 
 # Generate lock files for Spack packages

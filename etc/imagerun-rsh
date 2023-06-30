@@ -1,0 +1,23 @@
+#!/usr/bin/env python3
+#  Copyright 2023 Bureau of Meteorology
+#  Author Scott Wales
+
+import subprocess
+import argparse
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('hostname')
+parser.add_argument('command', nargs=argparse.REMAINDER)
+parser.add_argument('-n', action='store_true')
+parser.add_argument('-l', dest='user')
+
+args = parser.parse_args()
+
+command = ['/opt/pbs/default/bin/pbs_tmrsh', args.hostname, str(Path(__file__).parent.resolve()/'imagerun'), *args.command]
+
+if args.user is not None:
+    command = ['-l', args.user, *command]
+
+subprocess.run(command)
