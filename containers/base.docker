@@ -29,6 +29,7 @@ RUN  microdnf install -y --nodocs \
      perl \
      perl-ExtUtils-MakeMaker \
      perl-XML-Parser \
+     procps \
      python3-devel \
      shadow-utils \
      subversion \
@@ -42,7 +43,7 @@ RUN  microdnf install -y --nodocs \
 &&   microdnf clean all
 
 # Install container setup scripts
-COPY containers/*.sh /build/
+COPY containers/base/*.sh /build/
 RUN  chmod 755 /build/*.sh
 
 # Mamba user
@@ -67,14 +68,6 @@ RUN  useradd spack --home-dir $SPACK_ROOT --no-create-home \
 # Install spack
 USER spack
 RUN  /build/install-spack.sh
-
-# Install intel compilers
-RUN  source $SPACK_ROOT/share/spack/setup-env.sh \
-&&   spack install --no-check-signature intel-oneapi-compilers-classic \
-&&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux \
-&&   spack compiler find --scope site $(spack find --format '{prefix}' intel-oneapi-compilers-classic) \
-&&   rm -rf $(spack find --format '{prefix}' intel-oneapi-compilers)/compiler/latest/linux/lib/oclfpga \
-&&   spack clean
 
 ENTRYPOINT ["/build/entrypoint.sh"]
 
