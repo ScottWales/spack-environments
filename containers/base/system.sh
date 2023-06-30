@@ -7,7 +7,7 @@ set -o pipefail
 
 # Base packages
 microdnf install -y --nodocs \
-     bzip2 \
+     bzip2-devel \
      cmake \
      curl-devel \
      gcc \
