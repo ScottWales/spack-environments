@@ -3,6 +3,10 @@ set -eu
 
 source /opt/spack/share/spack/setup-env.sh
 
+spack repo list
+ls -l $SPACK_ROOT/var/spack/repos/bom-ngm
+
+
 # Generates Spack CI yaml files
 : ${CI_PROJECT_DIR:=.}
 export CI_PROJECT_DIR
