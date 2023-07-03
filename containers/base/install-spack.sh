@@ -14,7 +14,7 @@ spack mirror add --scope site ci-mirror file://$SPACK_CACHE
 # Temporary path to be copied in later
 for repo in jopa bom-ngm; do
     mkdir -p $SPACK_ROOT/var/spack/repos/$repo/packages
-    echo "repo: {namespace: $repo}" > SPACK_ROOT/var/spack/repos/$repo/repo.yaml
+    echo "repo: {namespace: $repo}" > $SPACK_ROOT/var/spack/repos/$repo/repo.yaml
     spack repo add --scope site $SPACK_ROOT/var/spack/repos/$repo
 done
 

@@ -5,8 +5,8 @@ source /opt/spack/share/spack/setup-env.sh
 
 spack repo list
 ls -l /opt/spack/var/spack/repos/
-ls -l /opt/spack/var/spack/repos/bom-ngm
-ls -l /opt/spack/var/spack/repos/jopa
+ls -l /opt/spack/var/spack/repos/bom-ngm/packages
+ls -l /opt/spack/var/spack/repos/jopa/packages
 
 
 # Generates Spack CI yaml files
