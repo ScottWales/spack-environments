@@ -40,6 +40,7 @@ docker build spack-base:
         entrypoint: [""]
     script: &kaniko_build
         - pwd
+        - ls -l
         - ls repos/jopa/packages
         - mkdir -p /kaniko/.docker
         - |
