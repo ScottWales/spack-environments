@@ -41,6 +41,8 @@ docker build spack-base:
     script: &kaniko_build
         - pwd
         - ls -l
+        - ls -l repos
+        - ls -l repos/jopa
         - ls repos/jopa/packages
         - mkdir -p /kaniko/.docker
         - |
