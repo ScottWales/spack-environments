@@ -39,13 +39,6 @@ docker build spack-base:
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
     script: &kaniko_build
-        - pwd
-        - ls -l
-        - ls -l repos
-        - ls -l repos/bom-ngm
-        - ls -l repos/bom-ngm/packages
-        - ls -l repos/jopa
-        - ls repos/jopa/packages
         - mkdir -p /kaniko/.docker
         - |
             cat > /kaniko/.docker/config.json <<EOF
