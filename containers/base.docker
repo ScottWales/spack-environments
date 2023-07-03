@@ -27,6 +27,7 @@ RUN  /bin/bash /build/install-spack.sh
 
 # Copy repos
 COPY repos/ $SPACK_ROOT/var/spack/repos/
+RUN  /opt/spack/bin/spack clean -m
 
 # Install entrypoint
 USER root
