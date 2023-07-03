@@ -18,6 +18,7 @@ variables:
     CI_OUTDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}'
     BRANCH_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/master'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
+    APPTAINER_CACHEDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/apptainer'
     MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
 
 setup:
@@ -27,6 +28,7 @@ setup:
         - mkdir -p "$SPACK_CACHE"
         - mkdir -p "$BRANCH_CACHE"
         - chmod a+rwX "$SPACK_CACHE"
+        - mkdir -p "$APPTAINER_CACHEDIR"
         - mkdir -p "$CI_OUTDIR"
 
 # Base docker image, used for building the Spack packages
@@ -57,78 +59,78 @@ docker build spack-base:
             --compressed-caching=false
             --cache=true
 
-              ## Generate lock files for Spack packages
-              #generate spack environments:
-              #    stage: generate
-              #    tags: [docker]
-              #    image:
-              #        name: localhost:5000/spack-base:latest
-              #        entrypoint: [""]
-              #        pull_policy: always
-              #    script:
-              #        - /build/entrypoint.sh ./ci/generate-spack.sh
-              #    artifacts:
-              #      paths:
-              #        - "$CI_PROJECT_DIR/artifacts"
-              #      expire_in: 1 day
-              #
-              ## Generate lock files for Spack packages
-              #generate mamba environments:
-              #    stage: generate
-              #    tags: [docker]
-              #    image:
-              #        name: localhost:5000/spack-base:latest
-              #        entrypoint: [""]
-              #        pull_policy: always
-              #    script:
-              #        - /build/entrypoint.sh ./ci/generate-mamba.sh
-              #    artifacts:
-              #      paths:
-              #        - "$CI_PROJECT_DIR/artifacts"
-              #      expire_in: 1 day
-              #
-              ## Build Spack packages
-              #spack build:
-              #    stage: package-build
-              #    trigger:
-              #      include:
-              #        - artifact: artifacts/pipeline.yml
-              #          job: generate spack environments
-              #      strategy: depend
-              #
-              ## Generate build tasks for containers
-              #generate containers:
-              #    stage: generate
-              #    tags: [docker]
-              #    image: 
-              #        name: localhost:5000/spack-base:latest
-              #        entrypoint: [""]
-              #        pull_policy: always
-              #    script:
-              #        - /build/entrypoint.sh ./ci/generate-containers.sh
-              #    needs:
-              #        # Get the lock files for the environments
-              #        - job: generate spack environments
-              #          artifacts: true
-              #        - job: generate mamba environments
-              #          artifacts: true
-              #    artifacts:
-              #      paths:
-              #        - "$CI_PROJECT_DIR/artifacts"
-              #      expire_in: 1 day
-              #
-              ## Build containers
-              #container build:
-              #    stage: container-build
-              #    trigger:
-              #      include:
-              #        - artifact: artifacts/containers.yml
-              #          job: generate containers
-              #      strategy: depend
-              #
-              #clean:
-              #    stage: clean
-              #    tags: [docker]
-              #    script:
-              #      - rm -rv $CI_OUTDIR
-              #    when: always
+# Generate lock files for Spack packages
+generate spack environments:
+    stage: generate
+    tags: [docker]
+    image:
+        name: localhost:5000/spack-base:latest
+        entrypoint: [""]
+        pull_policy: always
+    script:
+        - /build/entrypoint.sh ./ci/generate-spack.sh
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
+
+# Generate lock files for Spack packages
+generate mamba environments:
+    stage: generate
+    tags: [docker]
+    image:
+        name: localhost:5000/spack-base:latest
+        entrypoint: [""]
+        pull_policy: always
+    script:
+        - /build/entrypoint.sh ./ci/generate-mamba.sh
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
+
+# Build Spack packages
+spack build:
+    stage: package-build
+    trigger:
+      include:
+        - artifact: artifacts/pipeline.yml
+          job: generate spack environments
+      strategy: depend
+
+# Generate build tasks for containers
+generate containers:
+    stage: generate
+    tags: [docker]
+    image: 
+        name: localhost:5000/spack-base:latest
+        entrypoint: [""]
+        pull_policy: always
+    script:
+        - /build/entrypoint.sh ./ci/generate-containers.sh
+    needs:
+        # Get the lock files for the environments
+        - job: generate spack environments
+          artifacts: true
+        - job: generate mamba environments
+          artifacts: true
+    artifacts:
+      paths:
+        - "$CI_PROJECT_DIR/artifacts"
+      expire_in: 1 day
+
+# Build containers
+container build:
+    stage: container-build
+    trigger:
+      include:
+        - artifact: artifacts/containers.yml
+          job: generate containers
+      strategy: depend
+
+clean:
+    stage: clean
+    tags: [docker]
+    script:
+      - rm -rv $CI_OUTDIR
+    when: always
