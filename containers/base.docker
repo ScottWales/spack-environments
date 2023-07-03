@@ -26,7 +26,8 @@ COPY containers/base/install-spack.sh /build
 RUN  /bin/bash /build/install-spack.sh
 
 # Copy repos
-COPY repos/* $SPACK_ROOT/var/spack/repos/
+COPY repos/bom-ngm/packages/* $SPACK_ROOT/var/spack/repos/bom-ngm/packages/
+COPY repos/jopa/packages/* $SPACK_ROOT/var/spack/repos/jopa/packages/
 # RUN  /opt/spack/bin/spack clean -m
 
 # Install entrypoint
