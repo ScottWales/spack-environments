@@ -7,4 +7,5 @@ spack:
         - rsync
         - builtin.hdf5
         - bzip2
-        - tau +mpi +openmp +opari ~pthreads
+        - elfutils ~bzip2
+#        - tau +mpi +openmp +opari ~pthreads
