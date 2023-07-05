@@ -28,6 +28,7 @@ docker build containers:
             --destination "${DEST}"
             --tar-path "${CI_OUTDIR}/${CONCRETE_ENV}.tar"
             --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
+            --build-arg "DOCKER_TAG=${DOCKER_TAG}"
             --build-arg "BASE_ENV=${BASE_ENV}"
             --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
             --use-new-run

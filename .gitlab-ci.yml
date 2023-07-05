@@ -15,8 +15,9 @@ stages:
 variables:
     DOCKER_REGISTRY: '172.17.0.2:5000'
     DOCKER_PERSIST: '/scratch/gitlab-runner/'
+    DOCKER_TAG: '${CI_COMMIT_BRANCH}'
     CI_OUTDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}'
-    BRANCH_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/master'
+    BRANCH_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_BRANCH}'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
     APPTAINER_CACHEDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/apptainer'
     MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
@@ -51,7 +52,7 @@ docker build spack-base:
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
             --dockerfile "${CI_PROJECT_DIR}/containers/base.docker"
-            --destination "${DOCKER_REGISTRY}/spack-base:latest"
+            --destination "${DOCKER_REGISTRY}/spack-base:${DOCKER_TAG}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --use-new-run
