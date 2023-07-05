@@ -65,7 +65,7 @@ generate spack environments:
     stage: generate
     tags: [docker]
     image:
-        name: localhost:5000/spack-base:latest
+        name: localhost:5000/spack-base:${DOCKER_TAG}
         entrypoint: [""]
         pull_policy: always
     script:
@@ -80,7 +80,7 @@ generate mamba environments:
     stage: generate
     tags: [docker]
     image:
-        name: localhost:5000/spack-base:latest
+        name: localhost:5000/spack-base:${DOCKER_TAG}
         entrypoint: [""]
         pull_policy: always
     script:
@@ -104,7 +104,7 @@ generate containers:
     stage: generate
     tags: [docker]
     image: 
-        name: localhost:5000/spack-base:latest
+        name: localhost:5000/spack-base:${DOCKER_TAG}
         entrypoint: [""]
         pull_policy: always
     script:
