@@ -27,7 +27,7 @@ RUN  /bin/bash /build/install-spack.sh
 
 # Copy repos
 COPY repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
-# RUN  /opt/spack/bin/spack clean -m
+COPY repos/jopa/packages $SPACK_ROOT/var/spack/repos/jopa/packages
 
 # Install entrypoint
 USER root
