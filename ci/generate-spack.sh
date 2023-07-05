@@ -39,7 +39,7 @@ for env in envs/*/spack.yaml; do
         if [ -f $variant ]; then
             spack config add --file $variant
         fi
-        spack concretize --force --fresh
+        spack concretize --force --fresh --jobs=1
         spack env deactivate
 
         # Copy the concretized environment to the artifacts directory for deployment
