@@ -41,6 +41,9 @@ for env in envs/*/spack.yaml; do
             cp artifacts/$ENV/mamba.lock artifacts/ci-$BUILD/mamba.lock
         fi
 
+        # Copy etc files into the cache
+        cp -r etc artifacts/ci-$BUILD/etc
+
         # See if this container was already built
         HAS_DIFF="no"
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then

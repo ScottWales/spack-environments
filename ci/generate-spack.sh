@@ -3,12 +3,6 @@ set -eu
 
 source /opt/spack/share/spack/setup-env.sh
 
-spack repo list
-ls -l /opt/spack/var/spack/repos/
-ls -l /opt/spack/var/spack/repos/bom-ngm/packages
-ls -l /opt/spack/var/spack/repos/jopa/packages
-
-
 # Generates Spack CI yaml files
 : ${CI_PROJECT_DIR:=.}
 export CI_PROJECT_DIR
@@ -39,7 +33,7 @@ for env in envs/*/spack.yaml; do
         if [ -f $variant ]; then
             spack config add --file $variant
         fi
-        spack concretize --force --fresh --jobs=1
+        spack concretize --force --fresh
         spack env deactivate
 
         # Copy the concretized environment to the artifacts directory for deployment
