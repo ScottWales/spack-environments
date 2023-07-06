@@ -10,8 +10,13 @@ source $SPACK_ROOT/share/spack/setup-env.sh
 
 # Install the CI mirror and package repos
 spack mirror add --scope site ci-mirror file://$SPACK_CACHE
-spack repo add --scope site $SPACK_ROOT/var/spack/repos/jopa
-spack repo add --scope site $SPACK_ROOT/var/spack/repos/bom-ngm
+
+# Temporary path to be copied in later
+for repo in jopa bom-ngm; do
+    mkdir -p $SPACK_ROOT/var/spack/repos/$repo/packages
+    echo "repo: {namespace: $repo}" > $SPACK_ROOT/var/spack/repos/$repo/repo.yaml
+    spack repo add --scope site $SPACK_ROOT/var/spack/repos/$repo
+done
 
 # Update Spack with system packages
 spack compiler find --scope site /usr

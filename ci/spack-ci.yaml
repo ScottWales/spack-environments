@@ -23,7 +23,7 @@ spack:
           tags:
             - docker
           image:
-            name: "localhost:5000/spack-base:latest"
+            name: "localhost:5000/spack-base:${DOCKER_TAG}"
             entrypoint: ['']
           before_script:
             - source /build/entrypoint.sh
@@ -31,7 +31,7 @@ spack:
       tags:
         - docker
       image:
-        name: "localhost:5000/spack-base:latest"
+        name: "localhost:5000/spack-base:${DOCKER_TAG}"
         entrypoint: ['']
       before_script:
         - source /build/entrypoint.sh
