@@ -22,7 +22,7 @@ def main():
     parser.add_argument('fileb', argparse.FileType('r'))
     args = parser.parse_args()
 
-    diff =  spack_lock_diff(args.filea, args.fileb):
+    diff = spack_lock_diff(args.filea, args.fileb)
 
     if len(diff) == 0:
         return
