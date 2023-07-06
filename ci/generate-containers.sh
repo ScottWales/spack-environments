@@ -42,11 +42,15 @@ for env in envs/*/spack.yaml; do
         fi
 
         # See if this container was already built
+        HAS_DIFF="no"
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
+            # Do config files differ?
             if ! diff -q -r --exclude variants "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
-            else
-                HAS_DIFF="no"
+            fi
+            # Do lock files differ? - special because files are not consistently ordered
+            if ! ci/diff-spack-lock.py "$BRANCH_CACHE/ci-$BUILD/spack.lock" "artifacts/ci-$BUILD/spack.lock"; then
+                HAS_DIFF="yes"
             fi
         else
             HAS_DIFF="yes"
