@@ -45,7 +45,7 @@ for env in envs/*/spack.yaml; do
         HAS_DIFF="no"
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
             # Do config files differ?
-            if ! diff -q -r --exclude variants "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
+            if ! diff -q -r --exclude variants --exclude spack.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
             fi
             # Do lock files differ? - special because files are not consistently ordered
