@@ -132,8 +132,6 @@ cat >> $SPACK_ROOT/bin/activate.sh << EOF
 if [ -n "\$HOST_MPI" ]; then
     if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then
         BIND_MPI_LIB=\$HOST_MPI/lib
-    else
-        BIND_MPI_LIB=""
     fi
 fi
 
@@ -141,7 +139,7 @@ fi
 PATH=\$MPI_PATH/bin:\$PATH
 CPATH=\$MPI_PATH/include:\$CPATH
 
-MPI_LIB_PREPEND=\$BIND_MPI_LIB:\$HYBRID_MPI_LIB
+MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 EOF
