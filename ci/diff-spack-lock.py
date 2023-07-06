@@ -1,4 +1,4 @@
-#!/g/data/hh5/public/apps/miniconda3/envs/analysis3/bin/python
+#!/usr/bin/env python3
 ## Scott Wales 2023
 
 # Compare two spack lock files, exiting with 0 if they represent the same environment
