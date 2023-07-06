@@ -4,6 +4,7 @@
 # Compare two spack lock files, exiting with 0 if they represent the same environment
 
 import argparse
+import json
 
 def spack_lock_diff(filea, fileb):
     locka = json.load(filea)
@@ -18,8 +19,8 @@ def spack_lock_diff(filea, fileb):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('filea', argparse.FileType('r'))
-    parser.add_argument('fileb', argparse.FileType('r'))
+    parser.add_argument('filea', type=argparse.FileType('r'))
+    parser.add_argument('fileb', type=argparse.FileType('r'))
     args = parser.parse_args()
 
     diff = spack_lock_diff(args.filea, args.fileb)
