@@ -6,7 +6,4 @@ spack:
         - fcm
         - rsync
         - builtin.hdf5
-#        - bzip2
-#        - bom-ngm.elfutils ~bzip2
-        - builtin.elfutils
         - tau +mpi +openmp +opari ~pthreads
