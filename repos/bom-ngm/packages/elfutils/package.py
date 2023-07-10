@@ -115,7 +115,7 @@ class Elfutils(AutotoolsPackage, SourcewarePackage):
         spec = self.spec
         args = [
             "--with-bzlib=%s" % spec["bzip2"].prefix,
-            "--with-lzma=%s" % spec["lzma"].prefix,
+            "--with-lzma=%s" % spec["libxml2"].prefix,
             "--with-zlib=%s" % spec["zlib"].prefix,
         ]
 
