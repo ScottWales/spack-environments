@@ -67,7 +67,6 @@ class Elfutils(AutotoolsPackage, SourcewarePackage):
     depends_on("xz", type="link")
     depends_on("zlib", type="link")
     depends_on("zstd", type="link", when="@0.182:")
-    depends_on("lzma", type="link")
 
     depends_on("gettext", when="+nls")
     depends_on("iconv")
@@ -115,7 +114,7 @@ class Elfutils(AutotoolsPackage, SourcewarePackage):
         spec = self.spec
         args = [
             "--with-bzlib=%s" % spec["bzip2"].prefix,
-            "--with-lzma=%s" % spec["libxml2"].prefix,
+            "--with-lzma=/usr/lib64",
             "--with-zlib=%s" % spec["zlib"].prefix,
         ]
 
