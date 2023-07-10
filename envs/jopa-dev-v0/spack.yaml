@@ -1,0 +1,11 @@
+spack:
+    specs:
+        - eckit
+        - fckit
+        - ecmwf-atlas
+
+    packages:
+        git-lfs:
+            require: '%gcc'
+        go:
+            require: '%gcc'
