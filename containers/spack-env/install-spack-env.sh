@@ -119,15 +119,36 @@ for prefix in $(spack find --format '{prefix}'); do
         continue
     fi
     if [ -d "$prefix/include" ]; then
-        echo "CPATH=$prefix/include:\$CPATH" >> $SPACK_ROOT/bin/activate.sh
+        echo "CPATH=$prefix/include:\$CPATH" >> $SPACK_ROOT/bin/activate-full.sh
     fi
     if [ -d "$prefix/lib" ]; then
-        echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate.sh
-        echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate.sh
+        echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
+        echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
+    fi
+done
+
+for prefix in $(spack find --implicit --format '{prefix}'); do
+    if ! [[ "$prefix" =~ ^$SPACK_ROOT ]]; then
+        continue
+    fi
+    if [ -d "$prefix/include" ]; then
+        echo "CPATH=$prefix/include:\$CPATH" >> $SPACK_ROOT/bin/activate-dev.sh
+    fi
+    if [ -d "$prefix/lib" ]; then
+        echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
+        echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
 done
 
 cat >> $SPACK_ROOT/bin/activate.sh << EOF
+# Only activate dependencies, or the full environment
+if [ -n "\$NGMENV_DEV_ENVIRONMENT" ]; then
+    source $SPACK_ROOT/bin/activate-dev.sh
+else
+    source $SPACK_ROOT/bin/activate-full.sh
+fi
+
+
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
     if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then

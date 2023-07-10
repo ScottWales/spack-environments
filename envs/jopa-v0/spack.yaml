@@ -1,8 +1,5 @@
 spack:
     specs:
-        - eckit
-        - fckit
-        - ecmwf-atlas
         - crtm@2.3-jedi.1
         - oops@1.1.0
           #- saber@1.1.2
