@@ -2,7 +2,7 @@ class Fv3Jedi(CMakePackage):
     git = "https://github.com/jcsda/fv3-jedi"
     url = "https://github.com/jcsda/fv3-jedi/archive/refs/tags/1.1.0.tar.gz"
 
-    parallel = False`
+    parallel = False
 
     version("1.1.0", sha256="aaf7b9c39bfa8ed0a8377bd1308f6d49376ec8e21f4a807497271a02c1f726bd")
 
