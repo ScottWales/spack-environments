@@ -1,14 +1,17 @@
 ARG  DOCKER_REGISTRY
-FROM $DOCKER_REGISTRY/spack-base:latest
+ARG  DOCKER_TAG
+FROM $DOCKER_REGISTRY/spack-base:$DOCKER_TAG
 
 ARG  BASE_ENV
 ARG  CONCRETE_ENV
+
+USER root
+COPY containers/spack-env/*.sh /build/
 
 # Copy environment definition
 COPY envs/$BASE_ENV/* /build/
 
 # Copy lock files
-USER root
 COPY artifacts/ci-$CONCRETE_ENV/*.yaml /build/
 COPY artifacts/ci-$CONCRETE_ENV/*.lock /build/
 RUN  chmod 755 /build/*.sh

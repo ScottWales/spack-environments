@@ -41,12 +41,19 @@ for env in envs/*/spack.yaml; do
             cp artifacts/$ENV/mamba.lock artifacts/ci-$BUILD/mamba.lock
         fi
 
+        # Copy etc files into the cache
+        cp -r etc artifacts/ci-$BUILD/etc
+
         # See if this container was already built
+        HAS_DIFF="no"
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
-            if ! diff -q -r "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
+            # Do config files differ?
+            if ! diff -q -r --exclude variants --exclude spack.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
-            else
-                HAS_DIFF="no"
+            fi
+            # Do lock files differ? - special because files are not consistently ordered
+            if ! ci/diff-spack-lock.py "$BRANCH_CACHE/ci-$BUILD/spack.lock" "artifacts/ci-$BUILD/spack.lock"; then
+                HAS_DIFF="yes"
             fi
         else
             HAS_DIFF="yes"

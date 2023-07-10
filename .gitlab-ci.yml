@@ -15,9 +15,11 @@ stages:
 variables:
     DOCKER_REGISTRY: '172.17.0.2:5000'
     DOCKER_PERSIST: '/scratch/gitlab-runner/'
+    DOCKER_TAG: '${CI_COMMIT_BRANCH}'
     CI_OUTDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_SHA}'
-    BRANCH_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/master'
+    BRANCH_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/${CI_COMMIT_BRANCH}'
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack'
+    APPTAINER_CACHEDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/apptainer'
     MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
 
 setup:
@@ -27,6 +29,7 @@ setup:
         - mkdir -p "$SPACK_CACHE"
         - mkdir -p "$BRANCH_CACHE"
         - chmod a+rwX "$SPACK_CACHE"
+        - mkdir -p "$APPTAINER_CACHEDIR"
         - mkdir -p "$CI_OUTDIR"
 
 # Base docker image, used for building the Spack packages
@@ -49,25 +52,20 @@ docker build spack-base:
         - /kaniko/executor
             --context "${CI_PROJECT_DIR}"
             --dockerfile "${CI_PROJECT_DIR}/containers/base.docker"
-            --destination "${DOCKER_REGISTRY}/spack-base:latest"
+            --destination "${DOCKER_REGISTRY}/spack-base:${DOCKER_TAG}"
             --build-arg "SPACK_CACHE=${SPACK_CACHE}"
             --build-arg "MAMBA_REPO=${MAMBA_REPO}"
             --use-new-run
-            --single-snapshot
             --snapshotMode=redo
             --compressed-caching=false
-    only:
-        changes:
-            - containers/base.docker
-            - containers/*.sh
-            - repos/**/*
+            --cache=true
 
 # Generate lock files for Spack packages
 generate spack environments:
     stage: generate
     tags: [docker]
     image:
-        name: localhost:5000/spack-base:latest
+        name: localhost:5000/spack-base:${DOCKER_TAG}
         entrypoint: [""]
         pull_policy: always
     script:
@@ -82,7 +80,7 @@ generate mamba environments:
     stage: generate
     tags: [docker]
     image:
-        name: localhost:5000/spack-base:latest
+        name: localhost:5000/spack-base:${DOCKER_TAG}
         entrypoint: [""]
         pull_policy: always
     script:
@@ -106,7 +104,7 @@ generate containers:
     stage: generate
     tags: [docker]
     image: 
-        name: localhost:5000/spack-base:latest
+        name: localhost:5000/spack-base:${DOCKER_TAG}
         entrypoint: [""]
         pull_policy: always
     script:

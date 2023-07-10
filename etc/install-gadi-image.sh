@@ -30,6 +30,7 @@ mkdir -p $APPDIR/bin
 rm -f $APPDIR/bin/*
 cp etc/run-image-command.sh $APPDIR/bin
 cp etc/rose $APPDIR/bin
+cp etc/imagerun-rsh $APPDIR/bin
 ln -s ../etc/imagerun-gadi $APPDIR/bin/imagerun
 
 COMMANDS=""
