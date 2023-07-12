@@ -18,7 +18,7 @@ spack:
         - ninja
         - netcdf-cxx4
         - netcdf-fortran
-        - blas
+        - openblas
         - boost
         - gsl-lite
         - udunits
