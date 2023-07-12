@@ -14,6 +14,7 @@ class EcmwfAtlas(CMakePackage):
     depends_on('fckit')
     depends_on('eigen')
     depends_on('python@3', type='build')
+    depends_on('ectrans')
 
     def cmake_args(self):
         args = []
