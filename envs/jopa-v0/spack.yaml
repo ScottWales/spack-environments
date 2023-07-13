@@ -16,3 +16,5 @@ spack:
             require: '%gcc'
         go:
             require: '%gcc'
+        mpi:
+            require: "openmpi@4.1.4 ~static"
