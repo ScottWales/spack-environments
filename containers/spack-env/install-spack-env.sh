@@ -112,6 +112,8 @@ PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 CPATH=\${CPATH:-}:/include
 LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
 LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
+LD_RUN_PATH=\${LD_LIBRARY_PATH:-}:/lib64
+CMAKE_PREFIX_PATH=\${CMAKE_PREFIX_PATH:-}
 EOF
 
 for prefix in $(spack find --format '{prefix}'); do
@@ -124,7 +126,9 @@ for prefix in $(spack find --format '{prefix}'); do
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
+        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
+    echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
 done
 
 for prefix in $(spack find --implicit --format '{prefix}'); do
@@ -137,7 +141,9 @@ for prefix in $(spack find --implicit --format '{prefix}'); do
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
+        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
+    echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
 done
 
 cat >> $SPACK_ROOT/bin/activate.sh << EOF
