@@ -20,7 +20,7 @@ done
 
 # Update Spack with system packages
 spack compiler find --scope site /usr
-spack external find --scope site --all --path /usr --not-buildable
+spack external find --scope site --all --path /usr
 
 spack config --scope site add packages:gcc:buildable:true
 
