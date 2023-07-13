@@ -71,7 +71,7 @@ export MPI_PATH=$MPI_PATH
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
 # Container MPI library path
-HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
+HYBRID_MPI_LIB=\$(spack find --format '{prefix}' mpi)/lib
 
 # Intel compiler spack packages have different names
 case \${SPACK_COMPILER} in
@@ -112,6 +112,8 @@ PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 CPATH=\${CPATH:-}:/include
 LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
 LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
+LD_RUN_PATH=\${LD_LIBRARY_PATH:-}:/lib64
+CMAKE_PREFIX_PATH=\${CMAKE_PREFIX_PATH:-}
 EOF
 
 for prefix in $(spack find --format '{prefix}'); do
@@ -124,7 +126,9 @@ for prefix in $(spack find --format '{prefix}'); do
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
+        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
+    echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
 done
 
 for prefix in $(spack find --implicit --format '{prefix}'); do
@@ -137,7 +141,9 @@ for prefix in $(spack find --implicit --format '{prefix}'); do
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
+        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
+    echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
 done
 
 cat >> $SPACK_ROOT/bin/activate.sh << EOF
@@ -148,11 +154,15 @@ else
     source $SPACK_ROOT/bin/activate-full.sh
 fi
 
+# Make mpicc etc. find the correct paths when in cmake
+export OMPI_FFLAGS=-I\$MPI_PATH/include
+export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB"
 
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
     if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then
         BIND_MPI_LIB=\$HOST_MPI/lib
+        OMPI_LDFLAGS="-L\$HOST_MPI/lib \$OMPI_LDFLAGS"
     fi
 fi
 
