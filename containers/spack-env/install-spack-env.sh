@@ -71,7 +71,7 @@ export MPI_PATH=$MPI_PATH
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
 # Container MPI library path
-HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
+HYBRID_MPI_LIB=\$(spack find --format '{prefix}' mpi)/lib
 
 # Intel compiler spack packages have different names
 case \${SPACK_COMPILER} in
@@ -154,11 +154,15 @@ else
     source $SPACK_ROOT/bin/activate-full.sh
 fi
 
+# Make mpicc etc. find the correct paths when in cmake
+export OMPI_FFLAGS=-I\$MPI_PATH/include
+export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB"
 
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
     if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then
         BIND_MPI_LIB=\$HOST_MPI/lib
+        OMPI_LDFLAGS="-L\$HOST_MPI/lib \$OMPI_LDFLAGS"
     fi
 fi
 
