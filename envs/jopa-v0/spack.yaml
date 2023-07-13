@@ -14,7 +14,7 @@ spack:
         - fftw
         - git-lfs
         - gsl-lite
-        - jedicmake
+        - jedi-cmake
         - lapack
         - netcdf-c
         - netcdf-cxx4
