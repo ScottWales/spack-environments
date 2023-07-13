@@ -8,7 +8,7 @@ spack:
 
         - blas
         - boost
-        - 'cmake@3.19:'
+        - 'cmake@3.26:'
         - ecbuild@3.7
         - eigen
         - fftw
