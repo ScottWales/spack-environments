@@ -19,6 +19,7 @@ SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
 SPACK_COMPILER=$(spack find --format="{compiler}" mpi | sed 's/@=/@/')
 
 # Move MPI libs into a separate directory for Bind mode
+INTERNAL_MPI=$(spack find --format="{prefix}" mpi)
 MPI_PATH=$SPACK_ROOT/containermpi
 mkdir -p "$MPI_PATH/lib_hybrid_mpi"
 
@@ -48,6 +49,11 @@ else
 fi
 EOF
         chmod +x "$MPI_PATH/bin/$cmd"
+    done
+
+    # Reset cmake packages to generic paths
+    for file in $(grep -rl $INTERNAL_MPI/lib/libmpi.so  /opt/spack/opt/spack/*/*/*/*/cmake); do
+        sed -i $file -e 's#'$INTERNAL_MPI'/lib/libmpi.so##'
     done
 
 elif [[ "$SPACK_MPI" =~ intel-oneapi-mpi ]]; then
