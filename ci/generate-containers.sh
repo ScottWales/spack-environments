@@ -35,6 +35,7 @@ if [ $ENV != jopa-v0 ]; then continue; fi
         # Copy config files to this variant
         cp -r --no-clobber envs/$ENV/* artifacts/ci-$BUILD/
         cp containers/spack-env.docker artifacts/ci-$BUILD
+        cp -r containers/spack-env artifacts/ci-$BUILD
 
         # If there is a conda environment copy the lock to this variant
         if [ -f envs/$ENV/mamba.yaml ]; then
