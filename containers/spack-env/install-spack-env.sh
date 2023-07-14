@@ -53,7 +53,7 @@ EOF
 
     # Reset cmake packages to generic paths
     for file in $(grep -rl $INTERNAL_MPI/lib/libmpi.so  /opt/spack/opt/spack/*/*/*/*/cmake); do
-        sed -i $file -e 's#'$INTERNAL_MPI'/lib/libmpi.so##'
+        sed -i $file -e 's#'$INTERNAL_MPI'/lib/libmpi.so#${MPI_C_LIBRARIES}#'
     done
 
 elif [[ "$SPACK_MPI" =~ intel-oneapi-mpi ]]; then
