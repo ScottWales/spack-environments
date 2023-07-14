@@ -13,6 +13,8 @@ mkdir -p ${ARTIFACTS}
 
 # Concretize each enviornment separately
 for env in envs/*/spack.yaml; do
+
+
     for variant in $(dirname $env)/variants/*.yaml; do
         if [ -f $variant ]; then
             VAR=$(basename --suffix=.yaml $variant)
@@ -24,6 +26,7 @@ for env in envs/*/spack.yaml; do
         BUILD=$ENV-$VAR
         echo $BUILD
 
+if [ $ENV != jopa-v0 ]; then continue; fi
         # Setup the build directory
         mkdir -p build/ci-$BUILD/
         cp $env build/ci-$BUILD/

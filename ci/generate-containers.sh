@@ -18,6 +18,7 @@ for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
     echo "ENV=$ENV"
 
+if [ $ENV != jopa-v0 ]; then continue; fi
     for variant in $(dirname $env)/variants/*.yaml; do
         if [ -f $variant ]; then
             VAR=$(basename --suffix=.yaml $variant)
@@ -34,6 +35,7 @@ for env in envs/*/spack.yaml; do
         # Copy config files to this variant
         cp -r --no-clobber envs/$ENV/* artifacts/ci-$BUILD/
         cp containers/spack-env.docker artifacts/ci-$BUILD
+        cp -r containers/spack-env artifacts/ci-$BUILD
 
         # If there is a conda environment copy the lock to this variant
         if [ -f envs/$ENV/mamba.yaml ]; then

@@ -19,6 +19,7 @@ SPACK_MPI=$(spack find --format="{name}@{version}" mpi)
 SPACK_COMPILER=$(spack find --format="{compiler}" mpi | sed 's/@=/@/')
 
 # Move MPI libs into a separate directory for Bind mode
+INTERNAL_MPI=$(spack find --format="{prefix}" mpi)
 MPI_PATH=$SPACK_ROOT/containermpi
 mkdir -p "$MPI_PATH/lib_hybrid_mpi"
 
@@ -50,6 +51,11 @@ EOF
         chmod +x "$MPI_PATH/bin/$cmd"
     done
 
+    # Reset cmake packages to generic paths
+    for file in $(grep -rl $INTERNAL_MPI/lib/libmpi.so  /opt/spack/opt/spack/*/*/*/*/cmake); do
+        sed -i $file -e 's#'$INTERNAL_MPI'/lib/libmpi.so#${MPI_C_LIBRARIES}#'
+    done
+
 elif [[ "$SPACK_MPI" =~ intel-oneapi-mpi ]]; then
 
     ln -s $(spack find --format="{prefix}" mpi)/mpi/latest/bin "$MPI_PATH/bin"
@@ -71,6 +77,7 @@ export MPI_PATH=$MPI_PATH
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
 # Container MPI library path
+INTERNAL_MPI=\$(spack find --format '{prefix}' mpi)
 HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
 
 # Intel compiler spack packages have different names
@@ -104,7 +111,7 @@ export I_MPI_FC=\$FC
 export I_MPI_F90=\$FC
 export I_MPI_CXX=\$CXX
 
-export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
+export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH LD_RUN_PATH CMAKE_PREFIX_PATH
 
 # Add environment to paths
 PATH=\$SPACK_ENV_VIEW/bin:\$PATH
@@ -112,6 +119,9 @@ PATH=\$SPACK_ENV_VIEW/bin:\$PATH
 CPATH=\${CPATH:-}:/include
 LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
 LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
+LD_RUN_PATH=\${LD_LIBRARY_PATH:-}:/lib64
+CMAKE_PREFIX_PATH=\${CMAKE_PREFIX_PATH:-}
+
 EOF
 
 for prefix in $(spack find --format '{prefix}'); do
@@ -124,7 +134,9 @@ for prefix in $(spack find --format '{prefix}'); do
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
+        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
+    echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
 done
 
 for prefix in $(spack find --implicit --format '{prefix}'); do
@@ -137,7 +149,9 @@ for prefix in $(spack find --implicit --format '{prefix}'); do
     if [ -d "$prefix/lib" ]; then
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
+        echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
+    echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
 done
 
 cat >> $SPACK_ROOT/bin/activate.sh << EOF
@@ -148,19 +162,23 @@ else
     source $SPACK_ROOT/bin/activate-full.sh
 fi
 
+# Make mpicc etc. find the correct paths when in cmake
+export OMPI_FCFLAGS=-I\$MPI_PATH/include
+export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB -L\$INTERNAL_MPI_LIB"
 
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
     if [ -z "\${NGMENV_MPI_HYBRID_MODE_ONLY:-}" ]; then
         BIND_MPI_LIB=\$HOST_MPI/lib
+        OMPI_LDFLAGS="-L\$HOST_MPI/lib \$OMPI_LDFLAGS"
     fi
 fi
 
 # Add MPI to path & export
 PATH=\$MPI_PATH/bin:\$PATH
-CPATH=\$MPI_PATH/include:\$CPATH
+CPATH=\$MPI_PATH/include:\$INTERNAL_MPI/include:\$CPATH
 
-MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB
+MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB:\$INTERNAL_MPI/lib
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 EOF

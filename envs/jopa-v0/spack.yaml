@@ -8,12 +8,13 @@ spack:
 
         - openblas
         - boost
-        - 'cmake@3.19:'
+        - 'cmake@3.26:'
         - ecbuild@3.7
         - eigen
         - fftw
         - git-lfs
         - gsl-lite
+        - jedi-cmake
         - lapack
         - netcdf-c
         - netcdf-cxx4
@@ -32,4 +33,4 @@ spack:
         go:
             require: '%gcc'
         openmpi:
-            require: '+cxx'
+            require: '~static +cxx'
