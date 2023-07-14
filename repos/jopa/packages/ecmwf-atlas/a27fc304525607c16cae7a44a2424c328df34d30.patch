@@ -1,0 +1,22 @@
+From a27fc304525607c16cae7a44a2424c328df34d30 Mon Sep 17 00:00:00 2001
+From: Willem Deconinck <willem.deconinck@ecmwf.int>
+Date: Wed, 10 May 2023 13:44:58 +0200
+Subject: [PATCH] Fix compilation of atlas_io due to missing header <cstdint>
+
+---
+ atlas_io/src/atlas_io/Data.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/atlas_io/src/atlas_io/Data.h b/atlas_io/src/atlas_io/Data.h
+index 7431fd7f4..69c51096f 100644
+--- a/atlas_io/src/atlas_io/Data.h
++++ b/atlas_io/src/atlas_io/Data.h
+@@ -10,6 +10,8 @@
+ 
+ #pragma once
+ 
++#include <cstdint>
++
+ #include "eckit/io/Buffer.h"
+ 
+ namespace atlas {
