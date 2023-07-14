@@ -26,6 +26,7 @@ spack:
         - shumlib
         - udunits
         - zstd
+        - bom-ngm.hdf5@1.12.2 # Must match mamba
 
     packages:
         git-lfs:
