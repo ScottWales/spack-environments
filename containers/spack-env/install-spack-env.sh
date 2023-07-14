@@ -71,7 +71,8 @@ export MPI_PATH=$MPI_PATH
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 
 # Container MPI library path
-HYBRID_MPI_LIB=\$(spack find --format '{prefix}' mpi)/lib
+INTERNAL_MPI=\$(spack find --format '{prefix}' mpi)
+HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
 
 # Intel compiler spack packages have different names
 case \${SPACK_COMPILER} in
@@ -104,7 +105,7 @@ export I_MPI_FC=\$FC
 export I_MPI_F90=\$FC
 export I_MPI_CXX=\$CXX
 
-export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH
+export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH LD_RUN_PATH CMAKE_PREFIX_PATH
 
 # Add environment to paths
 PATH=\$SPACK_ENV_VIEW/bin:\$PATH
@@ -114,6 +115,7 @@ LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
 LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
 LD_RUN_PATH=\${LD_LIBRARY_PATH:-}:/lib64
 CMAKE_PREFIX_PATH=\${CMAKE_PREFIX_PATH:-}
+
 EOF
 
 for prefix in $(spack find --format '{prefix}'); do
@@ -155,8 +157,8 @@ else
 fi
 
 # Make mpicc etc. find the correct paths when in cmake
-export OMPI_FFLAGS=-I\$MPI_PATH/include
-export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB"
+export OMPI_FCFLAGS=-I\$MPI_PATH/include
+export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB -L\$INTERNAL_MPI_LIB"
 
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
@@ -168,9 +170,9 @@ fi
 
 # Add MPI to path & export
 PATH=\$MPI_PATH/bin:\$PATH
-CPATH=\$MPI_PATH/include:\$CPATH
+CPATH=\$MPI_PATH/include:\$INTERNAL_MPI/include:\$CPATH
 
-MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB
+MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB:\$INTERNAL_MPI/lib
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 EOF
