@@ -18,7 +18,6 @@ for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
     echo "ENV=$ENV"
 
-if [ $ENV != jopa-v0 ]; then continue; fi
     for variant in $(dirname $env)/variants/*.yaml; do
         if [ -f $variant ]; then
             VAR=$(basename --suffix=.yaml $variant)
