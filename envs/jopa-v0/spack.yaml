@@ -5,6 +5,7 @@ spack:
         - fckit@0.10.1
         - ectrans@1.2.0
         - fiat@1.1.2
+        - odc
 
         - openblas
         - boost
@@ -26,6 +27,7 @@ spack:
         - shumlib
         - udunits
         - zstd
+        - bom-ngm.hdf5@1.12.2 # Must match mamba
 
     packages:
         git-lfs:
