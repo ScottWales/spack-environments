@@ -167,7 +167,7 @@ fi
 
 # Make mpicc etc. find the correct paths when in cmake
 export OMPI_FCFLAGS=-I\$MPI_PATH/include
-export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB -L\$INTERNAL_MPI_LIB"
+export OMPI_LDFLAGS="-L\$HYBRID_MPI_LIB -L\$INTERNAL_MPI/lib"
 
 # Connect to host mpi
 if [ -n "\$HOST_MPI" ]; then
@@ -179,9 +179,9 @@ fi
 
 # Add MPI to path & export
 PATH=\$MPI_PATH/bin:\$PATH
-CPATH=\$MPI_PATH/include:\$INTERNAL_MPI/include:\$CPATH
+CPATH=\$MPI_PATH/include:\$CPATH
 
-MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB:\$INTERNAL_MPI/lib
+MPI_LIB_PREPEND=\${BIND_MPI_LIB:-}:\$HYBRID_MPI_LIB
 LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LIBRARY_PATH
 LD_LIBRARY_PATH=\$MPI_LIB_PREPEND:\$LD_LIBRARY_PATH
 EOF
