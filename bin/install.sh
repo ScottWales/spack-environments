@@ -18,7 +18,6 @@ if ! $(spack env list | grep -w $ENV > /dev/null); then
     spack env activate $ENV
 
     # Add local repos
-    spack repo add $INSTALL_ROOT/repos/jopa
     spack repo add $INSTALL_ROOT/repos/bom-ngm
 else
     spack env activate $ENV
