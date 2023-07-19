@@ -15,15 +15,32 @@ class Eckit(CMakePackage):
 
     maintainers("skosukhin")
 
-    version("1.24.0", sha256="a25440011c66decbfb4908e5f4b7d0025b2166acfb9db941abdeb38d477c45b3")
-    version("1.20.2", sha256="9c11ddaaf346e40d11312b81ca7f1b510017f26618f4c0f5c5c59c37623fbac8")
-    version("1.19.0", sha256="a5fef36b4058f2f0aac8daf5bcc9740565f68da7357ddd242de3a5eed4765cc7")
-    version("1.16.3", sha256="d2aae7d8030e2ce39e5d04e36dd6aa739f3c8dfffe32c61c2a3127c36b573485")
-    version("1.16.0", sha256="9e09161ea6955df693d3c9ac70131985eaf7cf24a9fa4d6263661c6814ebbaf1")
+    version(
+        "1.24.0",
+        sha256="a25440011c66decbfb4908e5f4b7d0025b2166acfb9db941abdeb38d477c45b3",
+    )
+    version(
+        "1.20.2",
+        sha256="9c11ddaaf346e40d11312b81ca7f1b510017f26618f4c0f5c5c59c37623fbac8",
+    )
+    version(
+        "1.19.0",
+        sha256="a5fef36b4058f2f0aac8daf5bcc9740565f68da7357ddd242de3a5eed4765cc7",
+    )
+    version(
+        "1.16.3",
+        sha256="d2aae7d8030e2ce39e5d04e36dd6aa739f3c8dfffe32c61c2a3127c36b573485",
+    )
+    version(
+        "1.16.0",
+        sha256="9e09161ea6955df693d3c9ac70131985eaf7cf24a9fa4d6263661c6814ebbaf1",
+    )
 
     variant("tools", default=True, description="Build the command line tools")
     variant("mpi", default=True, description="Enable MPI support")
-    variant("admin", default=True, description="Build utilities for administration tools")
+    variant(
+        "admin", default=True, description="Build utilities for administration tools"
+    )
     variant("sql", default=True, description="Build SQL engine")
     variant(
         "linalg",
@@ -36,9 +53,13 @@ class Eckit(CMakePackage):
         description="List of supported compression backends",
     )
     variant("xxhash", default=True, description="Enable xxHash support for hashing")
-    variant("ssl", default=False, description="Enable MD4 and SHA1 support with OpenSSL")
+    variant(
+        "ssl", default=False, description="Enable MD4 and SHA1 support with OpenSSL"
+    )
     variant("curl", default=False, description="Enable URL data transferring with cURL")
-    variant("jemalloc", default=False, description="Link against jemalloc memory allocator")
+    variant(
+        "jemalloc", default=False, description="Link against jemalloc memory allocator"
+    )
     variant(
         "unicode",
         default=True,
@@ -57,7 +78,7 @@ class Eckit(CMakePackage):
 
     depends_on("yacc", type="build", when="+sql")
     depends_on("flex", type="build", when="+sql")
-    depends_on('python@3', type='build')
+    depends_on("python@3", type="build")
 
     depends_on("eigen", when="linalg=eigen")
     depends_on("armadillo", when="linalg=armadillo")
@@ -135,7 +156,9 @@ class Eckit(CMakePackage):
             self.define("ENABLE_RSYNC", False),
             # Disable "prototyping code that may never see the light of day":
             self.define("ENABLE_SANDBOX", False),
-            self.define('PYTHON_EXECUTABLE', self.spec['python'].prefix + '/bin/python3')
+            self.define(
+                "PYTHON_EXECUTABLE", self.spec["python"].prefix + "/bin/python3"
+            ),
         ]
 
         if "linalg=mkl" not in self.spec:
