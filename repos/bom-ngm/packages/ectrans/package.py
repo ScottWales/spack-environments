@@ -7,4 +7,4 @@ class Ectrans(CMakePackage):
     depends_on('fiat')
     depends_on('ecbuild', type='build')
     depends_on('blas')
-    depends_on('fftw')
+    depends_on('fftw-api')

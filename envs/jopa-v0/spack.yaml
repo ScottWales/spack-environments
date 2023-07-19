@@ -12,7 +12,6 @@ spack:
         - 'cmake@3.26:'
         - ecbuild@3.7
         - eigen
-        - fftw
         - git-lfs
         - gsl-lite
         - jedi-cmake
