@@ -1,0 +1,11 @@
+diff -u a/src/odc/api/StridedData.h b/src/odc/api/StridedData.h
+--- a/src/odc/api/StridedData.h	2023-07-17 15:17:41.136669000 +0100
++++ b/src/odc/api/StridedData.h	2023-07-17 15:18:55.183160000 +0100
+@@ -16,6 +16,7 @@
+ #define odc_api_StridedData_H
+ 
+ #include <cstddef>
++#include <cstdint>
+ #include <string.h>
+ #include <algorithm>
+ 
