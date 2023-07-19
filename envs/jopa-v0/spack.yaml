@@ -15,6 +15,7 @@ spack:
         - fftw
         - git-lfs
         - gsl-lite
+        - hdf5-plugins
         - jedi-cmake
         - lapack
         - netcdf-c
