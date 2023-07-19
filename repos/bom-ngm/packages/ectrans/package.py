@@ -7,7 +7,7 @@ class Ectrans(CMakePackage):
         sha256="2ee6dccc8bbfcc23faada1d957d141f24e41bb077c1821a7bc2b812148dd336c",
     )
 
-    depends_on("fiat")
-    depends_on("ecbuild", type="build")
-    depends_on("blas")
-    depends_on("fftw")
+    depends_on('fiat')
+    depends_on('ecbuild', type='build')
+    depends_on('blas')
+    depends_on('fftw-api')
