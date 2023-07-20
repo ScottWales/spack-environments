@@ -1,10 +1,17 @@
-# Building JOPA
+# JOPA Container
 
-## With a container
+Contains the dependencies required to build mo-bundle and run JOPA
+
+https://github.com/MetOffice/mo-bundle
+
+# Building JOPA / mo-bundle
+
+## NCI, with a container
 
 1. Load the container
 
 ```
+module use /g/data/access/ngm
 module load envs/jopa
 ```
 
@@ -16,7 +23,7 @@ cd mo-bundle
 imagerun cmake --preset=bom-container --workflow
 ```
 
-## At the Met Office, no container
+## Met Office VDI, no container
 
 1. Install Spack, and activate with `$SPACK/share/spack/setup-env.sh`
 
@@ -29,19 +36,19 @@ spack install gcc@9
 spack compiler find $(spack find --format='{prefix}' gcc@9)
 ```
 
-4. Install the environment
+4. Install the environment with GCC and MPICH
 
 ```
 export SPACK_COMPILER="gcc@9"
-export SPACK_MPI="openmpi schedulers=slurm"
+export SPACK_MPI="mpich +slurm"
 
-srun ./bin/install.sh jopa-v0
+srun -q -n1 -c10 --mem=40G --time=120 env -u SLURM_NODELIST ./bin/install.sh jopa-v0
 ```
 
 5. Activate the environment
 
 ```
-spack load gcc@9
+spack load $SPACK_COMPILER
 spack env activate jopa-v0
 export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
 ```

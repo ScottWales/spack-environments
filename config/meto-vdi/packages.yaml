@@ -124,3 +124,8 @@ packages:
     - spec: slurm@17.02.10
       prefix: /usr
     buildable: false
+  libfabric:
+    externals:
+    - spec: libfabric@1.7.2
+      prefix: /usr
+    buildable: false
