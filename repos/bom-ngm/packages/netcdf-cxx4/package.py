@@ -40,7 +40,9 @@ class NetcdfCxx4(AutotoolsPackage):
             # Address the underlinking problem reported in
             # https://github.com/Unidata/netcdf-cxx4/issues/86, which also
             # results into a linking error on macOS:
-            flags.extend(self.spec["netcdf-c"].libs.libraries)
+            flags.append(self.spec["netcdf-c"].libs.link_flags)
+        elif name == "ldflags":
+            flags.append(self.spec["netcdf-c"].libs.search_flags)
 
         # Note that cflags and cxxflags should be added by the compiler wrapper
         # and not on the command line to avoid overriding the default
