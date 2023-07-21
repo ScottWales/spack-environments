@@ -261,6 +261,13 @@ class Tau(Package):
             env["FC"] = spec["mpi"].mpifc
             options.append("-mpiinc=%s" % spec["mpi"].prefix.include)
             options.append("-mpilib=%s" % spec["mpi"].prefix.lib)
+            
+            if spec["mpi"].name == "nci-openmpi" and self.spec.satisfies('%intel'):
+                options.append("-mpiinc=%s" % join_path(spec["mpi"].prefix.include, "Intel"))
+                options.append("-mpilib=%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
+            if spec["mpi"].name == "nci-openmpi" and self.spec.satisfies('%gcc'):
+                options.append("-mpiinc=%s" % join_path(spec["mpi"].prefix.include, "GNU"))
+                options.append("-mpilib=%s" % join_path(spec["mpi"].prefix.lib, "GNU"))
 
             options.append("-mpi")
             if "+comm" in spec:
