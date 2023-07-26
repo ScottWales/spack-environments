@@ -33,7 +33,7 @@ microdnf install -y --nodocs \
      unzip \
      wget \
      which \
-     xz \
+     xz-devel \
      zstd
 
 microdnf clean all
