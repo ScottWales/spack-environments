@@ -5,3 +5,4 @@ dependencies:
   - h5py
   - hdf5=1.12.2 # Must match spack
   - yamlprocessor
+  - varpy
