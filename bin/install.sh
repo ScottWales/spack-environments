@@ -14,11 +14,10 @@ spack clean -m
 
 # Create the environment
 if ! $(spack env list | grep -w $ENV > /dev/null); then
-    spack env create --without-view $ENV envs/$ENV/spack.yaml
+    spack env create $ENV envs/$ENV/spack.yaml
     spack env activate $ENV
 
     # Add local repos
-    spack repo add $INSTALL_ROOT/repos/jopa
     spack repo add $INSTALL_ROOT/repos/bom-ngm
 else
     spack env activate $ENV
@@ -58,9 +57,11 @@ fi
 #    rm $CONFIG
 #fi
 
+echo $SPACK_ENV
+
 # Concretize and install
 spack concretize --force --fresh
-spack install ${SPACK_JOBS:+--jobs=$SPACK_JOBS}
+spack install -v ${SPACK_JOBS:+--jobs=$SPACK_JOBS}
 
 spack module tcl refresh -y
 spack env loads > /dev/null

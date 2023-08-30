@@ -1,0 +1,34 @@
+diff --git a/config/cmake/FindZSTD.cmake b/config/cmake/FindZSTD.cmake
+new file mode 100644
+index 00000000..87c19ebe
+--- /dev/null
++++ b/config/cmake/FindZSTD.cmake
+@@ -0,0 +1,28 @@
++find_package(PkgConfig)
++pkg_check_modules(PC_ZSTD QUIET libzstd)
++
++find_path(ZSTD_INCLUDE_DIR
++    NAMES zstd.h
++    PATHS ${PC_ZSTD_INCLUDE_DIR}
++    )
++
++find_library(ZSTD_LIBRARY
++    NAMES zstd
++    PATHS ${PC_ZSTD_LIBRARY_DIRS}
++    )
++
++set(ZSTD_VERSION ${PC_ZSTD_VERSION})
++
++include(FindPackageHandleStandardArgs)
++find_package_handle_standard_args(ZSTD
++    FOUND_VAR ZSTD_FOUND
++    REQUIRED_VARS
++        ZSTD_LIBRARY
++        ZSTD_INCLUDE_DIR
++    VERSION_VAR ZSTD_VERSION)
++
++if(ZSTD_FOUND)
++    set(ZSTD_LIBRARIES ${ZSTD_LIBRARY})
++    set(ZSTD_INCLUDE_DIRS ${ZSTD_INCLUDE_DIR})
++    set(ZSTD_DEFINITIONS ${PC_ZSTD_CFLAGS_OTHER})
++endif()
