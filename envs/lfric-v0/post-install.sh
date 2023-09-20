@@ -6,6 +6,6 @@ set -eu
 set -o pipefail
 
 
-cat > $SPACK_ENV_VIEW/etc/fcm/keyword.cfg <<EOF
+cat > $(spack find --format="{prefix}" fcm)/etc/fcm/keyword.cfg <<EOF
 include = \$FCM_KEYWORDS
 EOF
