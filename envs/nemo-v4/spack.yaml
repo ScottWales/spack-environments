@@ -2,7 +2,7 @@ spack:
     specs:
         - fcm
         - netcdf-fortran
-        - hdf5
+        - bom-ngm.hdf5@1.12.2 # Must match mamba
         - libpng
         - openjpeg
         - zlib

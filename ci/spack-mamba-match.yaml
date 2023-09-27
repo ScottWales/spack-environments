@@ -1,0 +1,9 @@
+spack:
+  # Spack packages that need to match mamba versions
+  packages:
+      xz:
+          require: '@=5.2.6'
+      libevent:
+          require: '@=2.1.10'
+      gsl:
+          require: '@=2.7 +external-cblas'
