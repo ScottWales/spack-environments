@@ -6,3 +6,5 @@ dependencies:
   - hdf5=1.12.2 # Must match spack
   - yamlprocessor
   - varpy
+  - libxml2=2.10.3
+  - libopenblas=0.3.23

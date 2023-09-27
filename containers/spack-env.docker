@@ -21,3 +21,9 @@ RUN  /build/install-mamba-env.sh
 
 USER spack
 RUN  /build/install-spack-env.sh
+
+# Replace mamba versions of libraries with links to the spack versions
+USER mamba
+RUN  /build/link-mamba-spack.sh
+
+USER spack

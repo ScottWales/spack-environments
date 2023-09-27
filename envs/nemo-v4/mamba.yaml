@@ -2,3 +2,5 @@ dependencies:
   - python
   - numpy
   - netCDF4
+  - hdf5=1.12.2 # Must match spack
+  - libxml2=2.10.3 # Must match spack

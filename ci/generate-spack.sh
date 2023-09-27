@@ -30,6 +30,7 @@ for env in envs/*/spack.yaml; do
 
         # Activate the environment, set the compiler/mpi, and concretize
         spack env activate --without-view build/ci-$BUILD
+        spack config add --file ci/spack-mamba-match.yaml
         if [ -f $variant ]; then
             spack config add --file $variant
         fi
