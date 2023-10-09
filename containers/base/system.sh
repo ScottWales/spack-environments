@@ -25,7 +25,6 @@ microdnf install -y --nodocs \
      openssl \
      openssl-devel \
      patch \
-     patchelf \
      perl \
      perl-ExtUtils-MakeMaker \
      perl-XML-Parser \
