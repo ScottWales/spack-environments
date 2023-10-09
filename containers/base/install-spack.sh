@@ -105,6 +105,8 @@ cat >> /opt/spack/etc/spack/compilers.yaml << EOF
     extra_rpaths: []
 EOF
 
+cat /opt/spack/etc/spack/compilers.yaml
+
 spack clean
 
 # List the found environment
