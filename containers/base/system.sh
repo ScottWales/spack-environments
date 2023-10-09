@@ -10,6 +10,7 @@ microdnf install -y --nodocs \
      bzip2 \
      bzip2-devel \
      cmake \
+     curl \
      curl-devel \
      gcc \
      gcc-c++ \
@@ -21,6 +22,7 @@ microdnf install -y --nodocs \
      libtool \
      libtsan \
      libubsan \
+     openssl \
      openssl-devel \
      patch \
      perl \
