@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eox
+
 export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
 # Install Spack
@@ -21,6 +23,8 @@ done
 # Update Spack with system packages
 spack compiler find --scope site /usr
 spack external find --scope site --all --path /usr
+
+cat /opt/spack/etc/spack/compilers.yaml
 
 spack config --scope site add packages:openssl:buildable:false
 spack config --scope site add packages:gcc:buildable:true
