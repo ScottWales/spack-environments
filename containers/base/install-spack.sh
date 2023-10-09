@@ -61,6 +61,7 @@ EOF
 spack config --scope site add -f /tmp/packages.yaml
 rm /tmp/packages.yaml
 
+spack bootstrap status
 spack bootstrap now
 
 # Install intel compilers
