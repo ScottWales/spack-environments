@@ -27,7 +27,7 @@ spack external find --scope site --all --path /usr
 cat /opt/spack/etc/spack/compilers.yaml
 
 spack config --scope site add packages:openssl:buildable:false
-spack config --scope site add packages:gcc:buildable:true
+spack config --scope site add packages:gcc:buildable:false
 
 function mamba_vn () {
     source $MAMBA_ROOT/etc/profile.d/conda.sh
