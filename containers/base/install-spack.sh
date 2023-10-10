@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eox
+set -eu
 
 export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
@@ -24,10 +24,8 @@ done
 spack compiler find --scope site /usr
 spack external find --scope site --all --path /usr
 
-cat /opt/spack/etc/spack/compilers.yaml
-
 spack config --scope site add packages:openssl:buildable:false
-spack config --scope site add packages:gcc:buildable:false
+spack config --scope site add packages:gcc:buildable:true
 
 function mamba_vn () {
     source $MAMBA_ROOT/etc/profile.d/conda.sh

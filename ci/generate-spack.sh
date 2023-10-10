@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eux
+set -eu
 
 source /opt/spack/share/spack/setup-env.sh
 
