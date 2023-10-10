@@ -14,7 +14,7 @@ $MAMBA_ROOT/bin/mamba install conda-lock
 $MAMBA_ROOT/bin/mamba update --all
 
 # Container environment
-$MAMBA_ROOT/bin/mamba create -n container python pyyaml
+$MAMBA_ROOT/bin/mamba create -n container python=3.11 pyyaml
 $MAMBA_ROOT/bin/mamba clean --all
 $MAMBA_ROOT/bin/conda config --system --append channels "$MAMBA_REPO"
 
