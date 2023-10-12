@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -eu
+
 export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
 # Install Spack
@@ -57,6 +59,7 @@ EOF
 spack config --scope site add -f /tmp/packages.yaml
 rm /tmp/packages.yaml
 
+spack bootstrap status
 spack bootstrap now
 
 # Install intel compilers
@@ -104,6 +107,8 @@ cat >> /opt/spack/etc/spack/compilers.yaml << EOF
         LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
     extra_rpaths: []
 EOF
+
+cat /opt/spack/etc/spack/compilers.yaml
 
 spack clean
 

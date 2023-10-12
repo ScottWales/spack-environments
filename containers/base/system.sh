@@ -7,8 +7,10 @@ set -o pipefail
 
 # Base packages
 microdnf install -y --nodocs \
+     bzip2 \
      bzip2-devel \
      cmake \
+     curl \
      curl-devel \
      gcc \
      gcc-c++ \
@@ -20,6 +22,7 @@ microdnf install -y --nodocs \
      libtool \
      libtsan \
      libubsan \
+     openssl \
      openssl-devel \
      patch \
      perl \
@@ -33,6 +36,7 @@ microdnf install -y --nodocs \
      unzip \
      wget \
      which \
+     xz \
      xz-devel \
      zstd
 
