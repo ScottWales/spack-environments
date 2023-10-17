@@ -10,6 +10,11 @@ function debug() {
 }
 fi
 
+# Set default locale
+if [ -z "${LC_ALL:-}" ]; then
+    export LC_ALL="C"
+fi
+
 if [ -z "${NGMENV_SPACK_DONT_ISOLATE:-}" ]; then
     # Don't consider the user's ~/.spack directory
     debug  spack is isolated
