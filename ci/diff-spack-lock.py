@@ -13,9 +13,20 @@ def spack_lock_diff(filea, fileb):
     specsa = set(locka['concrete_specs'].keys())
     specsb = set(lockb['concrete_specs'].keys())
 
-    diff = specsa ^ specsb
+    namesa = {}
+    namesb = {}
 
-    return diff
+    for h in specsa ^ specsb:
+        if h in specsa:
+            namesa[specsa[h]['name']] = f"{specsa[h]['name']}@{specsa[h]['version']}/{h[0:6]}"
+        else:
+            namesb[specsb[h]['name']] = f"{specsb[h]['name']}@{specsb[h]['version']}/{h[0:6]}"
+
+    diff = []
+    for n in sorted(set(namesa.keys()) & set(namesb.keys())):
+        diff.append(f"- {namesa.get(n,'')} + {namesb.get(n,'')}")
+
+    return "\n".join(diff)
 
 def main():
     parser = argparse.ArgumentParser()
