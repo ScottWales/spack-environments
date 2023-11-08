@@ -22,7 +22,12 @@ def mamba_lock_diff(filea, fileb):
 
     diff = []
     for n in sorted(set(namesa.keys()) & set(namesb.keys())):
-        diff.append(f"- {namesa.get(n,'')} + {namesb.get(n,'')}")
+        # Only care about major.minor version
+        vera = namesa.get(n,'').split('/')[0].split('@')[1].split('.')[:2]
+        verb = namesb.get(n,'').split('/')[0].split('@')[1].split('.')[:2]
+
+        if vera != verb:
+            diff.append(f"- {namesa.get(n,'')} + {namesb.get(n,'')}")
 
     return "\n".join(diff)
 
