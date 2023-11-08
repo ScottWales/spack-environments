@@ -1,17 +1,13 @@
-stages:
-    - docker
-    - apptainer
-    - stage
-    - clean
-
 # Build Docker containers
-docker build containers:
+docker build __CONCRETE_ENV__:
     stage: docker
     image:
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
-    before_script:
-        - export DEST=${CONCRETE_ENV}:latest
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
+        DEST: "__CONCRETE_ENV__:latest"
+        BASE_ENV: "__BASE_ENV__"
     script:
         - mkdir -p /kaniko/.docker
         - |
@@ -41,39 +37,42 @@ docker build containers:
           pipeline: "__PIPELINE_ID__"
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
-    parallel: &build_matrix
-        matrix: __MATRIX__
 
 # Build Apptainer containers
-apptainer build containers:
+apptainer build __CONCRETE_ENV__:
     stage: apptainer
     tags: [docker]
     image:
         name: quay.io/singularity/singularity:v3.10.2
         entrypoint: [""]
-    before_script:
-        - export DEST=${CONCRETE_ENV}:latest
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
+        DEST: "__CONCRETE_ENV__:latest"
     script:
         - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker-archive://${CI_OUTDIR}/${CONCRETE_ENV}.tar"
-    parallel: *build_matrix
+    needs:
+        - docker build __CONCRETE_ENV__
 
 # Copy container to Gadi
-stage gadi:
+stage gadi __CONCRETE_ENV__:
     stage: stage
     tags: [gadi]
-    before_script:
-        - export DEST=${CONCRETE_ENV}:latest
+    variables:
+        DEST: "__CONCRETE_ENV__:latest"
     script:
         - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
         - etc/install-gadi-image.sh
     after_script:
         - rm image.sif
-    parallel: *build_matrix
+    needs:
+        - apptainer build __CONCRETE_ENV__
 
 # Cache lock files
-cache build:
+cache build __CONCRETE_ENV__:
     stage: clean
     tags: [docker]
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
     script:
         - mkdir -p $BRANCH_CACHE/ci-$CONCRETE_ENV
         - cp -r artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
@@ -82,6 +81,5 @@ cache build:
           pipeline: "__PIPELINE_ID__"
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
-        - job: apptainer build containers
-    parallel: *build_matrix
+        - job: apptainer build __CONCRETE_ENV__
 

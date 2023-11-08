@@ -13,7 +13,7 @@ if ! [ -d "$BRANCH_CACHE" ]; then
 fi
 echo "BRANCH_CACHE=$BRANCH_CACHE"
 
-MATRIX="["
+JOBS=""
 for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
     echo "ENV=$ENV"
@@ -63,17 +63,29 @@ for env in envs/*/spack.yaml; do
         echo "HAS_DIFF=$HAS_DIFF"
 
         if [ $HAS_DIFF = "yes" ]; then
-            MATRIX="$MATRIX {'BASE_ENV':'$ENV', 'VARIANT':'$VAR', 'CONCRETE_ENV':'$BUILD'},"
+            JOBS="$BUILD $JOBS"
+            sed \
+                -e "s?__BASE_ENV__?${ENV}" \
+                -e "s?__CONCRETE_ENV__?${BUILD}" \
+                -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
+                ci/containers.yml >> artifacts/containers.yml
         fi
     done
 done
-MATRIX="$MATRIX ]"
 
-sed -e "s?__MATRIX__?${MATRIX}?" \
-    -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
-    ci/containers.yml > artifacts/containers.yml
+if [ -n "$JOBS" ]; then
+cat >> artifacts/containers.yml <<EOF
 
-if [ "$MATRIX" = "[ ]" ]; then
+stages:
+    - docker
+    - apptainer
+    - stage
+    - clean
+
+EOF
+
+else
+
 # Nothing to build
 cat > artifacts/containers.yml << EOF
 stages:
