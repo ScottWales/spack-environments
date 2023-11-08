@@ -59,6 +59,10 @@ docker build spack-base:
             --snapshotMode=redo
             --compressed-caching=false
             --cache=false
+    rules:
+        - changes:
+            - containers/base.docker
+            - containers/base/*
 
 # Generate lock files for Spack packages
 generate spack environments:
