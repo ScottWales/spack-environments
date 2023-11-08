@@ -49,12 +49,18 @@ for env in envs/*/spack.yaml; do
         HAS_DIFF="no"
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
             # Do config files differ?
-            if ! diff -q -r --exclude variants --exclude spack.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
+            if ! diff -q -r --exclude variants --exclude spack.lock --exclude mamba.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
             fi
             # Do lock files differ? - special because files are not consistently ordered
             if ! ci/diff-spack-lock.py "$BRANCH_CACHE/ci-$BUILD/spack.lock" "artifacts/ci-$BUILD/spack.lock"; then
                 HAS_DIFF="yes"
+            fi
+
+            if [ -f "artifacts/ci-$BUILD/mamba.lock" ]; then
+                if ! ci/diff-mamba-lock.py "$BRANCH_CACHE/ci-$BUILD/mamba.lock" "artifacts/ci-$BUILD/mamba.lock"; then
+                    HAS_DIFF="yes"
+                fi
             fi
         else
             HAS_DIFF="yes"
