@@ -90,14 +90,14 @@ generate mamba environments:
         - "$CI_PROJECT_DIR/artifacts"
       expire_in: 1 day
 
-# Build Spack packages
-spack build:
-    stage: package-build
-    trigger:
-      include:
-        - artifact: artifacts/pipeline.yml
-          job: generate spack environments
-      strategy: depend
+      # # Build Spack packages
+      # spack build:
+      #     stage: package-build
+      #     trigger:
+      #       include:
+      #         - artifact: artifacts/pipeline.yml
+      #           job: generate spack environments
+      #       strategy: depend
 
 # Generate build tasks for containers
 generate containers:
@@ -120,14 +120,14 @@ generate containers:
         - "$CI_PROJECT_DIR/artifacts"
       expire_in: 1 day
 
-# Build containers
-container build:
-    stage: container-build
-    trigger:
-      include:
-        - artifact: artifacts/containers.yml
-          job: generate containers
-      strategy: depend
+      # # Build containers
+      # container build:
+      #     stage: container-build
+      #     trigger:
+      #       include:
+      #         - artifact: artifacts/containers.yml
+      #           job: generate containers
+      #       strategy: depend
 
 clean:
     stage: clean
