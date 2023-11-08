@@ -10,13 +10,13 @@ def spack_lock_diff(filea, fileb):
     locka = json.load(filea)
     lockb = json.load(fileb)
 
-    specsa = set(locka['concrete_specs'].keys())
-    specsb = set(lockb['concrete_specs'].keys())
+    specsa = locka['concrete_specs']
+    specsb = lockb['concrete_specs']
 
     namesa = {}
     namesb = {}
 
-    for h in specsa ^ specsb:
+    for h in set(specsa.keys()) ^ set(specsb.keys()):
         if h in specsa:
             namesa[specsa[h]['name']] = f"{specsa[h]['name']}@{specsa[h]['version']}/{h[0:6]}"
         else:
