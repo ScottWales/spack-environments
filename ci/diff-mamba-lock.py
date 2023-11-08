@@ -7,8 +7,8 @@ def mamba_lock_diff(filea, fileb):
     locka = yaml.safe_load(filea)
     lockb = yaml.safe_load(fileb)
 
-    specsa = {s['hash']['sha256']: 'name': s['name'], 'version': s['version'] for s in locka['package']}
-    specsb = {s['hash']['sha256']: 'name': s['name'], 'version': s['version'] for s in lockb['package']}
+    specsa = {s['hash']['sha256']: {'name': s['name'], 'version': s['version']} for s in locka['package']}
+    specsb = {s['hash']['sha256']: {'name': s['name'], 'version': s['version']} for s in lockb['package']}
 
     namesa = {}
     namesb = {}
