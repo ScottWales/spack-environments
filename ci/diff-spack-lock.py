@@ -39,7 +39,7 @@ def main():
     if len(diff) == 0:
         return
     else:
-        raise Exception(f'Specs differ: {diff}')
+        raise Exception(f'Specs differ:\n{diff}')
 
 if __name__ == '__main__':
     main()
