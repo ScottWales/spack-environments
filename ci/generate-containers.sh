@@ -71,8 +71,8 @@ for env in envs/*/spack.yaml; do
         if [ $HAS_DIFF = "yes" ]; then
             JOBS="$BUILD $JOBS"
             sed \
-                -e "s?__BASE_ENV__?${ENV}" \
-                -e "s?__CONCRETE_ENV__?${BUILD}" \
+                -e "s?__BASE_ENV__?${ENV}?" \
+                -e "s?__CONCRETE_ENV__?${BUILD}?" \
                 -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
                 ci/containers.yml >> artifacts/containers.yml
         fi
