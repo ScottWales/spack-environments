@@ -59,6 +59,7 @@ stage gadi __CONCRETE_ENV__:
     tags: [gadi]
     variables:
         DEST: "__CONCRETE_ENV__:latest"
+        BASE_ENV: "__BASE_ENV__"
     script:
         - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
         - etc/install-gadi-image.sh
