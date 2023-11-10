@@ -12,8 +12,8 @@ SHA=$(git rev-parse HEAD)
 DATE=$(date --iso-8601=minutes)
 
 NAME="${BASE_ENV}"
-APPDIR="${PREFIX}/apps/${NAME}/${VARIANT}"
-MODULE="${PREFIX}/modules/${NAME}/${VARIANT}"
+APPDIR="${PREFIX}/apps/${NAME}/${VARIANT}-${VERSION}"
+MODULE="${PREFIX}/modules/${NAME}/${VARIANT}-${VERSION}"
 
 echo "Installing ${NAME}/${VERSION} to ${APPDIR}"
 
