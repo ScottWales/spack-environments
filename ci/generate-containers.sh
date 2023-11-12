@@ -74,7 +74,7 @@ for env in envs/*/spack.yaml; do
                 -e "s?__BASE_ENV__?${ENV}?" \
                 -e "s?__CONCRETE_ENV__?${BUILD}?" \
                 -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
-                -e "s?__VARIANT__?${VARIANT}?" \
+                -e "s?__VARIANT__?${VAR}?" \
                 ci/containers.yml >> artifacts/containers.yml
         fi
     done
