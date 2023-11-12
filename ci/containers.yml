@@ -1,13 +1,15 @@
+variables:
+    CONCRETE_ENV: "__CONCRETE_ENV__"
+    DEST: "__CONCRETE_ENV__:latest"
+    BASE_ENV: "__BASE_ENV__"
+    VARIANT: "__VARIANT__"
+
 # Build Docker containers
 docker build __CONCRETE_ENV__:
     stage: docker
     image:
         name: gcr.io/kaniko-project/executor:debug
         entrypoint: [""]
-    variables:
-        CONCRETE_ENV: "__CONCRETE_ENV__"
-        DEST: "__CONCRETE_ENV__:latest"
-        BASE_ENV: "__BASE_ENV__"
     script:
         - mkdir -p /kaniko/.docker
         - |
@@ -45,9 +47,6 @@ apptainer build __CONCRETE_ENV__:
     image:
         name: quay.io/singularity/singularity:v3.10.2
         entrypoint: [""]
-    variables:
-        CONCRETE_ENV: "__CONCRETE_ENV__"
-        DEST: "__CONCRETE_ENV__:latest"
     script:
         - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker-archive://${CI_OUTDIR}/${CONCRETE_ENV}.tar"
     needs:
@@ -57,9 +56,6 @@ apptainer build __CONCRETE_ENV__:
 stage gadi __CONCRETE_ENV__:
     stage: stage
     tags: [gadi]
-    variables:
-        DEST: "__CONCRETE_ENV__:latest"
-        BASE_ENV: "__BASE_ENV__"
     script:
         - scp "gitlab-runner:${CI_OUTDIR}/${DEST}.sif" image.sif
         - etc/install-gadi-image.sh
@@ -72,8 +68,6 @@ stage gadi __CONCRETE_ENV__:
 cache build __CONCRETE_ENV__:
     stage: clean
     tags: [docker]
-    variables:
-        CONCRETE_ENV: "__CONCRETE_ENV__"
     script:
         - mkdir -p $BRANCH_CACHE/ci-$CONCRETE_ENV
         - cp -r artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
