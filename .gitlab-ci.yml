@@ -60,6 +60,8 @@ docker build spack-base:
             --compressed-caching=false
             --cache=false
     rules:
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+          when: never
         - changes:
             - containers/base.docker
             - containers/base/*
