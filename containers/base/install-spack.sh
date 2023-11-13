@@ -30,7 +30,8 @@ spack config --scope site add packages:gcc:buildable:true
 function mamba_vn () {
     source $MAMBA_ROOT/etc/profile.d/conda.sh
     source $MAMBA_ROOT/etc/profile.d/mamba.sh
-    mamba list "^$1\$" --json | sed -n 's/.*"version": "\([^"]\+\)".*/\1/p'
+    # Extract version and trim to major.minor
+    mamba list "^$1\$" --json | sed -n 's/.*"version": "\([[:digit:]]\+\(\.[[:digit:]]\+\)\).*".*/\1/p'
 }
 
 cat > /tmp/packages.yaml << EOF

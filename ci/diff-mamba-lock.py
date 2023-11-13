@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
 ## Scott Wales 2023
-
-# Compare two spack lock files, exiting with 0 if they represent the same environment
-
+import yaml
 import argparse
-import json
 
-def spack_lock_diff(filea, fileb):
-    locka = json.load(filea)
-    lockb = json.load(fileb)
 
-    specsa = locka['concrete_specs']
-    specsb = lockb['concrete_specs']
+def mamba_lock_diff(filea, fileb):
+    locka = yaml.safe_load(filea)
+    lockb = yaml.safe_load(fileb)
+
+    specsa = {s['hash']['sha256']: {'name': s['name'], 'version': s['version']} for s in locka['package']}
+    specsb = {s['hash']['sha256']: {'name': s['name'], 'version': s['version']} for s in lockb['package']}
 
     namesa = {}
     namesb = {}
@@ -24,9 +22,15 @@ def spack_lock_diff(filea, fileb):
 
     diff = []
     for n in sorted(set(namesa.keys()) & set(namesb.keys())):
-        diff.append(f"- {namesa.get(n,'')} + {namesb.get(n,'')}")
+        # Only care about major.minor version
+        vera = namesa.get(n,'').split('/')[0].split('@')[1].split('.')[:2]
+        verb = namesb.get(n,'').split('/')[0].split('@')[1].split('.')[:2]
+
+        if vera != verb:
+            diff.append(f"- {namesa.get(n,'')} + {namesb.get(n,'')}")
 
     return "\n".join(diff)
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -34,12 +38,13 @@ def main():
     parser.add_argument('fileb', type=argparse.FileType('r'))
     args = parser.parse_args()
 
-    diff = spack_lock_diff(args.filea, args.fileb)
+    diff = mamba_lock_diff(args.filea, args.fileb)
 
     if len(diff) == 0:
         return
     else:
         raise Exception(f'Specs differ:\n{diff}')
+
 
 if __name__ == '__main__':
     main()

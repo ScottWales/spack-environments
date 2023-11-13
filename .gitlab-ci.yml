@@ -59,6 +59,12 @@ docker build spack-base:
             --snapshotMode=redo
             --compressed-caching=false
             --cache=false
+    rules:
+        - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+          when: never
+        - changes:
+            - containers/base.docker
+            - containers/base/*
 
 # Generate lock files for Spack packages
 generate spack environments:

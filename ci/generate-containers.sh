@@ -13,7 +13,7 @@ if ! [ -d "$BRANCH_CACHE" ]; then
 fi
 echo "BRANCH_CACHE=$BRANCH_CACHE"
 
-MATRIX="["
+JOBS=""
 for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
     echo "ENV=$ENV"
@@ -49,12 +49,18 @@ for env in envs/*/spack.yaml; do
         HAS_DIFF="no"
         if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
             # Do config files differ?
-            if ! diff -q -r --exclude variants --exclude spack.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
+            if ! diff -q -r --exclude variants --exclude spack.lock --exclude mamba.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
                 HAS_DIFF="yes"
             fi
             # Do lock files differ? - special because files are not consistently ordered
             if ! ci/diff-spack-lock.py "$BRANCH_CACHE/ci-$BUILD/spack.lock" "artifacts/ci-$BUILD/spack.lock"; then
                 HAS_DIFF="yes"
+            fi
+
+            if [ -f "artifacts/ci-$BUILD/mamba.lock" ]; then
+                if ! ci/diff-mamba-lock.py "$BRANCH_CACHE/ci-$BUILD/mamba.lock" "artifacts/ci-$BUILD/mamba.lock"; then
+                    HAS_DIFF="yes"
+                fi
             fi
         else
             HAS_DIFF="yes"
@@ -63,17 +69,30 @@ for env in envs/*/spack.yaml; do
         echo "HAS_DIFF=$HAS_DIFF"
 
         if [ $HAS_DIFF = "yes" ]; then
-            MATRIX="$MATRIX {'BASE_ENV':'$ENV', 'VARIANT':'$VAR', 'CONCRETE_ENV':'$BUILD'},"
+            JOBS="$BUILD $JOBS"
+            sed \
+                -e "s?__BASE_ENV__?${ENV}?" \
+                -e "s?__CONCRETE_ENV__?${BUILD}?" \
+                -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
+                -e "s?__VARIANT__?${VAR}?" \
+                ci/containers.yml >> artifacts/containers.yml
         fi
     done
 done
-MATRIX="$MATRIX ]"
 
-sed -e "s?__MATRIX__?${MATRIX}?" \
-    -e "s?__PIPELINE_ID__?${CI_PIPELINE_ID}?" \
-    ci/containers.yml > artifacts/containers.yml
+if [ -n "$JOBS" ]; then
+cat >> artifacts/containers.yml <<EOF
 
-if [ "$MATRIX" = "[ ]" ]; then
+stages:
+    - docker
+    - apptainer
+    - stage
+    - clean
+
+EOF
+
+else
+
 # Nothing to build
 cat > artifacts/containers.yml << EOF
 stages:
