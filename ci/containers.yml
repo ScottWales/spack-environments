@@ -1,8 +1,3 @@
-variables:
-    CONCRETE_ENV: "__CONCRETE_ENV__"
-    DEST: "__CONCRETE_ENV__:latest"
-    BASE_ENV: "__BASE_ENV__"
-    VARIANT: "__VARIANT__"
 
 # Build Docker containers
 docker build __CONCRETE_ENV__:
@@ -39,6 +34,11 @@ docker build __CONCRETE_ENV__:
           pipeline: "__PIPELINE_ID__"
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
+        DEST: "__CONCRETE_ENV__:latest"
+        BASE_ENV: "__BASE_ENV__"
+        VARIANT: "__VARIANT__"
 
 # Build Apptainer containers
 apptainer build __CONCRETE_ENV__:
@@ -51,6 +51,11 @@ apptainer build __CONCRETE_ENV__:
         - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker-archive://${CI_OUTDIR}/${CONCRETE_ENV}.tar"
     needs:
         - docker build __CONCRETE_ENV__
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
+        DEST: "__CONCRETE_ENV__:latest"
+        BASE_ENV: "__BASE_ENV__"
+        VARIANT: "__VARIANT__"
 
 # Copy container to Gadi
 stage gadi __CONCRETE_ENV__:
@@ -63,6 +68,11 @@ stage gadi __CONCRETE_ENV__:
         - rm image.sif
     needs:
         - apptainer build __CONCRETE_ENV__
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
+        DEST: "__CONCRETE_ENV__:latest"
+        BASE_ENV: "__BASE_ENV__"
+        VARIANT: "__VARIANT__"
 
 # Cache lock files
 cache build __CONCRETE_ENV__:
@@ -77,4 +87,9 @@ cache build __CONCRETE_ENV__:
         - job: generate containers
           pipeline: "__PIPELINE_ID__"
         - job: apptainer build __CONCRETE_ENV__
+    variables:
+        CONCRETE_ENV: "__CONCRETE_ENV__"
+        DEST: "__CONCRETE_ENV__:latest"
+        BASE_ENV: "__BASE_ENV__"
+        VARIANT: "__VARIANT__"
 
