@@ -137,6 +137,7 @@ class Tau(Package):
 
     patch("unwind.patch", when="@2.29.0")
     patch("lcxa.patch", when="%intel@2021.8.0")
+    patch("TauFInit.patch")
 
     filter_compiler_wrappers("Makefile", relative_root="include")
     filter_compiler_wrappers("Makefile.tau*", relative_root="lib")
@@ -175,6 +176,30 @@ class Tau(Package):
             compiler_options.append("-fortran=%s" % os.path.basename(self.compiler.fc))
 
         ##########
+
+        if "+mpi" in spec:
+            import os
+            if os.path.exists("/apps/openmpi/4.1.4/") or spec["mpi"].name == "nci-openmpi":
+
+                if self.spec.satisfies('%intel'):
+#                    useropt.append("-I%s" % join_path(spec["mpi"].prefix.include, "Intel"))
+#                    useropt.append("-L%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
+#                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
+#                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.include, "Intel"))
+                    useropt.append("-I%s" % "/apps/openmpi/4.1.4/include/Intel")
+                    useropt.append("-L%s" % "/apps/openmpi/4.1.4/lib/Intel")
+                    useropt.append("-Wl,-rpath,%s" % "/apps/openmpi/4.1.4/lib/Intel")
+                    useropt.append("-Wl,-rpath,%s" % "/apps/openmpi/4.1.4/include/Intel")
+
+                if self.spec.satisfies('%gcc'):
+#                    useropt.append("-I%s" % join_path(spec["mpi"].prefix.include, "GNU"))
+#                    useropt.append("-L%s" % join_path(spec["mpi"].prefix.lib, "GNU"))
+#                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.lib, "GNU"))         
+#                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.include, "GNU"))
+                    useropt.append("-I%s" % "/apps/openmpi/4.1.4/include/GNU")
+                    useropt.append("-L%s" % "/apps/openmpi/4.1.4/lib/GNU")
+                    useropt.append("-Wl,-rpath,%s" % "/apps/openmpi/4.1.4/lib/GNU")         
+                    useropt.append("-Wl,-rpath,%s" % "/apps/openmpi/4.1.4/include/GNU")
 
         # Construct the string of custom compiler flags and append it to
         # compiler related options
@@ -255,20 +280,26 @@ class Tau(Package):
             options.append("-otf=%s" % spec["otf2"].prefix)
 
         if "+mpi" in spec:
-            env["CC"] = spec["mpi"].mpicc
-            env["CXX"] = spec["mpi"].mpicxx
-            env["F77"] = spec["mpi"].mpif77
-            env["FC"] = spec["mpi"].mpifc
-            options.append("-mpiinc=%s" % spec["mpi"].prefix.include)
-            options.append("-mpilib=%s" % spec["mpi"].prefix.lib)
-            
-            if spec["mpi"].name == "nci-openmpi" and self.spec.satisfies('%intel'):
-                options.append("-mpiinc=%s" % join_path(spec["mpi"].prefix.include, "Intel"))
-                options.append("-mpilib=%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
-            if spec["mpi"].name == "nci-openmpi" and self.spec.satisfies('%gcc'):
-                options.append("-mpiinc=%s" % join_path(spec["mpi"].prefix.include, "GNU"))
-                options.append("-mpilib=%s" % join_path(spec["mpi"].prefix.lib, "GNU"))
 
+            import os
+            if os.path.exists("/apps/openmpi/4.1.4/") or spec["mpi"].name == "nci-openmpi":
+                env["CC"] = "/apps/openmpi/4.1.4/bin/mpicc"
+                env["CXX"] = "/apps/openmpi/4.1.4/bin/mpic++"
+                env["F77"] = "/apps/openmpi/4.1.4/bin/mpif77"
+                env["FC"] = "/apps/openmpi/4.1.4/bin/mpif90"
+            else:
+                env["CC"] = spec["mpi"].mpicc
+                env["CXX"] = spec["mpi"].mpicxx
+                env["F77"] = spec["mpi"].mpif77
+                env["FC"] = spec["mpi"].mpifc
+
+            if os.path.exists("/apps/openmpi/4.1.4/") or spec["mpi"].name == "nci-openmpi":
+                options.append("-mpiinc=%s" % "/apps/openmpi/4.1.4/include")
+                options.append("-mpilib=%s" % "/apps/openmpi/4.1.4/lib")
+            else:
+                options.append("-mpiinc=%s" % spec["mpi"].prefix.include)
+                options.append("-mpilib=%s" % spec["mpi"].prefix.lib)
+            
             options.append("-mpi")
             if "+comm" in spec:
                 options.append("-PROFILECOMMUNICATORS")
