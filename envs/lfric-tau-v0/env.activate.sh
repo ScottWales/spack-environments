@@ -15,3 +15,4 @@ spack load tau
 export TAU_OPTIONS="-optKeepFiles -optCompInst -optMemDbg"
 export TAU_TRACK_MEMORY_LEAKS=1 
 export TAU_TRACK_IO_PARAMS=1
+export TAU_TRACK_HEAP=1

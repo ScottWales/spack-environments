@@ -33,5 +33,3 @@ USER root
 COPY containers/base/entrypoint.sh /build
 RUN  chmod 755 /build/entrypoint.sh
 ENTRYPOINT ["/build/entrypoint.sh"]
-
-# Try trigger the base stage job for updating the changes in the repo/packages 
