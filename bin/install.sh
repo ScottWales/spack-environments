@@ -74,3 +74,8 @@ EOF
 if [ -f envs/$ENV/env.activate.sh ]; then
     cat envs/$ENV/env.activate.sh >> $SPACK_ENV/activate.sh
 fi
+
+# Run any post-install scripts
+if [ -f envs/$ENV/post-install.sh ]; then
+    envs/$ENV/post-install.sh
+fi

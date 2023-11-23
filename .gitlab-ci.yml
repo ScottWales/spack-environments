@@ -65,6 +65,7 @@ docker build spack-base:
         - changes:
             - containers/base.docker
             - containers/base/*
+            - repos/**/*
 
 # Generate lock files for Spack packages
 generate spack environments:

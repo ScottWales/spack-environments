@@ -34,6 +34,7 @@ class Xios(Package):
     )
 
     variant("lfric", default=False, description="Add patch for LFRic grid coordinates")
+    variant("nemo", default=False, description="Add patches to support NEMO")
 
     # NOTE: oasis coupler could be supported with a variant
 
@@ -48,6 +49,12 @@ class Xios(Package):
 
     # Fix for recent gcc
     patch("gcc_remap.patch", when="@2.5:")
+
+    # NEMO-specific patches from https://github.com/hiker/xios-2252/tree/master/patches
+    patch("nemo/p1_add_refname", when="+nemo")
+    patch("nemo/p2_fix_multi_file_exception", when="+nemo")
+    patch("nemo/p5_fix_inconsistent_checks", when="+nemo")
+    patch("nemo/p6_", when="+nemo")
 
     # Fix for lfric to avoid run time segmentation fault reported at 'CMesh::createMeshEpsilon()' due to CMesh::createHashes()
     patch("mesh_cpp.patch", when="+lfric")
@@ -151,12 +158,12 @@ OASIS_LIB=""
                 -std=gnu++11
 %PROD_CFLAGS    -O3 -DBOOST_DISABLE_ASSERTS
 %DEV_CFLAGS     -g -O2
-%DEBUG_CFLAGS   -g
+%DEBUG_CFLAGS   -g -traceback
 
 %BASE_FFLAGS    -D__NONE__ -ffree-line-length-none
 %PROD_FFLAGS    -O3
 %DEV_FFLAGS     -g -O2
-%DEBUG_FFLAGS   -g
+%DEBUG_FFLAGS   -g -traceback
 
 %BASE_INC       -D__NONE__
 %BASE_LD        -L{BOOST_LIB_DIR} -L{BLITZ_LIB_DIR} -lblitz {LIBCXX}
