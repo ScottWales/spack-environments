@@ -6,15 +6,19 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev
 
 # Install an environment at NCI
 ENV=$1
-ENVPATH=/scratch/$PROJECT/$USER/ngm/envs/$ENV
 
 # Activate spack
 export SPACK_SYSTEM_CONFIG_PATH=$SCRIPT_DIR/../config/gadi
+source ~saw562/spack-base/share/spack/setup-env.sh
 
-#source /g/data/access/spack/0.19.0/share/spack/setup-env.sh
-source /home/562/saw562/projects/spack-pipeline/spack/share/spack/setup-env.sh
+# TODO: Get this path from `spack config get config`
+INSTALL_TREE_ROOT=/scratch/$PROJECT/$USER/spack
 
-spack env activate $ENV
+# Nemo envs don't compile nemo itself, so still need a compiler
+module use /g/data/access/projects/access/modules
+module load intel-compiler/2021.8.0
 
-source $SPACK_ENV/loads
+# This is required by the 'loads' script
+module use $INSTALL_TREE_ROOT/modules/linux-rocky8-*
 
+source $INSTALL_TREE_ROOT/envs/$ENV/activate.sh

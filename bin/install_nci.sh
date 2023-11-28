@@ -20,7 +20,7 @@ export SPACK_MPI=nci-openmpi@4.1.4
 
 # Activate spack
 export SPACK_SYSTEM_CONFIG_PATH=$INSTALL_ROOT/config/gadi
-source /scratch/hc46/saw562/spack-base/share/spack/setup-env.sh
+source ~saw562/spack-base/share/spack/setup-env.sh 
 
 export SPACK_JOBS=${PBS_NCPUS:-4}
 
