@@ -3,3 +3,4 @@ dependencies:
   - psyclone
   - lfric-gpl-utils=2
   - jinja2
+  - sci-fab
