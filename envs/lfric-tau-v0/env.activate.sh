@@ -10,9 +10,11 @@ export FPP="cpp -traditional"
 export FFLAGS="${FFLAGS:-} -I$SPACK_ENV_VIEW/include -I$SPACK_ENV_VIEW/lib"
 export PFUNIT=$SPACK_ENV_VIEW
 export PSYCLONE_CONFIG=${PSYCLONE_CONFIG:-/build/psyclone.cfg}
+export PSYCLONE_TRANSFORMATION=nci-gadi
+export VERBOSE=1
 
 spack load tau
 export TAU_OPTIONS="-optKeepFiles -optCompInst -optMemDbg"
 export TAU_TRACK_MEMORY_LEAKS=1 
 export TAU_TRACK_IO_PARAMS=1
-# export TAU_TRACK_HEAP=1
+export TAU_TRACK_HEAP=1
