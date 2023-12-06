@@ -17,7 +17,7 @@ class Eckit(CMakePackage):
 
     version(
         "1.24.4",
-        sha256="abc",
+        sha256="d25440011c66decbfb4908e5f4b7d0025b2166acfb9db941abdeb38d477c45b3",
     )
     version(
         "1.24.0",

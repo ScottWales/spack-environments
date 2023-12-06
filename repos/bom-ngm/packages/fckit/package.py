@@ -8,7 +8,7 @@ class Fckit(CMakePackage):
 
     version(
         "0.11.0",
-        sha256="abc",
+        sha256="bcde04fefa50624bf89068ab793cc2e9437c0cd1c271a41af7d54dbd37c306be",
     )
     version(
         "0.10.1",

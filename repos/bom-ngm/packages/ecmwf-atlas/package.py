@@ -8,7 +8,7 @@ class EcmwfAtlas(CMakePackage):
 
     version(
         "0.34.0",
-        sha256="abc",
+        sha256="b91fffe9cecb51c6ee8549cbc20f8279e7b1f67dd90448e6c04c1889281b0600",
     )
     version(
         "0.33.0",
