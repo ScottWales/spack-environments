@@ -1,8 +1,8 @@
 spack:
     specs:
-        - eckit@1.24.0 compression=lz4
-        - ecmwf-atlas@0.33.0
-        - fckit@0.10.1
+        - eckit@1.24.4 compression=lz4
+        - ecmwf-atlas@0.34.0
+        - fckit@0.11.0
         - ectrans@1.2.0
         - fiat@1.1.2
         - odc
