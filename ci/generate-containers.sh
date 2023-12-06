@@ -8,7 +8,7 @@ set -o pipefail
 mkdir -p artifacts
 
 # Default to master branch cache if this branch doesn't have one
-if ! [ -d "$BRANCH_CACHE" ]; then
+if ! [ -z "$(ls -A "$BRANCH_CACHE")" ]; then
     BRANCH_CACHE="$BRANCH_CACHE/../master"
 fi
 echo "BRANCH_CACHE=$BRANCH_CACHE"
