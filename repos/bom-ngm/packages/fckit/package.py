@@ -7,6 +7,10 @@ class Fckit(CMakePackage):
     url = "https://github.com/ecmwf/fckit/archive/refs/tags/0.9.0.tar.gz"
 
     version(
+        "0.11.0",
+        sha256="abc",
+    )
+    version(
         "0.10.1",
         sha256="9cde04fefa50624bf89068ab793cc2e9437c0cd1c271a41af7d54dbd37c306be",
     )
