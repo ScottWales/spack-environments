@@ -27,7 +27,7 @@ class EcmwfAtlas(CMakePackage):
     depends_on("python@3", type="build")
     depends_on("ectrans")
 
-    patch("a27fc304525607c16cae7a44a2424c328df34d30.patch")
+    patch("a27fc304525607c16cae7a44a2424c328df34d30.patch", when="@0.33")
 
     def cmake_args(self):
         args = []
