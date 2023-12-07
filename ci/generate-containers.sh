@@ -7,12 +7,6 @@ set -o pipefail
 
 mkdir -p artifacts
 
-# Default to master branch cache if this branch doesn't have one
-if [ -z "$(ls -A "$BRANCH_CACHE")" ]; then
-    BRANCH_CACHE="$BRANCH_CACHE/../master"
-fi
-echo "BRANCH_CACHE=$BRANCH_CACHE"
-
 JOBS=""
 for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
@@ -46,8 +40,9 @@ for env in envs/*/spack.yaml; do
         cp -r etc artifacts/ci-$BUILD/etc
 
         # See if this container was already built, or if it's the same as master's
-        for CACHE in "$BRANCH_CACHE{,/../master}/ci-$BUILD"; do
+        for CACHE in "$BRANCH_CACHE/ci-$BUILD" "$BRANCH_CACHE/../master/ci-$BUILD"; do
             if [ -d "$CACHE" ]; then
+                echo "Cache at $CACHE"
                 HAS_DIFF="no"
                 # Do config files differ?
                 if ! diff -q -r --exclude variants --exclude spack.lock --exclude mamba.lock "$CACHE" "artifacts/ci-$BUILD"; then
@@ -70,6 +65,7 @@ for env in envs/*/spack.yaml; do
 
         if [ -z "${HAS_DIFF:-}" ]; then
             # Not seen in cache
+            echo "Not cached"
             HAS_DIFF=yes
         fi
 
