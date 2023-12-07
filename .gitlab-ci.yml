@@ -76,9 +76,7 @@ generate spack environments:
         pull_policy: always
     script:
         - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
-        - /opt/spack/bin/spack clean -m
-        - /opt/spack/bin/spack repo list
-        - ls -l $SPACK_ROOT/var/spack/repos/bom-ngm/packages 
+        - ls $SPACK_ROOT/var/spack/repos/bom-ngm/packages
         - /build/entrypoint.sh ./ci/generate-spack.sh
     artifacts:
       paths:
