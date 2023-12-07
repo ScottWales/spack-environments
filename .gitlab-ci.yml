@@ -75,7 +75,7 @@ generate spack environments:
         entrypoint: [""]
         pull_policy: always
     script:
-        - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
+        - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
         - /opt/spack/bin/spack clean -m
         - /opt/spack/bin/spack repo list
         - ls -l $SPACK_ROOT/var/spack/repos/bom-ngm/packages 
