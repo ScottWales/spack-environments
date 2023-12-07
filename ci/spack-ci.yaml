@@ -12,6 +12,7 @@ spack:
 
   gitlab-ci:
     script:
+      - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
       - spack env activate --without-view ${SPACK_CONCRETE_ENV_DIR}
       - spack -d ci rebuild --tests
     mappings:

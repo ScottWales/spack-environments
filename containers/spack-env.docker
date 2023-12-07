@@ -8,6 +8,9 @@ ARG  CONCRETE_ENV
 USER root
 COPY containers/spack-env/*.sh /build/
 
+# Copy repos
+COPY repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
+
 # Copy environment definition
 COPY envs/$BASE_ENV/* /build/
 

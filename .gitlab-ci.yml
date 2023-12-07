@@ -65,7 +65,6 @@ docker build spack-base:
         - changes:
             - containers/base.docker
             - containers/base/*
-            - repos/**/*
 
 # Generate lock files for Spack packages
 generate spack environments:
@@ -76,6 +75,7 @@ generate spack environments:
         entrypoint: [""]
         pull_policy: always
     script:
+        - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
         - /build/entrypoint.sh ./ci/generate-spack.sh
     artifacts:
       paths:
