@@ -16,6 +16,10 @@ class Eckit(CMakePackage):
     maintainers("skosukhin")
 
     version(
+        "1.24.4",
+        sha256="b6129eb4f7b8532aa6905033e4cf7d09aadc8547c225780fea3db196e34e4671",
+    )
+    version(
         "1.24.0",
         sha256="a25440011c66decbfb4908e5f4b7d0025b2166acfb9db941abdeb38d477c45b3",
     )

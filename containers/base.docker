@@ -25,9 +25,6 @@ USER spack
 COPY containers/base/install-spack.sh /build
 RUN  /bin/bash /build/install-spack.sh
 
-# Copy repos
-COPY repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
-
 # Install entrypoint
 USER root
 COPY containers/base/entrypoint.sh /build
