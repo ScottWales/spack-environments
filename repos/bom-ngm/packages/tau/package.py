@@ -138,6 +138,7 @@ class Tau(Package):
     patch("unwind.patch", when="@2.29.0")
     patch("lcxa.patch", when="%intel@2021.8.0")
     patch("TauFInit.patch")
+    patch("ompt.patch",when="+ompt")
 
     filter_compiler_wrappers("Makefile", relative_root="include")
     filter_compiler_wrappers("Makefile.tau*", relative_root="lib")
