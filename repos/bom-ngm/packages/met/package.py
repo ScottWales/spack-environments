@@ -14,6 +14,7 @@ class Met(AutotoolsPackage):
 
     maintainers = ['scottwales']
 
+    version('11.1.0', 'e2e371ae1f49185ff8bf08201b1a3e90864a467aa3369b04132d231213c3c9e5')
     version('11.0.2', 'f720d15e1d6c235c9a41fd97dbeb0eb1082fb8ae99e1bcdcb5e51be9b50bdfbf')
 
     depends_on('bufr')
