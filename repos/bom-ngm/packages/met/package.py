@@ -45,10 +45,13 @@ class Met(AutotoolsPackage):
         config_args.append("MET_GRIB2CLIB=%s/lib64"%self.spec["g2c"].prefix)
         config_args.append("GRIB2CLIB_NAME=-lg2c")
         config_args.append(f"MET_PYTHON_BIN_EXE={self.spec['python'].prefix}/bin/python")
-        config_args.append("MET_PYTHON_CC=")
         config_args.append("MET_PYTHON_LD=-L%s/lib -lpython3.11"%self.spec["python"].prefix)
         config_args.append("MET_HDF=%s"%self.spec["hdf"].prefix)
         config_args.append("MET_HDFEOS=%s"%self.spec["hdf-eos2"].prefix)
         config_args.append("LIBS=-ltirpc")
 
         return config_args
+
+    def setup_build_environment(self, env):
+        env['MET_PYTHON_CC'] = env['CC']
+
