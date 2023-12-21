@@ -26,6 +26,8 @@ class Met(AutotoolsPackage):
     depends_on('hdf-eos2')
     depends_on('python')
 
+    patch('have_isatty.patch', when='@11.1.0')
+
 
     def configure_args(self):
         config_args = [
