@@ -13,7 +13,11 @@ export PSYCLONE_CONFIG=${PSYCLONE_CONFIG:-/build/psyclone.cfg}
 export PSYCLONE_TRANSFORMATION=nci-gadi
 export VERBOSE=1
 
-spack load tau
+#spack load tau
+TAU_MAKEFILE=$(eval spack find --format='{prefix}' tau)
+TAU_MAKEFILE+='/lib/Makefile*'
+export TAU_MAKEFILE
+
 export TAU_OPTIONS="-optKeepFiles -optCompInst -optMemDbg"
 export TAU_TRACK_MEMORY_LEAKS=1 
 export TAU_TRACK_IO_PARAMS=1
