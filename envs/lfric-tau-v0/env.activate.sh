@@ -16,9 +16,9 @@ export VERBOSE=1
 #spack load tau
 TAU_MAKEFILE=$(eval spack find --format='{prefix}' tau)
 TAU_MAKEFILE+='/lib/Makefile*'
-export TAU_MAKEFILE
+export TAU_MAKEFILE=$(eval ls $TAU_MAKEFILE)
 
-export TAU_OPTIONS="-optKeepFiles -optCompInst -optMemDbg"
-export TAU_TRACK_MEMORY_LEAKS=1 
-export TAU_TRACK_IO_PARAMS=1
-export TAU_TRACK_HEAP=1
+export TAU_OPTIONS="-optKeepFiles -optCompInst"
+#export TAU_TRACK_MEMORY_LEAKS=1 
+#export TAU_TRACK_IO_PARAMS=1
+#export TAU_TRACK_HEAP=1
