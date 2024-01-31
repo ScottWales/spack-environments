@@ -347,6 +347,8 @@ class Tau(Package):
                 if found:
                     break
             options.append("-pythonlib=%s" % lib_path)
+        
+        options.append("-DTAU_MAX_CALLPATH_DEPTH=5000")
 
         compiler_specific_options = self.set_compiler_options(spec)
         options.extend(compiler_specific_options)
