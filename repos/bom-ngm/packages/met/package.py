@@ -14,6 +14,7 @@ class Met(AutotoolsPackage):
 
     maintainers = ['scottwales']
 
+    version('11.1.0', 'e2e371ae1f49185ff8bf08201b1a3e90864a467aa3369b04132d231213c3c9e5')
     version('11.0.2', 'f720d15e1d6c235c9a41fd97dbeb0eb1082fb8ae99e1bcdcb5e51be9b50bdfbf')
 
     depends_on('bufr')
@@ -24,6 +25,8 @@ class Met(AutotoolsPackage):
     depends_on('hdf@4')
     depends_on('hdf-eos2')
     depends_on('python')
+
+    patch('have_isatty.patch', when='@11.1.0')
 
 
     def configure_args(self):
@@ -43,7 +46,8 @@ class Met(AutotoolsPackage):
         config_args.append("MET_GRIB2CINC=%s/include"%self.spec["g2c"].prefix)
         config_args.append("MET_GRIB2CLIB=%s/lib64"%self.spec["g2c"].prefix)
         config_args.append("GRIB2CLIB_NAME=-lg2c")
-        config_args.append("MET_PYTHON_CC=")
+        config_args.append(f"MET_PYTHON_BIN_EXE={self.spec['python'].prefix}/bin/python")
+        config_args.append(f"MET_PYTHON_CC={spack_cc}")
         config_args.append("MET_PYTHON_LD=-L%s/lib -lpython3.11"%self.spec["python"].prefix)
         config_args.append("MET_HDF=%s"%self.spec["hdf"].prefix)
         config_args.append("MET_HDFEOS=%s"%self.spec["hdf-eos2"].prefix)
