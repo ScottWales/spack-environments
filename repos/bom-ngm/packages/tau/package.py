@@ -193,6 +193,9 @@ class Tau(Package):
                     useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.lib, "GNU"))         
                     useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.include, "GNU"))
 
+        ### Increase hard-coded limit for TAU callpath error
+        useropt.append("-DTAU_MAX_CALLPATH_DEPTH=5000")
+
         # Construct the string of custom compiler flags and append it to
         # compiler related options
         useropt = " ".join(useropt)
@@ -348,7 +351,6 @@ class Tau(Package):
                     break
             options.append("-pythonlib=%s" % lib_path)
         
-        options.append("-DTAU_MAX_CALLPATH_DEPTH=5000")
 
         compiler_specific_options = self.set_compiler_options(spec)
         options.extend(compiler_specific_options)
