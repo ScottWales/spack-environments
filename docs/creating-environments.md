@@ -31,7 +31,7 @@ Containers will only be built using CI if their environments change.
 ## Installing Environments on Gadi
 
 The container will be created automatically by Gitlab CI and installed to the
-staging area `/scratch/hc46/hc46_gitlab/ngm/apps/$ENV-v$VERSION/$VARIANT`.
+staging area `/scratch/hc46/hc46_gitlab/ngm/apps/$ENV-v$VERSION/$VARIANT-$BRANCH`.
 
 The installation directory for containerised environments is
 `/g/data/access/ngm/envs/$ENV/$VERSION/$VARIANT`. The staging directory should
@@ -40,6 +40,6 @@ complete.
 
 A matching module file should be created at
 `/g/data/access/ngm/modules/envs/$ENV/$VERSION/$VARIANT`. This file should be
-copied from `/scratch/hc46/hc46_gitlab/ngm/modules/$ENV-v$VERSION/$VARIANT`.
+copied from `/scratch/hc46/hc46_gitlab/ngm/modules/$ENV-v$VERSION/$VARIANT-$BRANCH`.
 The `appdir` variable needs to be updated to the final install path.
 
