@@ -3,7 +3,7 @@ channels:
 dependencies:
     - attrs
     - cartopy
-    - cset
+    - cset>=0.5
     - eofs
     - exceptiongroup
     - geovista
