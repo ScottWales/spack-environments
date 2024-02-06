@@ -9,7 +9,7 @@ dependencies:
     - geovista
     - ghostscript
     - h5py
-    - hdf5=1.12.2 # Must match spack
+    - hdf5=1.14.3 # Must match spack
     - imageio
     - imutils
     - iniconfig
