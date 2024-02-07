@@ -60,8 +60,8 @@ EOF
 spack config --scope site add -f /tmp/packages.yaml
 rm /tmp/packages.yaml
 
-spack bootstrap status
 spack bootstrap now
+spack bootstrap status
 
 # Install intel compilers
 spack install --no-check-signature intel-oneapi-compilers-classic@2021.8.0
