@@ -56,6 +56,11 @@ packages:
     - spec: 'py-setuptools@$(mamba_vn setuptools)'
       prefix: $MAMBA_ROOT/envs/container
     buildable: False
+  # Preferred versions to match Mamba
+  openblas:
+      require: "@0.3.23"
+  zlib:
+      require: "@1.2.13"
 EOF
 spack config --scope site add -f /tmp/packages.yaml
 rm /tmp/packages.yaml
