@@ -10,11 +10,13 @@ microdnf install -y --nodocs \
      bzip2 \
      bzip2-devel \
      curl \
+     file \
      gcc \
      gcc-c++ \
      gcc-gfortran \
      git \
      gzip \
+     make \
      openssl \
      openssl-devel \
      patch \
