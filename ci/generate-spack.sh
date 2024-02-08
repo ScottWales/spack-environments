@@ -51,4 +51,4 @@ bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged build/c
 # CI generate
 spack env activate --without-view build/merged
 
-spack ci generate --check-index-only --prune-dag --optimize --artifacts-root $ARTIFACTS --output-file $ARTIFACTS/pipeline.yml
+spack ci generate --check-index-only --prune-dag --optimize --dependencies --artifacts-root $ARTIFACTS --output-file $ARTIFACTS/pipeline.yml
