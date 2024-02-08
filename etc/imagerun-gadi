@@ -48,7 +48,8 @@ BIND="$BIND --bind /half-root:/gadi"
 export SINGULARITYENV_LD_LIBRARY_PATH=${LD_LIBRARY_PATH:-}:/lib64:/lib:/opt/nci/pbs/default/lib:/gadi/lib64:/gadi/lib
 
 # FCM keywords file with local mirrors
-export SINGULARITYENV_FCM_KEYWORDS=/g/data/access/apps/fcm/2019.09.0/etc/fcm/keyword.cfg
+export SINGULARITYENV_FCM_CONF=/g/data/hr22/apps/etc/fcm
+export SINGULARITYENV_FCM_KEYWORDS=/g/data/hr22/apps/fcm/2021.05.0/etc/fcm/keyword.cfg
 
 if [ "${SPACK_MPI_TYPE:-openmpi}" = "openmpi" ]; then
     export SINGULARITYENV_HOST_MPI=${OPENMPI_ROOT:-/apps/openmpi/4.1.4}
