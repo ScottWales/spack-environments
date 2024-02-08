@@ -8,7 +8,7 @@ set -o pipefail
 mkdir -p artifacts
 
 JOBS=""
-for env in envs/*/spack.yaml; do
+for env in envs/metplus-v5/spack.yaml; do
     ENV=$(basename $(dirname $env))
     echo "ENV=$ENV"
 
