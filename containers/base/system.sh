@@ -11,6 +11,7 @@ microdnf install -y --nodocs \
      bzip2-devel \
      curl \
      file \
+     findutils \
      gcc \
      gcc-c++ \
      gcc-gfortran \
