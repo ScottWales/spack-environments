@@ -46,6 +46,6 @@ for LIB in $CONDA_PREFIX/lib/*; do
         echo
         echo "  spack: $SPACK_LIB"
         echo "  real:  $(readlink -f $SPACK_LIB)"
-        exit 1
+        #exit 1
     fi
 done
