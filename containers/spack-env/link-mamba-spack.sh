@@ -21,7 +21,7 @@ for LIB in $CONDA_PREFIX/lib/*; do
     SPACK_REAL_LIB=$SPACK_ENV_VIEW/lib/$(basename $REAL_LIB)
 
     # Special cases
-    if [ $(basename $REAL_LIB) =~ libhdf5hl_fortran.so.* ]; then
+    if [[ $(basename $REAL_LIB) =~ libhdf5hl_fortran.so.* ]]; then
         vn=$(basename $REAL_LIB)
         SPACK_REAL_LIB=$SPACK_ENV_VIEW/lib/libhdf5_hl_fortran.${ver#*.}
     elif [[ $(basename $REAL_LIB) == "libopenblasp-r0.3.23.so" ]]; then
