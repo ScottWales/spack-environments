@@ -10,6 +10,7 @@ microdnf install -y --nodocs \
      bzip2 \
      bzip2-devel \
      curl \
+     diffutils \
      file \
      findutils \
      gcc \

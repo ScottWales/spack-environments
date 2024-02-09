@@ -4,6 +4,7 @@ spack:
         - metplus
         - bom-ngm.hdf5@1.14.3 # Must match mamba
         - libedit@3.1.20191231
+        - gettext@0.22.1
     packages:
         g2c:
             require: "^jasper@2"
