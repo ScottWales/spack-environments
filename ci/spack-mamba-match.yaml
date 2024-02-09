@@ -4,6 +4,6 @@ spack:
       xz:
           require: '@=5.2.6'
       libevent:
-          require: '@=2.1.10'
+          require: '@=2.1.12'
       gsl:
           require: '@=2.7 +external-cblas'

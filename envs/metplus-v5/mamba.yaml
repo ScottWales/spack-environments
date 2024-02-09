@@ -50,4 +50,3 @@ dependencies:
     - xarray
     - gsl=2.7.0
     - openblas=0.3.23
-    - libevent<=2.1.10
