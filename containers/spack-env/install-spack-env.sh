@@ -5,6 +5,8 @@
 set -eu
 set -o pipefail
 
+export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
+
 source $SPACK_ROOT/share/spack/setup-env.sh
 
 spack env create container /build/spack.lock
