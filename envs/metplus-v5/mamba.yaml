@@ -28,7 +28,7 @@ dependencies:
     - pykdtree
     - pymysql
     - pytest
-    - python
+    - python=3.11
     - python-dateutil
     - python-kaleido
     - pytz
