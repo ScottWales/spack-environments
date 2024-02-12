@@ -3,32 +3,17 @@
 docker build __CONCRETE_ENV__:
     stage: docker
     image:
-        name: gcr.io/kaniko-project/executor:debug
+        name: "localhost:5000/spack-base:${DOCKER_TAG}"
         entrypoint: [""]
     script:
-        - mkdir -p /kaniko/.docker
-        - |
-            cat > /kaniko/.docker/config.json <<EOF
-            {"auths": {
-                "$CI_DEPENDENCY_PROXY_SERVER": {
-                    "auth": "$(printf "%s:%s" ${CI_DEPENDENCY_PROXY_USER} "${CI_DEPENDENCY_PROXY_PASSWORD}" | base64 | tr -d '\n')"
-                }
-            }}
-            EOF
-        - /kaniko/executor
-            --context "${CI_PROJECT_DIR}"
-            --dockerfile "${CI_PROJECT_DIR}/containers/spack-env.docker"
-            --destination "${DEST}"
-            --tar-path "${CI_OUTDIR}/${CONCRETE_ENV}.tar"
-            --build-arg "DOCKER_REGISTRY=${DOCKER_REGISTRY}"
-            --build-arg "DOCKER_TAG=${DOCKER_TAG}"
-            --build-arg "BASE_ENV=${BASE_ENV}"
-            --build-arg "CONCRETE_ENV=${CONCRETE_ENV}"
-            --use-new-run
-            --single-snapshot
-            --snapshotMode=redo
-            --compressed-caching=false
-            --no-push
+        - cp -r containers/spack-env/*.sh /build
+        - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
+        - cp -r envs/$BASE_ENV/* /build
+        - cp artifacts/ci-$CONCRETE_ENV/*.yaml /build
+        - cp artifacts/ci-$CONCRETE_ENV/*.lock /build
+        - /build/install-mamba-env.sh
+        - /build/install-spack-env.sh
+        - /build/link-mamba-spack.sh
     needs:
         - job: generate spack environments
           pipeline: "__PIPELINE_ID__"
