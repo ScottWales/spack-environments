@@ -7,7 +7,7 @@ docker build __CONCRETE_ENV__:
         entrypoint: [""]
     script:
         - cp -r containers/spack-env/*.sh /build
-        - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/packages
+        - cp -r repos/bom-ngm/packages/* $SPACK_ROOT/var/spack/repos/bom-ngm/packages
         - cp -r envs/$BASE_ENV/* /build
         - cp artifacts/ci-$CONCRETE_ENV/*.yaml /build
         - cp artifacts/ci-$CONCRETE_ENV/*.lock /build
