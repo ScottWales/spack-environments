@@ -14,7 +14,7 @@ docker build __CONCRETE_ENV__:
         - /build/install-mamba-env.sh
         - /build/install-spack-env.sh
         - /build/link-mamba-spack.sh
-        - mksquashfs /build /opt/spack /opt/mamba "${CI_OUTDIR}/${CONCRETE_ENV}.squashfs" -all-root -no-strip -no-compression
+        - mksquashfs /build /opt/spack /opt/mamba "${CI_OUTDIR}/${CONCRETE_ENV}.squashfs" -all-root -no-strip -processors 2 -noI -noD -no-duplicates
     needs:
         - job: generate spack environments
           pipeline: "__PIPELINE_ID__"
