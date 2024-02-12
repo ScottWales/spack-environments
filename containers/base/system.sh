@@ -22,7 +22,6 @@ microdnf install -y --nodocs \
      openssl \
      openssl-devel \
      patch \
-     squashfs-tools \
      tar \
      time \
      unzip \

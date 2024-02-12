@@ -10,7 +10,7 @@ curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mam
 bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT
 
 # Base environment
-$MAMBA_ROOT/bin/mamba install conda-lock
+$MAMBA_ROOT/bin/mamba install conda-lock squashfs-tools
 
 # Container environment
 $MAMBA_ROOT/bin/mamba create -n container python=3.11 pyyaml
