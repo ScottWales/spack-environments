@@ -34,7 +34,7 @@ apptainer build __CONCRETE_ENV__:
         name: quay.io/singularity/singularity:v3.10.2
         entrypoint: [""]
     script:
-        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://localhost:5000/spack-base:${DOCKER_TAG}"
+        - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/spack-base:${DOCKER_TAG}"
         - singularity sif add --datatype 4 --partfs 1 --parttype 4 --partarch 2 --groupid 1 "${CI_OUTDIR}/${CONCRETE_ENV}.squashfs" "${CI_OUTDIR}/${DEST}.sif"
     needs:
         - docker build __CONCRETE_ENV__
