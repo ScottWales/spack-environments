@@ -35,7 +35,7 @@ apptainer build __CONCRETE_ENV__:
         entrypoint: [""]
     script:
         - singularity build --no-https "${CI_OUTDIR}/${DEST}.sif" "docker://${DOCKER_REGISTRY}/spack-base:${DOCKER_TAG}"
-        - singularity sif add --datatype 4 --partfs 1 --parttype 4 --partarch 2 --groupid 1 "${CI_OUTDIR}/${CONCRETE_ENV}.squashfs" "${CI_OUTDIR}/${DEST}.sif"
+        - singularity sif add --datatype 4 --partfs 1 --parttype 4 --partarch 2 --groupid 1 "${CI_OUTDIR}/${DEST}.sif" "${CI_OUTDIR}/${CONCRETE_ENV}.squashfs"
     needs:
         - docker build __CONCRETE_ENV__
     variables:
