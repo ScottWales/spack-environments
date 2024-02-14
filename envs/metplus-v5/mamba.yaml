@@ -50,3 +50,4 @@ dependencies:
     - xarray
     - gsl=2.7.0
     - openblas=0.3.23
+    - pocl
