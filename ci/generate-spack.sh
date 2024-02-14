@@ -11,6 +11,13 @@ ARTIFACTS=${CI_PROJECT_DIR}/artifacts
 mkdir -p build
 mkdir -p ${ARTIFACTS}
 
+cat >> $SPACK_ROOT/etc/spack/compilers.yaml <<EOF
+- compiler:
+    spec: intel@2021.8.0
+    operating_system: rocky8
+    target: x86_64
+EOF
+
 # Concretize each enviornment separately
 for env in envs/base/spack.yaml envs/metplus-v5/spack.yaml envs/nemo-v4/spack.yaml; do
     for variant in $(dirname $env)/variants/*.yaml; do
