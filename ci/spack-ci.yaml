@@ -20,7 +20,7 @@ spack:
           - os=amzn2023
       - match:
           - os=rocky8
-          - %intel
+          - '%intel'
         runner-attributes:
           tags:
             - docker
