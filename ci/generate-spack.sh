@@ -13,6 +13,11 @@ mkdir -p ${ARTIFACTS}
 
 cat >> $SPACK_ROOT/etc/spack/compilers.yaml <<EOF
 - compiler:
+    paths:
+      cc: /dev/null
+      cxx: /dev/null
+      f77: /dev/null
+      fc: /dev/null
     spec: intel@2021.8.0
     operating_system: rocky8
     target: x86_64
