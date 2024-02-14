@@ -21,6 +21,8 @@ cat >> $SPACK_ROOT/etc/spack/compilers.yaml <<EOF
     spec: intel@2021.8.0
     operating_system: rocky8
     target: x86_64
+    modules: []
+    environment: {}
 EOF
 
 # Concretize each enviornment separately
