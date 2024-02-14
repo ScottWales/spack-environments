@@ -9,6 +9,7 @@ spack:
 
   config:
     source_cache: $SPACK_CACHE
+    install_missing_compilers: true
 
   gitlab-ci:
     script:
