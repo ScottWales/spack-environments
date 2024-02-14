@@ -20,6 +20,19 @@ spack:
           - os=amzn2023
       - match:
           - os=rocky8
+          - %intel
+        runner-attributes:
+          tags:
+            - docker
+          image:
+            name: "localhost:5000/spack-base:${DOCKER_TAG}"
+            entrypoint: ['']
+          before_script:
+            - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
+            - source /build/entrypoint.sh
+            - spack install intel-oneapi-compilers-classic
+      - match:
+          - os=rocky8
         runner-attributes:
           tags:
             - docker
