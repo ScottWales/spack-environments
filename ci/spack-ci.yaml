@@ -29,7 +29,7 @@ spack:
           before_script:
             - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
             - source /build/entrypoint.sh
-            - spack install intel-oneapi-compilers-classic
+            - spack install --no-check-signature intel-oneapi-compilers-classic@2021.8.0
     service-job-attributes:
       tags:
         - docker
