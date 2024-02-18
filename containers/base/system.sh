@@ -18,6 +18,7 @@ microdnf install -y --nodocs \
      gcc-gfortran \
      git \
      gzip \
+     libtool \
      make \
      openssl \
      openssl-devel \
