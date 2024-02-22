@@ -7,12 +7,6 @@ set -o pipefail
 
 mkdir -p artifacts
 
-# Default to master branch cache if this branch doesn't have one
-if ! [ -d "$BRANCH_CACHE" ]; then
-    BRANCH_CACHE="$BRANCH_CACHE/../master"
-fi
-echo "BRANCH_CACHE=$BRANCH_CACHE"
-
 JOBS=""
 for env in envs/*/spack.yaml; do
     ENV=$(basename $(dirname $env))
@@ -45,25 +39,34 @@ for env in envs/*/spack.yaml; do
         # Copy etc files into the cache
         cp -r etc artifacts/ci-$BUILD/etc
 
-        # See if this container was already built
-        HAS_DIFF="no"
-        if [ -d "$BRANCH_CACHE/ci-$BUILD" ]; then
-            # Do config files differ?
-            if ! diff -q -r --exclude variants --exclude spack.lock --exclude mamba.lock "$BRANCH_CACHE/ci-$BUILD" "artifacts/ci-$BUILD"; then
-                HAS_DIFF="yes"
-            fi
-            # Do lock files differ? - special because files are not consistently ordered
-            if ! ci/diff-spack-lock.py "$BRANCH_CACHE/ci-$BUILD/spack.lock" "artifacts/ci-$BUILD/spack.lock"; then
-                HAS_DIFF="yes"
-            fi
-
-            if [ -f "artifacts/ci-$BUILD/mamba.lock" ]; then
-                if ! ci/diff-mamba-lock.py "$BRANCH_CACHE/ci-$BUILD/mamba.lock" "artifacts/ci-$BUILD/mamba.lock"; then
+        # See if this container was already built, or if it's the same as master's
+        for CACHE in "$BRANCH_CACHE/ci-$BUILD" "$BRANCH_CACHE/../master/ci-$BUILD"; do
+            if [ -d "$CACHE" ]; then
+                echo "Cache at $CACHE"
+                HAS_DIFF="no"
+                # Do config files differ?
+                if ! diff -q -r --exclude variants --exclude spack.lock --exclude mamba.lock "$CACHE" "artifacts/ci-$BUILD"; then
                     HAS_DIFF="yes"
                 fi
+                # Do lock files differ? - special because files are not consistently ordered
+                if ! ci/diff-spack-lock.py "$CACHE/spack.lock" "artifacts/ci-$BUILD/spack.lock"; then
+                    HAS_DIFF="yes"
+                fi
+
+                if [ -f "artifacts/ci-$BUILD/mamba.lock" ]; then
+                    if ! ci/diff-mamba-lock.py "$CACHE/mamba.lock" "artifacts/ci-$BUILD/mamba.lock"; then
+                        HAS_DIFF="yes"
+                    fi
+                fi
+
+                break
             fi
-        else
-            HAS_DIFF="yes"
+        done
+
+        if [ -z "${HAS_DIFF:-}" ]; then
+            # Not seen in cache
+            echo "Not cached"
+            HAS_DIFF=yes
         fi
 
         echo "HAS_DIFF=$HAS_DIFF"

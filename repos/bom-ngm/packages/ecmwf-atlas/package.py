@@ -7,6 +7,10 @@ class EcmwfAtlas(CMakePackage):
     url = "https://github.com/ecmwf/atlas/archive/refs/tags/0.32.1.tar.gz"
 
     version(
+        "0.34.0",
+        sha256="48536742cec0bc268695240843ac0e232e2b5142d06b19365688d9ea44dbd9ba",
+    )
+    version(
         "0.33.0",
         sha256="a91fffe9cecb51c6ee8549cbc20f8279e7b1f67dd90448e6c04c1889281b0600",
     )
@@ -23,7 +27,7 @@ class EcmwfAtlas(CMakePackage):
     depends_on("python@3", type="build")
     depends_on("ectrans")
 
-    patch("a27fc304525607c16cae7a44a2424c328df34d30.patch")
+    patch("a27fc304525607c16cae7a44a2424c328df34d30.patch", when="@0.33")
 
     def cmake_args(self):
         args = []

@@ -20,3 +20,4 @@ echo validate_config.py
 echo python
 echo python3
 echo jupyter
+echo cset

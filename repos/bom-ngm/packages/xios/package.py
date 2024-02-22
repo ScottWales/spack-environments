@@ -54,7 +54,7 @@ class Xios(Package):
     patch("nemo/p1_add_refname", when="+nemo")
     patch("nemo/p2_fix_multi_file_exception", when="+nemo")
     patch("nemo/p5_fix_inconsistent_checks", when="+nemo")
-    patch("nemo/p6_", when="+nemo")
+    patch("nemo/p7_fix_crash_in_nc4_data_output", when="+nemo")
 
     # Fix for lfric to avoid run time segmentation fault reported at 'CMesh::createMeshEpsilon()' due to CMesh::createHashes()
     patch("mesh_cpp.patch", when="+lfric")
