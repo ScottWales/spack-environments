@@ -98,6 +98,7 @@ class Tau(Package):
     variant(
         "x86_64", default=False, description="Force build for x86 Linux instead of auto-detect"
     )
+    variant("lfric", default=False, description="Add patch for LFRic stalling problem when freeing communicators in MPI_Finalize()")
 
     depends_on("cmake@3.14:", type="build", when="%clang")
     depends_on("zlib", type="link")
@@ -139,7 +140,7 @@ class Tau(Package):
     patch("lcxa.patch", when="%intel@2021.8.0")
     patch("TauFInit.patch")
     patch("ompt.patch",when="+ompt")
-    patch("TauMpi.c.patch")
+    patch("TauMpi.c.patch",when="+lfric")
 
     filter_compiler_wrappers("Makefile", relative_root="include")
     filter_compiler_wrappers("Makefile.tau*", relative_root="lib")
