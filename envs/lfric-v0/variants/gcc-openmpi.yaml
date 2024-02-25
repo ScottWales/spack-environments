@@ -3,5 +3,5 @@ spack:
         all:
             require: "%gcc@8.5.0"
         mpi:
-            require: "openmpi@4.1.4 +cxx"
+            require: "openmpi@4.1.4"
 

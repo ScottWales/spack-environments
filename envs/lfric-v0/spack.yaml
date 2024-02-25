@@ -6,4 +6,4 @@ spack:
         - fcm
         - rsync
         - builtin.hdf5
-        - tau +mpi +openmp +opari ~pthreads
+        - tau +mpi +openmp +opari ~pthreads +lfric

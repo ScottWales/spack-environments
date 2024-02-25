@@ -30,4 +30,3 @@ USER root
 COPY containers/base/entrypoint.sh /build
 RUN  chmod 755 /build/entrypoint.sh
 ENTRYPOINT ["/build/entrypoint.sh"]
-
