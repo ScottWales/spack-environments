@@ -12,18 +12,18 @@ from spack.pkg.builtin.boost import Boost
 class Xios(Package):
     """XML-IO-SERVER library for IO management of climate models."""
 
-    homepage = "https://forge.ipsl.jussieu.fr/ioserver/wiki"
+    homepage = "https://forge.ipsl.fr/ioserver/wiki"
 
-    version("develop", svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk")
-    version("2.5.2252", revision=2252, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/trunk")
+    version("develop", svn="http://forge.ipsl.fr/ioserver/svn/XIOS/trunk")
+    version("2.5.2252", revision=2252, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
     version(
-        "2.5", revision=1860, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/branches/xios-2.5"
+        "2.5", revision=1860, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/branches/xios-2.5"
     )
     version(
-        "2.0", revision=1627, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/branches/xios-2.0"
+        "2.0", revision=1627, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/branches/xios-2.0"
     )
     version(
-        "1.0", revision=910, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/branchs/xios-1.0"
+        "1.0", revision=910, svn="http://forge.ipsl.fr/ioserver/svn/XIOS/branchs/xios-1.0"
     )
 
     variant(
