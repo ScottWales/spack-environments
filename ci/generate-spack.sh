@@ -26,7 +26,7 @@ cat >> $SPACK_ROOT/etc/spack/compilers.yaml <<EOF
 EOF
 
 # Concretize each enviornment separately
-for env in envs/base/spack.yaml envs/metplus-v5/spack.yaml envs/nemo-v4/spack.yaml; do
+for env in envs/*/spack.yaml; do
     for variant in $(dirname $env)/variants/*.yaml; do
         if [ -f $variant ]; then
             VAR=$(basename --suffix=.yaml $variant)
