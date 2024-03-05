@@ -7,3 +7,5 @@ spack:
           require: '@=2.1.12'
       gsl:
           require: '@=2.7 +external-cblas'
+      binutils:
+          require: '%gcc'
