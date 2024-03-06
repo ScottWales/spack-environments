@@ -23,6 +23,7 @@ done
 # Update Spack with system packages
 spack compiler find --scope site /usr
 spack external find --scope site --path /usr --not-buildable openssl
+spack external find --scope site --path /usr --not-buildable subversion
 
 spack config --scope site add packages:openssl:buildable:false
 spack config --scope site add packages:gcc:buildable:true
