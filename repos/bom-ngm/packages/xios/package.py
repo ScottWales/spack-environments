@@ -15,7 +15,7 @@ class Xios(Package):
     homepage = "https://forge.ipsl.fr/ioserver/wiki"
 
     version("develop", svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
-    version("2.5.2252", revision=2252, svn="http://forge.ipsl.fr/ioserver/svn/XIOS/trunk")
+    version("2.5.2252", revision=2252, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
     version(
         "2.5", revision=1860, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/branches/xios-2.5"
     )
