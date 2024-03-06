@@ -9,3 +9,11 @@ spack:
           require: '@=2.7 +external-cblas'
       binutils:
           require: '%gcc'
+      intel-oneapi-compilers-classic:
+          require: '%gcc'
+      intel-oneapi-compilers:
+          require: '%gcc'
+      patchelf:
+          require: '%gcc'
+      gmake:
+          require: '%gcc'
