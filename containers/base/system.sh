@@ -23,6 +23,7 @@ microdnf install -y --nodocs \
      openssl \
      openssl-devel \
      patch \
+     subversion \
      tar \
      time \
      unzip \
