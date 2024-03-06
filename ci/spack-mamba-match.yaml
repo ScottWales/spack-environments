@@ -17,3 +17,5 @@ spack:
           require: '%gcc'
       gmake:
           require: '%gcc'
+      subversion:
+          require: '%gcc'
