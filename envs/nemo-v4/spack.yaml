@@ -7,7 +7,7 @@ spack:
         - openjpeg
         - zlib
         - "xios@2.5.2252+nemo"
-        - intel-oneapi-compilers-classic@2021.8.0
+        - intel-oneapi-compilers-classic@2021.8.0%gcc
         # - tau+mpi+opari+openmp~pthreads
         #Optional dependencies not currently in spack:
         # - drhook
