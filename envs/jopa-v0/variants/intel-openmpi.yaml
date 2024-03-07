@@ -1,5 +1,5 @@
 spack:
-    specs:
+    specs-:
         - intel-oneapi-compilers-classic@2021.8.0
     packages:
         all:
