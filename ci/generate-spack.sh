@@ -48,6 +48,9 @@ for env in envs/*/spack.yaml; do
         if [ -f $variant ]; then
             spack config add --file $variant
         fi
+        if [[ "$VAR" =~ intel-* ]]; then
+            spack add intel-oneapi-compilers-classic@2021.8.0
+        fi
         spack concretize --force --fresh
         spack env deactivate
 
