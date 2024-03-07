@@ -3,6 +3,11 @@ set -eu
 
 source /opt/spack/share/spack/setup-env.sh
 
+function e() {
+    echo "$@"
+    "$@"
+}
+
 # Generates Spack CI yaml files
 : ${CI_PROJECT_DIR:=.}
 export CI_PROJECT_DIR
@@ -43,16 +48,16 @@ for env in envs/*/spack.yaml; do
         cp $env build/ci-$BUILD/
 
         # Activate the environment, set the compiler/mpi, and concretize
-        spack env activate --without-view build/ci-$BUILD
-        spack config add --file ci/spack-mamba-match.yaml
+        e spack env activate --without-view build/ci-$BUILD
+        e spack config add --file ci/spack-mamba-match.yaml
         if [ -f $variant ]; then
-            spack config add --file $variant
+            e spack config add --file $variant
         fi
         if [[ "$VAR" =~ intel-* ]]; then
-            spack add intel-oneapi-compilers-classic@2021.8.0
+            e spack add intel-oneapi-compilers-classic@2021.8.0
         fi
-        spack concretize --force --fresh
-        spack env deactivate
+        e spack concretize --force --fresh
+        e spack env deactivate
 
         # Copy the concretized environment to the artifacts directory for deployment
         mkdir $ARTIFACTS/ci-$BUILD
