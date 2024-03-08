@@ -17,6 +17,7 @@ class Fcm(Package):
     )
 
     depends_on("perl")
+    depends_on("perl-xml-parser")
     depends_on("subversion")
 
     def install(self, spec, prefix):
