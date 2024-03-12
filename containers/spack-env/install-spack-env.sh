@@ -69,26 +69,26 @@ cat > $SPACK_ROOT/bin/activate.sh << EOF
 #!/bin/bash
 
 # Compiler used by Spack
-export SPACK_COMPILER=$SPACK_COMPILER
+export SPACK_COMPILER="$SPACK_COMPILER"
 
 # MPI used by Spack
-export SPACK_MPI=$SPACK_MPI
-export MPI_PATH=$MPI_PATH
+export SPACK_MPI="$SPACK_MPI"
+export MPI_PATH="$MPI_PATH"
 
 # Path to the Spack environment's view
-export SPACK_ENV_VIEW=$SPACK_ENV/.spack-env/view
+export SPACK_ENV_VIEW="$SPACK_ENV/.spack-env/view"
 
 # Container MPI library path
-INTERNAL_MPI=\$(spack find --format '{prefix}' mpi)
-HYBRID_MPI_LIB=\$MPI_PATH/lib_hybrid_mpi
+INTERNAL_MPI="\$(spack find --format '{prefix}' mpi)"
+HYBRID_MPI_LIB="\$MPI_PATH/lib_hybrid_mpi"
 
 # Intel compiler spack packages have different names
-case \${SPACK_COMPILER} in
+case "\${SPACK_COMPILER}" in
     oneapi@*)
-        spack load intel-oneapi-compilers@\${SPACK_COMPILER#*@}
+        spack load "intel-oneapi-compilers@\${SPACK_COMPILER#*@}"
         ;;
     intel@*)
-        spack load intel-oneapi-compilers-classic@\${SPACK_COMPILER#*@}
+        spack load "intel-oneapi-compilers-classic@\${SPACK_COMPILER#*@}"
         ;;
     gcc@8.5.0)
         # System compiler
@@ -98,31 +98,34 @@ case \${SPACK_COMPILER} in
         export F90=/bin/gfortran
         ;;
     *)
-        spack load \$SPACK_COMPILER
+        spack load "\$SPACK_COMPILER"
         ;;
 esac
 
 # Make sure container compilers are used in bind mode
-export OMPI_CC=\$CC
-export OMPI_FC=\$FC
-export OMPI_F90=\$FC
-export OMPI_CXX=\$CXX
+export OMPI_CC="\$CC"
+export OMPI_FC="\$FC"
+export OMPI_F90="\$FC"
+export OMPI_CXX="\$CXX"
 
-export I_MPI_CC=\$CC
-export I_MPI_FC=\$FC
-export I_MPI_F90=\$FC
-export I_MPI_CXX=\$CXX
+export I_MPI_CC="\$CC"
+export I_MPI_FC="\$FC"
+export I_MPI_F90="\$FC"
+export I_MPI_CXX="\$CXX"
 
 export PATH CPATH LIBRARY_PATH LD_LIBRARY_PATH LD_RUN_PATH CMAKE_PREFIX_PATH
 
-CPATH=\${CPATH:-}:/include
-LIBRARY_PATH=\${LIBRARY_PATH:-}:/lib64
-LD_LIBRARY_PATH=\${LD_LIBRARY_PATH:-}:/lib64
-LD_RUN_PATH=\${LD_LIBRARY_PATH:-}:/lib64
-CMAKE_PREFIX_PATH=\${CMAKE_PREFIX_PATH:-}
+CPATH="\${CPATH:-}:/include"
+LIBRARY_PATH="\${LIBRARY_PATH:-}:/lib64"
+LD_LIBRARY_PATH="\${LD_LIBRARY_PATH:-}:/lib64"
+LD_RUN_PATH="\${LD_LIBRARY_PATH:-}:/lib64"
+CMAKE_PREFIX_PATH="\${CMAKE_PREFIX_PATH:-}"
+PERL5LIB="\${PERL5LIB:-}"
 
 EOF
 
+# The full environment
+perl5ext="lib/perl5/x86_64-linux-thread-multi"
 for prefix in $(spack find --format '{prefix}'); do
     if ! [[ "$prefix" =~ ^$SPACK_ROOT ]]; then
         continue
@@ -138,15 +141,19 @@ for prefix in $(spack find --format '{prefix}'); do
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-full.sh
         echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-full.sh
     fi
+    if [ -d "$prefix/$perl5ext" ]; then
+        echo "PERL5LIB=$prefix/$perl5ext:\$PERL5LIB" >> $SPACK_ROOT/bin/activate-full.sh
+    fi
     echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activate-full.sh
 done
 
+# Only the implicit dependencies of the environment
 for prefix in $(spack find --implicit --format '{prefix}'); do
     if ! [[ "$prefix" =~ ^$SPACK_ROOT ]]; then
         continue
     fi
     if [ -d "$prefix/bin" ]; then
-        echo "PATH=$prefix/bin:\$PATH" >> $SPACK_ROOT/bin/activate-full.sh
+        echo "PATH=$prefix/bin:\$PATH" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
     if [ -d "$prefix/include" ]; then
         echo "CPATH=$prefix/include:\$CPATH" >> $SPACK_ROOT/bin/activate-dev.sh
@@ -155,6 +162,9 @@ for prefix in $(spack find --implicit --format '{prefix}'); do
         echo "LIBRARY_PATH=$prefix/lib:\$LIBRARY_PATH" >> $SPACK_ROOT/bin/activated-dev.sh
         echo "LD_LIBRARY_PATH=$prefix/lib:\$LD_LIBRARY_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
         echo "LD_RUN_PATH=$prefix/lib:\$LD_RUN_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
+    fi
+    if [ -d "$prefix/lib/perl5/x86_64-linux-thread-multi" ]; then
+        echo "PERL5LIB=$prefix/$perl5ext:\$PERL5LIB" >> $SPACK_ROOT/bin/activate-dev.sh
     fi
     echo "CMAKE_PREFIX_PATH=$prefix:\$CMAKE_PREFIX_PATH" >> $SPACK_ROOT/bin/activate-dev.sh
 done
