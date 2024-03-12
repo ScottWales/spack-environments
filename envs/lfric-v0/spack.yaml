@@ -7,3 +7,5 @@ spack:
         - rsync
           #- builtin.hdf5
         - tau +mpi +openmp +opari ~pthreads
+        - hdf5@1.12.2
+        - netcdf-c@4.9.2

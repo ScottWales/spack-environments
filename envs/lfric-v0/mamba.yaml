@@ -4,5 +4,3 @@ dependencies:
   - lfric-gpl-utils=2
   - jinja2
   - sci-fab
-  - hdf5@1.12.2
-  - netcdf-c@4.9.2
