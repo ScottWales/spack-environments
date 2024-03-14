@@ -157,12 +157,12 @@ OASIS_LIB=""
                 -I{BOOST_INC_DIR} -I{BLITZ_INC_DIR} \
                 -std=gnu++11
 %PROD_CFLAGS    -O3 -DBOOST_DISABLE_ASSERTS
-%DEV_CFLAGS     -g -O2
+%DEV_CFLAGS     -g -traceback -O2
 %DEBUG_CFLAGS   -g -traceback
 
 %BASE_FFLAGS    -D__NONE__ -ffree-line-length-none
 %PROD_FFLAGS    -O3
-%DEV_FFLAGS     -g -O2
+%DEV_FFLAGS     -g -traceback -O2
 %DEBUG_FFLAGS   -g -traceback
 
 %BASE_INC       -D__NONE__
