@@ -144,12 +144,8 @@ OASIS_LIB=""
             param["LIBCXX"] = "-lstdc++"
 
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
-            if "+lfric" in spec:
-                param.update({"MICROARCHITECTURE": " "})
-            else:
-                param.update({"MICROARCHITECTURE": "-march=broadwell -mtune=broadwell"})
             text = r"""
-%CCOMPILER      {MPICXX} {MICROARCHITECTURE}
+%CCOMPILER      {MPICXX}
 %FCOMPILER      {MPIFC}
 %LINKER         {MPIFC}
 
