@@ -71,6 +71,12 @@ for env in envs/*/spack.yaml; do
             HAS_DIFF=yes
         fi
 
+        if [ "$FORCE_CONTAINER_REBUILD" == "True" ]; then
+            # Force containers to be rebuilt by passing in variable value at starting the pipeline. Default is "False"
+            echo "Force containers to be rebuilt"
+            HAS_DIFF=yes
+        fi
+
         echo "HAS_DIFF=$HAS_DIFF"
 
         if [ $HAS_DIFF = "yes" ]; then

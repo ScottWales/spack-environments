@@ -62,5 +62,5 @@ Install complete
 
 Load module with
     module use ${PREFIX}/modules
-    module load ${NAME}/${VARIANT}
+    module load ${NAME}/${VARIANT}-${VERSION}
 EOF

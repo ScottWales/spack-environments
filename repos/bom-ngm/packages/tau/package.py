@@ -98,6 +98,7 @@ class Tau(Package):
     variant(
         "x86_64", default=False, description="Force build for x86 Linux instead of auto-detect"
     )
+    variant("lfric", default=False, description="Add patch for LFRic stalling problem when freeing communicators in MPI_Finalize()")
 
     depends_on("cmake@3.14:", type="build", when="%clang")
     depends_on("zlib", type="link")
@@ -137,6 +138,9 @@ class Tau(Package):
 
     patch("unwind.patch", when="@2.29.0")
     patch("lcxa.patch", when="%intel@2021.8.0")
+    patch("TauFInit.patch")
+    patch("ompt.patch",when="+ompt")
+    patch("TauMpi.c.patch",when="+lfric")
 
     filter_compiler_wrappers("Makefile", relative_root="include")
     filter_compiler_wrappers("Makefile.tau*", relative_root="lib")
@@ -175,6 +179,24 @@ class Tau(Package):
             compiler_options.append("-fortran=%s" % os.path.basename(self.compiler.fc))
 
         ##########
+
+        if "+mpi" in spec:
+            if spec["mpi"].name == "nci-openmpi":
+            # Accomodate multiple paths for mpi directories on nci
+                if self.spec.satisfies('%intel'):
+                    useropt.append("-I%s" % join_path(spec["mpi"].prefix.include, "Intel"))
+                    useropt.append("-L%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
+                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
+                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.include, "Intel"))
+
+                if self.spec.satisfies('%gcc'):
+                    useropt.append("-I%s" % join_path(spec["mpi"].prefix.include, "GNU"))
+                    useropt.append("-L%s" % join_path(spec["mpi"].prefix.lib, "GNU"))
+                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.lib, "GNU"))         
+                    useropt.append("-Wl,-rpath,%s" % join_path(spec["mpi"].prefix.include, "GNU"))
+
+        ### Increase hard-coded limit for TAU callpath error
+        useropt.append("-DTAU_MAX_CALLPATH_DEPTH=5000")
 
         # Construct the string of custom compiler flags and append it to
         # compiler related options
@@ -259,16 +281,10 @@ class Tau(Package):
             env["CXX"] = spec["mpi"].mpicxx
             env["F77"] = spec["mpi"].mpif77
             env["FC"] = spec["mpi"].mpifc
+            
             options.append("-mpiinc=%s" % spec["mpi"].prefix.include)
             options.append("-mpilib=%s" % spec["mpi"].prefix.lib)
             
-            if spec["mpi"].name == "nci-openmpi" and self.spec.satisfies('%intel'):
-                options.append("-mpiinc=%s" % join_path(spec["mpi"].prefix.include, "Intel"))
-                options.append("-mpilib=%s" % join_path(spec["mpi"].prefix.lib, "Intel"))
-            if spec["mpi"].name == "nci-openmpi" and self.spec.satisfies('%gcc'):
-                options.append("-mpiinc=%s" % join_path(spec["mpi"].prefix.include, "GNU"))
-                options.append("-mpilib=%s" % join_path(spec["mpi"].prefix.lib, "GNU"))
-
             options.append("-mpi")
             if "+comm" in spec:
                 options.append("-PROFILECOMMUNICATORS")
@@ -336,6 +352,7 @@ class Tau(Package):
                 if found:
                     break
             options.append("-pythonlib=%s" % lib_path)
+        
 
         compiler_specific_options = self.set_compiler_options(spec)
         options.extend(compiler_specific_options)

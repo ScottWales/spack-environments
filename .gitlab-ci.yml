@@ -21,6 +21,7 @@ variables:
     SPACK_CACHE: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/spack-7'
     APPTAINER_CACHEDIR: '${DOCKER_PERSIST}/${CI_PROJECT_PATH}/apptainer'
     MAMBA_REPO: 'file://${DOCKER_PERSIST}/bom/ngm/conda-pkgs/pkgs'
+    FORCE_CONTAINER_REBUILD: 'False'
 
 setup:
     stage: setup

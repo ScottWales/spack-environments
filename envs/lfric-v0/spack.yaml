@@ -5,7 +5,5 @@ spack:
         - pfunit@3 max_array_rank=6 +mpi +openmp
         - fcm
         - rsync
-          #- builtin.hdf5
-        - tau +mpi +openmp +opari ~pthreads
-        - hdf5@1.12.2
-        - netcdf-c@4.9.2
+        - builtin.hdf5
+        - tau +mpi +openmp +opari ~pthreads +lfric
