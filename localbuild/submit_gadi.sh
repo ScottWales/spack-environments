@@ -9,7 +9,7 @@ export SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" 
 
 # Container to build
 export BASE_ENV=lfric-v0
-export VARIANT=intel-openmpi
+export VARIANT=gcc-openmpi
 
 PBS_FLAGS="-v PROJECT,SCRIPT_DIR,BASE_ENV,VARIANT"
 

@@ -5,10 +5,10 @@
 set -eu
 set -o pipefail
 
-if [ -f $SPACKENVS/envs/$BASE_ENV/mamba.yaml ]; then
+if [ -f /build/mamba.yaml ]; then
     $MAMBA_ROOT/bin/conda-lock --mamba \
         --platform linux-64 \
-        --file $SPACKENVS/envs/$BASE_ENV/mamba.yaml \
+        --file /build/mamba.yaml \
         --lockfile /build/mamba.lock \
         -c conda-forge \
         -c "$MAMBA_REPO"
@@ -19,7 +19,6 @@ source /opt/spack/share/spack/setup-env.sh
 env=$SPACKENVS/envs/$BASE_ENV/spack.yaml
 variant=$SPACKENVS/envs/$BASE_ENV/variants/$VARIANT.yaml
 
-cp $env /build/spack.yaml
 spack env activate --without-view /build
 spack config add --file $SPACKENVS/ci/spack-mamba-match.yaml
 if [ -f $variant ]; then

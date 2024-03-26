@@ -23,7 +23,7 @@ cat >> $SPACK_ROOT/etc/spack/compilers.yaml <<EOF
       cxx: /dev/null
       f77: /dev/null
       fc: /dev/null
-    spec: intel@2021.8.0
+    spec: intel@2021.9.0
     operating_system: rocky8
     target: x86_64
     modules: []
@@ -54,7 +54,7 @@ for env in envs/*/spack.yaml; do
             e spack config add --file $variant
         fi
         if [[ "$VAR" =~ intel-* ]]; then
-            e spack add intel-oneapi-compilers-classic@2021.8.0
+            e spack add intel-oneapi-compilers-classic@2021.9.0
         fi
         e spack concretize --force --fresh
         e spack env deactivate

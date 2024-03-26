@@ -1,7 +1,7 @@
 spack:
     packages:
         all:
-            require: "%intel@2021.8.0"
+            require: "%intel"
         mpi:
             require: "openmpi@4.1.4 ~static"
         intel-oneapi-compilers-classic:
