@@ -5,12 +5,10 @@
 set -eu
 set -o pipefail
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
-
-if [ -f $SPACKENVS/envs/$ENV/mamba.yaml ]; then
+if [ -f $SPACKENVS/envs/$BASE_ENV/mamba.yaml ]; then
     $MAMBA_ROOT/bin/conda-lock --mamba \
         --platform linux-64 \
-        --file $SPACKENVS/envs/$ENV/mamba.yaml \
+        --file $SPACKENVS/envs/$BASE_ENV/mamba.yaml \
         --lockfile /build/mamba.lock \
         -c conda-forge \
         -c "$MAMBA_REPO"
@@ -18,8 +16,8 @@ fi
 
 source /opt/spack/share/spack/setup-env.sh
 
-env=$SPACKENVS/envs/$ENV/spack.yaml
-variant=$SPACKENVS/envs/$ENV/variants/$VARIANT.yaml
+env=$SPACKENVS/envs/$BASE_ENV/spack.yaml
+variant=$SPACKENVS/envs/$BASE_ENV/variants/$VARIANT.yaml
 
 cp $env /build/spack.yaml
 spack env activate --without-view /build

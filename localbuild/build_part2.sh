@@ -12,8 +12,6 @@
 set -eu
 set -o pipefail
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
-
 # Compiles the Spack packages
 module load singularity
 
@@ -26,7 +24,7 @@ tar -C $SQUASHFS_ROOT -xf "$OUTDIR/part1.tar"
 
 export SPACK_JOBS=${PBS_NCPUS:-2}
 
-e singularity exec $MOUNT_ARGS baseimage.sif /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
+e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image
 mksquashfs $SQUASHFS_ROOT $OUTDIR/spack.squashfs -all-root -noappend
@@ -36,7 +34,7 @@ if [ -d "$APPDIR" ]; then
     rm -r "$APPDIR"
 fi
 mkdir -p "$APPDIR"/{bin,etc}
-cp baseimage.sif "$APPDIR/etc/image.sif"
+cp "$BASEIMAGE" "$APPDIR/etc/image.sif"
 /opt/singularity/bin/singularity sif add \
     --datatype 4 \
     --partfs 1 \
