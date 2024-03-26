@@ -117,7 +117,7 @@ spack bootstrap status
 
 cat /opt/spack/etc/spack/compilers.yaml
 
-spack clean
+#spack clean
 
 # List the found environment
 spack compilers
