@@ -56,6 +56,7 @@ for env in envs/*/spack.yaml; do
         if [[ "$VAR" =~ intel-* ]]; then
             e spack add intel-oneapi-compilers-classic@2021.9.0
         fi
+        cat build/ci-$BUILD/spack.yaml
         e spack concretize --force --fresh
         e spack env deactivate
 
