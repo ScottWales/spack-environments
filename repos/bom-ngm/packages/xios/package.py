@@ -143,6 +143,11 @@ OASIS_LIB=""
         else:
             param["LIBCXX"] = "-lstdc++"
 
+        if spec.satisfies('%gcc'):
+            param['BACKTRACE'] = '-fbacktrace'
+        else:
+            param['BACKTRACE'] = '-traceback'
+
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
             text = r"""
 %CCOMPILER      {MPICXX}
@@ -153,13 +158,13 @@ OASIS_LIB=""
                 -I{BOOST_INC_DIR} -I{BLITZ_INC_DIR} \
                 -std=gnu++11
 %PROD_CFLAGS    -O3 -DBOOST_DISABLE_ASSERTS
-%DEV_CFLAGS     -g -traceback -O2
-%DEBUG_CFLAGS   -g -traceback
+%DEV_CFLAGS     -g {BACKTRACE} -O2
+%DEBUG_CFLAGS   -g {BACKTRACE}
 
 %BASE_FFLAGS    -D__NONE__ -ffree-line-length-none
 %PROD_FFLAGS    -O3
-%DEV_FFLAGS     -g -traceback -O2
-%DEBUG_FFLAGS   -g -traceback
+%DEV_FFLAGS     -g {BACKTRACE} -O2
+%DEBUG_FFLAGS   -g {BACKTRACE}
 
 %BASE_INC       -D__NONE__
 %BASE_LD        -L{BOOST_LIB_DIR} -L{BLITZ_LIB_DIR} -lblitz {LIBCXX}
