@@ -8,7 +8,7 @@ set -o pipefail
 export SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
 
 # Container to build
-export BASE_ENV=lfric-v0
+export BASE_ENV=nemo-v4
 export VARIANT=gcc-openmpi
 
 PBS_FLAGS="-v PROJECT,SCRIPT_DIR,BASE_ENV,VARIANT"
