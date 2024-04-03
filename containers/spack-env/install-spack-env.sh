@@ -9,8 +9,8 @@ export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
 source $SPACK_ROOT/share/spack/setup-env.sh
 
-spack bootstrap disable github-actions-v0.5
-spack bootstrap disable github-actions-v0.4
+#spack bootstrap disable github-actions-v0.5
+#spack bootstrap disable github-actions-v0.4
 
 spack mirror list
 spack buildcache list --allarch

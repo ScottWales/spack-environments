@@ -24,6 +24,8 @@ tar -C $SQUASHFS_ROOT -xf "$OUTDIR/part1.tar"
 
 export SPACK_JOBS=${PBS_NCPUS:-2}
 
+e singularity exec $MOUNT_ARGS "$BASEIMAGE" spack bootstrap disable github-actions-v0.5
+e singularity exec $MOUNT_ARGS "$BASEIMAGE" spack bootstrap disable github-actions-v0.4
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image
