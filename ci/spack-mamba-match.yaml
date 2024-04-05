@@ -19,5 +19,3 @@ spack:
           require: '%gcc'
       subversion:
           require: '%gcc'
-      libxml2:
-          require: '@=2.12.6'
