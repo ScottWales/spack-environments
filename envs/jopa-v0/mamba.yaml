@@ -8,4 +8,4 @@ dependencies:
   - varpy
   - libxml2=2.10.3
   - libopenblas=0.3.23
-  - libexpat=1.8.10 # Must match spack
+  - libexpat=2.5.0 # Must match spack
