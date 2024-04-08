@@ -7,3 +7,5 @@ spack:
           require: '@=2.1.10'
       gsl:
           require: '@=2.7 +external-cblas'
+      libxml2:
+          require: '@=2.10.3'
