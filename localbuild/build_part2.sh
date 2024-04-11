@@ -2,12 +2,12 @@
 #  Copyright 2024 Bureau of Meteorology
 #  Author Scott Wales
 #PBS -l wd
-#PBS -q normal
 #PBS -l ncpus=16
 #PBS -l mem=64gb
 #PBS -l walltime=1:00:00
 #PBS -l jobfs=20gb
 #PBS -l storage=scratch/hc46
+#PBS -m ae
 #PBS -j oe
 
 set -eu
@@ -25,12 +25,17 @@ tar -C $SQUASHFS_ROOT -xf "$OUTDIR/part1.tar"
 
 export SPACK_JOBS=${PBS_NCPUS:-2}
 
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" spack bootstrap disable github-actions-v0.5
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" spack bootstrap disable github-actions-v0.4
+# Make sure python is available
+export SINGULARITYENV_PREPEND_PATH=$MAMBA_ROOT/envs/container/bin
+
+e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
+
+# Regenerate locks for current target
+e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks-part2.sh
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image
-mksquashfs $SQUASHFS_ROOT $OUTDIR/spack.squashfs -all-root -noappend
+mksquashfs $SQUASHFS_ROOT $OUTDIR/spack.squashfs -all-root -noappend -processors ${PBS_NCPUS:-1}
 
 # Set up APPDIR and add in squashfs to this container
 if [ -d "$APPDIR" ]; then

@@ -18,6 +18,10 @@ module load singularity
 # Common variables to both stages
 source env.sh
 
+if [ -f "$OUTDIR/part1.tar" ]; then
+    rm "$OUTDIR/part1.tar"
+fi
+
 mkdir -p "$SQUASHFS_ROOT"
 
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/base/install-mamba.sh
@@ -28,7 +32,7 @@ cp -r $SPACKENVS/repos/bom-ngm/packages $SQUASHFS_ROOT/$SPACK_ROOT/var/spack/rep
 cp -r $SPACKENVS/envs/$BASE_ENV/* $SQUASHFS_ROOT/build
 chmod +x $SQUASHFS_ROOT/build/*.sh
 
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
+# e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks.sh
 
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-mamba-env.sh
