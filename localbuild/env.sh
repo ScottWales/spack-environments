@@ -11,18 +11,11 @@ function e() {
     "$@"
 }
 
-# Where to write container fragments
-OUTDIR=/scratch/$PROJECT/$USER/tmp
-
 # Where to build the squashfs paths
-SQUASHFS_ROOT="$TMPDIR/squashfs"
+export SQUASHFS_ROOT="$TMPDIR/squashfs"
 
 # Path to the container repo
 export SPACKENVS="$SCRIPT_DIR/.."
-
-# Locally built packages
-export MAMBA_REPO=/scratch/hc46/hc46_gitlab/conda-bld/
-export SPACK_CACHE=/scratch/$PROJECT/$USER/tmp/spack-build
 
 # Spack settings
 export SPACK_VERSION=0.21.2
@@ -38,9 +31,6 @@ export MAMBA_ROOT=/opt/mamba
 
 # Python that spack should use
 export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
-
-# Base container image
-export BASEIMAGE=~saw562/projects/gadicontainer/baseimage.sif
 
 # Install directory
 export APPDIR="$OUTDIR/${BASE_ENV}-${VARIANT}"
