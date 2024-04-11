@@ -9,21 +9,12 @@ export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
 source $SPACK_ROOT/share/spack/setup-env.sh
 
-#spack bootstrap disable github-actions-v0.5
-#spack bootstrap disable github-actions-v0.4
-
 spack mirror list
 spack buildcache list --allarch
-
-#spack bootstrap now --dev
 
 spack env create container /build/spack.lock
 spack env activate container
 spack mirror add gitlab file://$SPACK_CACHE
-
-
-#spack add openmpi
-#spack concretize
 
 if [ -n "${SPACK_ALLOW_BUILDS:-}" ]; then
     make -C /build -j ${SPACK_JOBS:-2} --file $PWD/Makefile --keep-going

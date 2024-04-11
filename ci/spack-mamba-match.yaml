@@ -7,6 +7,10 @@ spack:
           require: '@=2.1.12'
       gsl:
           require: '@=2.7 +external-cblas'
+      openblas:
+          require: "@0.3.23"
+      zlib:
+          require: "@1.2.13"
       binutils:
           require: '%gcc'
       intel-oneapi-compilers-classic:

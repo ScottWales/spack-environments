@@ -57,67 +57,12 @@ packages:
     - spec: 'py-setuptools@$(mamba_vn setuptools)'
       prefix: $MAMBA_ROOT/envs/container
     buildable: False
-  # Preferred versions to match Mamba
-  openblas:
-      require: "@0.3.23"
-  zlib:
-      require: "@1.2.13"
 EOF
 spack config --scope site add -f /tmp/packages.yaml
 rm /tmp/packages.yaml
 
 spack bootstrap now
 spack bootstrap status
-
-# # Install intel compilers
-# spack install --no-check-signature intel-oneapi-compilers-classic@2021.8.0
-# ONEAPI_PREFIX=$(spack find --format '{prefix}' intel-oneapi-compilers)
-# 
-# # Minimise footprint
-# rm -rf $ONEAPI_PREFIX/compiler/latest/linux/lib/oclfpga
-# rm -rf $ONEAPI_PREFIX/compiler/latest/linux/lib/*_emu.so*
-# rm -rf $ONEAPI_PREFIX/compiler/latest/linux/bin-llvm
-# rm -rf $ONEAPI_PREFIX/intel
-# rm -rf $ONEAPI_PREFIX/conda_channel
-# rm -rf $ONEAPI_PREFIX/debugger
-# 
-# # Setup compilers
-# cat >> /opt/spack/etc/spack/compilers.yaml << EOF
-# - compiler:
-#     spec: oneapi@=$(spack find --format '{version}' intel-oneapi-compilers)
-#     paths:
-#       cc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/icx
-#       cxx: $ONEAPI_PREFIX/compiler/latest/linux/bin/icpx
-#       f77: $ONEAPI_PREFIX/compiler/latest/linux/bin/ifx
-#       fc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/ifx
-#     flags: {}
-#     operating_system: rocky8
-#     target: x86_64
-#     modules: []
-#     environment:
-#       prepend_path:
-#         LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
-#     extra_rpaths: []
-# - compiler:
-#     spec: intel@=$(spack find --format '{version}' intel-oneapi-compilers-classic)
-#     paths:
-#       cc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/icc
-#       cxx: $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/icpc
-#       f77: $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/ifort
-#       fc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/ifort
-#     flags: {}
-#     operating_system: rocky8
-#     target: x86_64
-#     modules: []
-#     environment:
-#       prepend_path:
-#         LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
-#     extra_rpaths: []
-# EOF
-
-cat /opt/spack/etc/spack/compilers.yaml
-
-#spack clean
 
 # List the found environment
 spack compilers

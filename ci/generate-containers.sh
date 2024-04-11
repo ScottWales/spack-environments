@@ -55,9 +55,8 @@ for env in envs/*/spack.yaml; do
 
                 if [ -f "artifacts/ci-$BUILD/mamba.lock" ]; then
                     if ! ci/diff-mamba-lock.py "$CACHE/mamba.lock" "artifacts/ci-$BUILD/mamba.lock"; then
-                        # Don't mind conda lock differences, just the config file
-                        :
-                        # HAS_DIFF="yes"
+                        # Don't mind conda lock differences, just diff the input config file
+                        : # HAS_DIFF="yes"
                     fi
                 fi
 
