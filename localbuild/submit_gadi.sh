@@ -16,13 +16,13 @@ export QUEUE=normal
 export BASEIMAGE=/g/data/access/ngm/data/gadicontainer/v1/baseimage.sif
 
 # Where to write container fragments
-export OUTDIR=/scratch/$PROJECT/$USER/tmp
+export NGM_OUTDIR=/scratch/$PROJECT/$USER/tmp
 
 # Locally built packages
 export MAMBA_REPO=/scratch/hc46/hc46_gitlab/conda-bld/
 export SPACK_CACHE=/scratch/$PROJECT/$USER/tmp/spack-build
 
-PBS_FLAGS="-v PROJECT,SCRIPT_DIR,BASE_ENV,VARIANT,BASEIMAGE,OUTDIR,MAMBA_REPO,SPACK_CACHE"
+PBS_FLAGS="-v PROJECT,SCRIPT_DIR,BASE_ENV,VARIANT,BASEIMAGE,NGM_OUTDIR,MAMBA_REPO,SPACK_CACHE"
 
 # Run tasks requiring network
 PART1=$(qsub $PBS_FLAGS build_part1.sh)

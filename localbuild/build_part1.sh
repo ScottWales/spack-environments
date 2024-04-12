@@ -18,8 +18,8 @@ module load singularity
 # Common variables to both stages
 source env.sh
 
-if [ -f "$OUTDIR/part1.tar" ]; then
-    rm "$OUTDIR/part1.tar"
+if [ -f "$NGM_OUTDIR/part1.tar" ]; then
+    rm "$NGM_OUTDIR/part1.tar"
 fi
 
 mkdir -p "$SQUASHFS_ROOT"
@@ -38,4 +38,4 @@ e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks.sh
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-mamba-env.sh
 
 # Save the build directories for part 2
-tar -C "$SQUASHFS_ROOT" -cf "$OUTDIR/part1.tar" build opt
+tar -C "$SQUASHFS_ROOT" -cf "$NGM_OUTDIR/part1.tar" build opt

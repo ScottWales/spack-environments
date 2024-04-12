@@ -33,7 +33,7 @@ export MAMBA_ROOT=/opt/mamba
 export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
 # Install directory
-export APPDIR="$OUTDIR/${BASE_ENV}-${VARIANT}"
+export APPDIR="$NGM_OUTDIR/${BASE_ENV}-${VARIANT}"
 
 # Squashfs paths to mount in the container while building
 SQUASHFS_DIRS="/build /opt/spack /opt/mamba"

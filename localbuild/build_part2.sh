@@ -21,7 +21,7 @@ source env.sh
 
 # Load the build directories from part 1
 mkdir -p $SQUASHFS_ROOT
-tar -C $SQUASHFS_ROOT -xf "$OUTDIR/part1.tar"
+tar -C $SQUASHFS_ROOT -xf "$NGM_OUTDIR/part1.tar"
 
 export SPACK_JOBS=${PBS_NCPUS:-2}
 
@@ -35,7 +35,7 @@ e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks-part2.sh
 e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image
-mksquashfs $SQUASHFS_ROOT $OUTDIR/spack.squashfs -all-root -noappend -processors ${PBS_NCPUS:-1}
+mksquashfs $SQUASHFS_ROOT $NGM_OUTDIR/spack.squashfs -all-root -noappend -processors ${PBS_NCPUS:-1}
 
 # Set up APPDIR and add in squashfs to this container
 if [ -d "$APPDIR" ]; then
@@ -50,7 +50,7 @@ cp "$BASEIMAGE" "$APPDIR/etc/image.sif"
     --partarch 2 \
     --groupid 1 \
     "$APPDIR/etc/image.sif" \
-    "$OUTDIR/spack.squashfs"
+    "$NGM_OUTDIR/spack.squashfs"
 
 cp $SPACKENVS/etc/imagerun-gadi "$APPDIR/etc/imagerun"
 cp $SPACKENVS/etc/run-image-command.sh "$APPDIR/bin"
