@@ -3,13 +3,13 @@ channels:
 dependencies:
     - attrs
     - cartopy
-    - cset
+    - cset>=0.5
     - eofs
     - exceptiongroup
     - geovista
     - ghostscript
     - h5py
-    - hdf5=1.12.2 # Must match spack
+    - hdf5=1.14.3 # Must match spack
     - imageio
     - imutils
     - iniconfig
@@ -28,7 +28,7 @@ dependencies:
     - pykdtree
     - pymysql
     - pytest
-    - python
+    - python=3.11
     - python-dateutil
     - python-kaleido
     - pytz
@@ -50,3 +50,4 @@ dependencies:
     - xarray
     - gsl=2.7.0
     - openblas=0.3.23
+    - pocl

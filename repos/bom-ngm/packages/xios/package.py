@@ -12,18 +12,18 @@ from spack.pkg.builtin.boost import Boost
 class Xios(Package):
     """XML-IO-SERVER library for IO management of climate models."""
 
-    homepage = "https://forge.ipsl.jussieu.fr/ioserver/wiki"
+    homepage = "https://forge.ipsl.fr/ioserver/wiki"
 
-    version("develop", svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/trunk")
-    version("2.5.2252", revision=2252, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/trunk")
+    version("develop", svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
+    version("2.5.2252", revision=2252, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
     version(
-        "2.5", revision=1860, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/branches/xios-2.5"
+        "2.5", revision=1860, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/branches/xios-2.5"
     )
     version(
-        "2.0", revision=1627, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS2/branches/xios-2.0"
+        "2.0", revision=1627, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/branches/xios-2.0"
     )
     version(
-        "1.0", revision=910, svn="http://forge.ipsl.jussieu.fr/ioserver/svn/XIOS/branchs/xios-1.0"
+        "1.0", revision=910, svn="http://forge.ipsl.fr/ioserver/svn/XIOS/branchs/xios-1.0"
     )
 
     variant(
@@ -143,6 +143,11 @@ OASIS_LIB=""
         else:
             param["LIBCXX"] = "-lstdc++"
 
+        if spec.satisfies('%gcc'):
+            param['BACKTRACE'] = '-fbacktrace'
+        else:
+            param['BACKTRACE'] = '-traceback'
+
         if any(map(spec.satisfies, ("%gcc", "%intel", "%apple-clang", "%clang", "%fj", "%oneapi"))):
             text = r"""
 %CCOMPILER      {MPICXX}
@@ -153,13 +158,13 @@ OASIS_LIB=""
                 -I{BOOST_INC_DIR} -I{BLITZ_INC_DIR} \
                 -std=gnu++11
 %PROD_CFLAGS    -O3 -DBOOST_DISABLE_ASSERTS
-%DEV_CFLAGS     -g -O2
-%DEBUG_CFLAGS   -g -traceback
+%DEV_CFLAGS     -g {BACKTRACE} -O2
+%DEBUG_CFLAGS   -g {BACKTRACE}
 
 %BASE_FFLAGS    -D__NONE__ -ffree-line-length-none
 %PROD_FFLAGS    -O3
-%DEV_FFLAGS     -g -O2
-%DEBUG_FFLAGS   -g -traceback
+%DEV_FFLAGS     -g {BACKTRACE} -O2
+%DEBUG_FFLAGS   -g {BACKTRACE}
 
 %BASE_INC       -D__NONE__
 %BASE_LD        -L{BOOST_LIB_DIR} -L{BLITZ_LIB_DIR} -lblitz {LIBCXX}

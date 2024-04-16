@@ -1,5 +1,5 @@
 dependencies:
-  - python
+  - python=3.11
   - psyclone
   - lfric-gpl-utils=2
   - jinja2

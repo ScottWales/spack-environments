@@ -4,8 +4,22 @@ spack:
       xz:
           require: '@=5.2.6'
       libevent:
-          require: '@=2.1.10'
+          require: '@=2.1.12'
       gsl:
           require: '@=2.7 +external-cblas'
-      libxml2:
-          require: '@=2.10.3'
+      openblas:
+          require: "@0.3.23"
+      zlib:
+          require: "@1.2.13"
+      binutils:
+          require: '%gcc'
+      intel-oneapi-compilers-classic:
+          require: '%gcc'
+      intel-oneapi-compilers:
+          require: '%gcc'
+      patchelf:
+          require: '%gcc'
+      gmake:
+          require: '%gcc'
+      subversion:
+          require: '%gcc'

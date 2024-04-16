@@ -9,27 +9,20 @@ set -o pipefail
 microdnf install -y --nodocs \
      bzip2 \
      bzip2-devel \
-     cmake \
      curl \
-     curl-devel \
+     diffutils \
+     file \
+     findutils \
      gcc \
      gcc-c++ \
      gcc-gfortran \
      git \
      gzip \
-     libasan \
-     liblsan \
      libtool \
-     libtsan \
-     libubsan \
+     make \
      openssl \
      openssl-devel \
      patch \
-     perl \
-     perl-ExtUtils-MakeMaker \
-     perl-XML-Parser \
-     procps \
-     shadow-utils \
      subversion \
      tar \
      time \

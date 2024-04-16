@@ -22,7 +22,8 @@ done
 
 # Update Spack with system packages
 spack compiler find --scope site /usr
-spack external find --scope site --all --path /usr
+spack external find --scope site --path /usr --not-buildable openssl
+spack external find --scope site --path /usr --not-buildable subversion
 
 spack config --scope site add packages:openssl:buildable:false
 spack config --scope site add packages:gcc:buildable:true
@@ -31,7 +32,7 @@ function mamba_vn () {
     source $MAMBA_ROOT/etc/profile.d/conda.sh
     source $MAMBA_ROOT/etc/profile.d/mamba.sh
     # Extract version and trim to major.minor
-    mamba list "^$1\$" --json | sed -n 's/.*"version": "\([[:digit:]]\+\(\.[[:digit:]]\+\)\).*".*/\1/p'
+    mamba list -n container "^$1\$" --json | sed -n 's/.*"version": "\([[:digit:]]\+\(\.[[:digit:]]\+\)\).*".*/\1/p'
 }
 
 cat > /tmp/packages.yaml << EOF
@@ -60,58 +61,8 @@ EOF
 spack config --scope site add -f /tmp/packages.yaml
 rm /tmp/packages.yaml
 
-spack bootstrap status
 spack bootstrap now
-
-# Install intel compilers
-spack install --no-check-signature intel-oneapi-compilers-classic@2021.8.0
-ONEAPI_PREFIX=$(spack find --format '{prefix}' intel-oneapi-compilers)
-
-# Minimise footprint
-rm -rf $ONEAPI_PREFIX/compiler/latest/linux/lib/oclfpga
-rm -rf $ONEAPI_PREFIX/compiler/latest/linux/lib/*_emu.so*
-rm -rf $ONEAPI_PREFIX/compiler/latest/linux/bin-llvm
-rm -rf $ONEAPI_PREFIX/intel
-rm -rf $ONEAPI_PREFIX/conda_channel
-rm -rf $ONEAPI_PREFIX/debugger
-
-# Setup compilers
-cat >> /opt/spack/etc/spack/compilers.yaml << EOF
-- compiler:
-    spec: oneapi@=$(spack find --format '{version}' intel-oneapi-compilers)
-    paths:
-      cc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/icx
-      cxx: $ONEAPI_PREFIX/compiler/latest/linux/bin/icpx
-      f77: $ONEAPI_PREFIX/compiler/latest/linux/bin/ifx
-      fc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/ifx
-    flags: {}
-    operating_system: rocky8
-    target: x86_64
-    modules: []
-    environment:
-      prepend_path:
-        LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
-    extra_rpaths: []
-- compiler:
-    spec: intel@=$(spack find --format '{version}' intel-oneapi-compilers-classic)
-    paths:
-      cc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/icc
-      cxx: $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/icpc
-      f77: $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/ifort
-      fc:  $ONEAPI_PREFIX/compiler/latest/linux/bin/intel64/ifort
-    flags: {}
-    operating_system: rocky8
-    target: x86_64
-    modules: []
-    environment:
-      prepend_path:
-        LD_LIBRARY_PATH: "$ONEAPI_PREFIX/compiler/latest/linux/lib:$ONEAPI_PREFIX/compiler/latest/linux/lib/x64:$ONEAPI_PREFIX/compiler/latest/linux/compiler/lib/intel64_lin"
-    extra_rpaths: []
-EOF
-
-cat /opt/spack/etc/spack/compilers.yaml
-
-spack clean
+spack bootstrap status
 
 # List the found environment
 spack compilers

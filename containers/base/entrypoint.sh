@@ -33,6 +33,9 @@ else
     debug  python is not isolated
 fi
 
+export MAMBA_ROOT=/opt/mamba
+export SPACK_ROOT=/opt/spack
+
 export SPACK_PYTHON=$MAMBA_ROOT/envs/container/bin/python
 
 # Load Spack and Mamba

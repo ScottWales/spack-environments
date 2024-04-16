@@ -42,11 +42,12 @@ Configure Bind-mode MPI by mounting your system MPI to /bind/openmpi@4
 
 ### Installing environments on NCI Gadi
 
-To install an environment on Gadi run
-
-    ./bin/install_gadi.sh ENV
-
-with ENV the name of a directory under `envs/`.
+To install an environment on Gadi, go to the `localbuild` directory and edit
+`submit_gadi.sh` setting ENV to the name of a directory under `envs/` and
+VARIANT to a variant name if available (e.g. `intel-openmpi`). Running the
+script submits the job in two stages - the first stage runs in `copyq` to
+download sources and the second stage runs in the compute queue to build
+dependencies.
 
 ### Installing environments on AWS EC2
 

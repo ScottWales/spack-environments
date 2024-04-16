@@ -50,6 +50,11 @@ class Hdf5(CMakePackage):
 
     # Even versions are maintenance versions
     version(
+        "1.14.3",
+        sha256="09cdb287aa7a89148c1638dd20891fdbae08102cf433ef128fd345338aa237c7",
+        preferred=True,
+    )
+    version(
         "1.12.2",
         sha256="2a89af03d56ce7502dcae18232c241281ad1773561ec00c0f0e8ee2463910f14",
         preferred=True,
@@ -203,6 +208,8 @@ class Hdf5(CMakePackage):
 
     # The compiler wrappers (h5cc, h5fc, etc.) run 'pkg-config'.
     depends_on("pkgconfig", type="run")
+
+    depends_on("curl")
 
     conflicts("api=v114", when="@1.6:1.12", msg="v114 is not compatible with this release")
     conflicts("api=v112", when="@1.6:1.10", msg="v112 is not compatible with this release")

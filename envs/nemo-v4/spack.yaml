@@ -7,12 +7,15 @@ spack:
         - openjpeg
         - zlib
         - "xios@2.5.2252+nemo"
+        - intel-oneapi-compilers-classic@2021.9.0
         # - tau+mpi+opari+openmp~pthreads
         #Optional dependencies not currently in spack:
         # - drhook
         # - grib-api
     packages:
         all:
-            require: "%intel@2021.8.0"
+            require: "%intel"
         mpi:
             require: "openmpi@4.1.4"
+        intel-oneapi-compilers-classic:
+            require: "%gcc"

@@ -137,7 +137,7 @@ class Tau(Package):
     conflicts("+sqlite", when="@:2.29.1")
 
     patch("unwind.patch", when="@2.29.0")
-    patch("lcxa.patch", when="%intel@2021.8.0")
+    patch("lcxa.patch", when="%intel")
     patch("TauFInit.patch")
     patch("ompt.patch",when="+ompt")
     patch("TauMpi.c.patch",when="+lfric")

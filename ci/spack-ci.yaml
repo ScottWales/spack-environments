@@ -9,10 +9,10 @@ spack:
 
   config:
     source_cache: $SPACK_CACHE
+    install_missing_compilers: true
 
   gitlab-ci:
     script:
-      - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
       - spack env activate --without-view ${SPACK_CONCRETE_ENV_DIR}
       - spack -d ci rebuild --tests
     mappings:
@@ -27,7 +27,11 @@ spack:
             name: "localhost:5000/spack-base:${DOCKER_TAG}"
             entrypoint: ['']
           before_script:
+            - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
             - source /build/entrypoint.sh
+            - spack install --no-check-signature intel-oneapi-compilers-classic@2021.9.0
+            - spack compiler find $(spack find --format '{prefix}' intel-oneapi-compilers-classic)
+            - spack compilers
     service-job-attributes:
       tags:
         - docker
@@ -35,6 +39,7 @@ spack:
         name: "localhost:5000/spack-base:${DOCKER_TAG}"
         entrypoint: ['']
       before_script:
+        - cp -r repos/bom-ngm/packages $SPACK_ROOT/var/spack/repos/bom-ngm/
         - source /build/entrypoint.sh
     enable-artifacts-buildcache: False
     rebuild-index: True

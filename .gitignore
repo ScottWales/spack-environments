@@ -5,3 +5,4 @@ __pycache__
 spack.lock
 /artifacts
 /build
+/localbuild/*.sh.o*

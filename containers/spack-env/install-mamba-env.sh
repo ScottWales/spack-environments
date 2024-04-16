@@ -12,5 +12,5 @@ if [ -f /build/mamba.lock ]; then
     ln -s /build/mamba.lock $MAMBA_ROOT/conda-lock.yml
     $MAMBA_ROOT/bin/conda-lock install --prefix $MAMBA_ROOT/envs/container $MAMBA_ROOT/conda-lock.yml
 
-    $MAMBA_ROOT/bin/mamba clean --all
+    $MAMBA_ROOT/bin/mamba clean --all --yes
 fi
