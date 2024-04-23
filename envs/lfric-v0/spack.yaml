@@ -7,3 +7,4 @@ spack:
         - rsync
           #- builtin.hdf5
         - tau +mpi +openmp +opari ~pthreads +lfric
+        - hdf5@1.12.2 # Pinned to fix floating point error opening some files?
