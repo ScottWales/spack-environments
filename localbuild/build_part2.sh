@@ -13,8 +13,10 @@
 set -eu
 set -o pipefail
 
-# Compiles the Spack packages
-module load singularity
+if [[ -d /opt/nci ]]; then
+	module load singularity
+	APPTAINER=$(which singularity)
+fi
 
 # Common variables to both stages
 source env.sh
@@ -28,11 +30,11 @@ export SPACK_JOBS=${PBS_NCPUS:-2}
 # Make sure python is available
 export SINGULARITYENV_PREPEND_PATH=$MAMBA_ROOT/envs/container/bin
 
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
 
 # Regenerate locks for current target
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks-part2.sh
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks-part2.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image
 mksquashfs $SQUASHFS_ROOT $NGM_OUTDIR/spack.squashfs -all-root -noappend -processors ${PBS_NCPUS:-1}
@@ -43,7 +45,7 @@ if [ -d "$APPDIR" ]; then
 fi
 mkdir -p "$APPDIR"/{bin,etc}
 cp "$BASEIMAGE" "$APPDIR/etc/image.sif"
-/opt/singularity/bin/singularity sif add \
+$APPTAINER sif add \
     --datatype 4 \
     --partfs 1 \
     --parttype 4 \

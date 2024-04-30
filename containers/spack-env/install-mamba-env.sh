@@ -6,7 +6,7 @@ set -eu
 set -o pipefail
 
 if [ -f /build/mamba.lock ]; then
-    $MAMBA_ROOT/bin/mamba env remove -n container
+    $MAMBA_ROOT/bin/mamba env remove --yes -n container
 
     # Needs a specific file name for conda-lock
     ln -s /build/mamba.lock $MAMBA_ROOT/conda-lock.yml
