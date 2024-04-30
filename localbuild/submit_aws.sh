@@ -15,13 +15,23 @@ if ! [[ -f "$MAMBA_ROOT/bin/conda" ]]; then
 	curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
 	bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT
 
-	$MAMBA_ROOT/bin/conda install --yes -n base conda-build subversion apptainer squashfuse cylc cylc-rose metomi-rose
+	$MAMBA_ROOT/bin/conda install --yes -n base conda-build subversion apptainer squashfuse cylc-flow cylc-rose metomi-rose
 	popd
 fi
 source $MAMBA_ROOT/etc/profile.d/conda.sh
 conda activate base
 
 # Set up passwordless SSH
+if ! [[ -f /usr/bin/pinentry-curses ]]; then
+        cat <<EOF
+
+ERROR: Unable to find pinentry-curses.
+       Please run:
+
+           sudo dnf install pinentry-curses
+EOF
+        exit 1
+fi
 if ! [[ -f ~/.gnupg/gpg-agent.conf ]]; then
 	mkdir ~/.gnupg
 	cat > ~/.gnupg/gpg-agent.conf <<EOF
@@ -36,8 +46,11 @@ export GPG_TTY=$(tty)
 
 # Check svn is working
 echo "Storing MOSRS password in gpg-agent"
+# Need to enter password twice for svn to store it
 svn info https://code.metoffice.gov.uk/svn/um
 svn info https://code.metoffice.gov.uk/svn/um
+# Now should have the password cached
+svn --non-interactive info https://code.metoffice.gov.uk/svn/um
 
 # Run the generic build script
 bash $SCRIPT_DIR/submit_generic.sh
