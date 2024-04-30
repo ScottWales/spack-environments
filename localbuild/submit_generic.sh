@@ -29,29 +29,20 @@ mkdir -p "$TMPDIR"
 source $CONDA_PREFIX/etc/profile.d/conda.sh
 mkdir -p "$NGM_OUTDIR"
 
-# 1. Install Apptainer if not available
-if ! which apptainer &> /dev/null; then
-	if ! conda env list | grep -w '^apptainer' &> /dev/null; then
-		echo "Installing apptainer"
-		conda create -n apptainer -c conda-forge apptainer squashfuse
-	fi
-	conda activate apptainer
-fi
-
-export APPTAINER="$(which apptainer)"
+export APPTAINER="$(which apptainer || which singularity)"
 echo "Using apptainer at $APPTAINER"
 
-# Base container image
+# Build base container image with Apptainer
 export BASEIMAGE=$NGM_OUTDIR/baseimage.sif
 
 if ! [[ -f "$BASEIMAGE" ]]; then
 	echo "Building base image"
-	apptainer build "$BASEIMAGE" $SCRIPT_DIR/baseimage.def
+	"$APPTAINER" build "$BASEIMAGE" $SCRIPT_DIR/baseimage.def
 fi
 
 echo "Container base image at $BASEIMAGE"
 
-# Set up conda local repo
+# Set up empty local conda repo
 if ! [[ -d "$MAMBA_REPO" ]]; then
 	mkdir -p "$MAMBA_REPO"/noarch
 	echo "{}" >> "$MAMBA_REPO"/noarch/repodata.json
@@ -60,6 +51,7 @@ fi
 
 # Conda packages
 if ! [[ -d "$TMPDIR/conda-pkgs" ]]; then
+	# Download recipes and set up for non-NCI
 	git clone git@git.nci.org.au:bom/ngm/conda-pkgs "$TMPDIR/conda-pkgs"
 	for pkg in "$TMPDIR"/conda-pkgs/*/meta.yaml; do
 		sed -i "$pkg" \
@@ -67,6 +59,7 @@ if ! [[ -d "$TMPDIR/conda-pkgs" ]]; then
 	done
 fi
 for pkg in "$TMPDIR"/conda-pkgs/*; do
+	# Build packages that are being used by this container
 	pkg_name="$(basename "$pkg")"
 	if ! [[ -f "$pkg/meta.yaml" ]]; then
 		# Not a conda package
