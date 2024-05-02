@@ -54,7 +54,11 @@ $APPTAINER sif add \
     "$APPDIR/etc/image.sif" \
     "$NGM_OUTDIR/spack.squashfs"
 
-cp $SPACKENVS/etc/imagerun-gadi "$APPDIR/etc/imagerun"
+if [[ -d /opt/nci ]]; then
+	cp $SPACKENVS/etc/imagerun-gadi "$APPDIR/etc/imagerun"
+else
+	cp $SPACKENVS/etc/imagerun-generic "$APPDIR/etc/imagerun"
+fi
 cp $SPACKENVS/etc/run-image-command.sh "$APPDIR/bin"
 cp $SPACKENVS/etc/rose "$APPDIR/bin"
 
