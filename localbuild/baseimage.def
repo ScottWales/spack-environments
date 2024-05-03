@@ -19,6 +19,7 @@ From: rockylinux:8-minimal
              openssl \
              openssl-devel \
              patch \
+             pinentry-curses \
              subversion \
              tar \
              time \

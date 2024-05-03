@@ -9,8 +9,8 @@ export SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" 
 
 # Install conda and dependencies
 MAMBA_ROOT=~/conda
-mkdir -p $MAMBA_ROOT
 if ! [[ -f "$MAMBA_ROOT/bin/conda" ]]; then
+	mkdir -p $MAMBA_ROOT
 	pushd $MAMBA_ROOT
 	curl -L -O https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
 	bash Mambaforge-Linux-x86_64.sh -b -f -p $MAMBA_ROOT
@@ -46,11 +46,13 @@ export GPG_TTY=$(tty)
 
 # Check svn is working
 echo "Storing MOSRS password in gpg-agent"
+
 # Need to enter password twice for svn to store it
 svn info https://code.metoffice.gov.uk/svn/um
 svn info https://code.metoffice.gov.uk/svn/um
+
 # Now should have the password cached
 svn --non-interactive info https://code.metoffice.gov.uk/svn/um
 
 # Run the generic build script
-bash $SCRIPT_DIR/submit_generic.sh
+bash $SCRIPT_DIR/build_generic.sh
