@@ -16,7 +16,7 @@ Containerised environments for working with next generation models
    * [Elsewhere](docs/using.md#elsewhere)
 
  * [Building the Container](docs/building.md)
-   * [On Gitlab](docs/building.md#on-gitlab)
+   * [On Gitlab CI](docs/building.md#on-gitlab-ci)
    * [At NCI](docs/building.md#at-nci)
    * [At AWS](docs/building.md#at-aws)
    * [Elsewhere](docs/building.md#elsewhere)

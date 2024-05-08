@@ -10,9 +10,9 @@ set -o pipefail
 export SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
 
 # Container to build
-export BASE_ENV=lfric-v0
-export VARIANT=intel-openmpi
-export QUEUE=normal
+: ${BASE_ENV:=lfric-v0}
+: ${VARIANT:=intel-openmpi}
+export BASE_ENV VARIANT
 
 # Where to write container fragments
 export NGM_OUTDIR=$HOME/ngm

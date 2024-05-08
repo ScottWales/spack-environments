@@ -7,6 +7,10 @@ set -o pipefail
 
 export SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
 
+: ${BASE_ENV:=lfric-v0}
+: ${VARIANT:=intel-openmpi}
+export BASE_ENV VARIANT
+
 # Install conda and dependencies
 MAMBA_ROOT=~/conda
 if ! [[ -f "$MAMBA_ROOT/bin/conda" ]]; then
