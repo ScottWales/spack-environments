@@ -21,8 +21,10 @@ Containerised environments for working with next generation models
    * [At AWS](docs/building.md#at-aws)
    * [Elsewhere](docs/building.md#elsewhere)
 
- * Changing MPI implementations
+ * [Environment Definitions](envs/README.md)
+   * [Environment Contents](docs/contents.md#environment-contents)
+   * [Variants](docs/contents.md#variants)
+   * [Adding new packages](docs/contents.md#adding-new-packages)
+   * [Adding new environments](docs/contents.md#adding-new-environments)
 
- * Container Contents
-   * Adding new packages
-   * Adding new environments
+ * [MPI Details](docs/mpi.md)
