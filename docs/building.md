@@ -21,7 +21,8 @@ system instead of as CI artefacts.
    them on top of the base image then deploys the container
 5. Cleanup - removes built containers from the runner filesystem
 
-On Gadi the CI built container are available in the hc46 project, and can be loaded with
+On Gadi the CI built container are available in the hc46 project, and can be
+loaded with:
 ```
 module use /scratch/hc46/hc46_gitlab/ngm/modules
 module load $BASE_ENV/$VARIANT-$BRANCH
@@ -52,8 +53,9 @@ container on an AWS EC2 instance. Recommended EC2 settings are an `amazonlinux`
 based image and at least 20 GB of storage. Adjust `$BASE_ENV` and `$VARIANT` in
 the script to the name of the container you wish to build.
 
-The build script will install Conda and create an environment with Apptainer
-installed before building the image.
+The build script will install Conda, download and build private Conda package
+recipes and then create an environment with Apptainer installed before building
+the image.
 
 See [Using the Container](using.md) or the environment documentation for
 how to use the container.
@@ -68,6 +70,9 @@ gets built on CI.
 The build process itself is split into two sections - part 1 requires network
 access, while part 2 requires more compute power. On a HPC these parts may
 require running on different queues.
+
+Some environments require private Conda packages, see the AWS build script for
+an example of how to download and build the recipes for these.
 
 See [Using the Container](using.md) or the environment documentation for
 how to use the container.
