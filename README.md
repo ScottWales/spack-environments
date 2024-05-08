@@ -22,9 +22,9 @@ Containerised environments for working with next generation models
    * [Elsewhere](docs/building.md#elsewhere)
 
  * [Environment Definitions](envs/README.md)
-   * [Environment Contents](docs/contents.md#environment-contents)
-   * [Variants](docs/contents.md#variants)
-   * [Adding new packages](docs/contents.md#adding-new-packages)
-   * [Adding new environments](docs/contents.md#adding-new-environments)
+   * [Environment Contents](envs/README.md#environment-contents)
+   * [Variants](envs/README.md#variants)
+   * [Adding new packages](envs/README.md#adding-new-packages)
+   * [Adding new environments](envs/README.md#adding-new-environments)
 
  * [MPI Details](docs/mpi.md)
