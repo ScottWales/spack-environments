@@ -13,13 +13,8 @@
 set -eu
 set -o pipefail
 
-if [[ -d /opt/nci ]]; then
-	module load singularity
-	APPTAINER=$(which singularity)
-fi
-
 # Common variables to both stages
-source env.sh
+source $SCRIPT_DIR/scripts/env.sh
 
 # Load the build directories from part 1
 mkdir -p $SQUASHFS_ROOT
@@ -30,10 +25,10 @@ export SPACK_JOBS=${PBS_NCPUS:-2}
 # Make sure python is available
 export SINGULARITYENV_PREPEND_PATH=$MAMBA_ROOT/envs/container/bin
 
-e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SCRIPT_DIR/scripts/install-compiler.sh
 
 # Regenerate locks for current target
-e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks-part2.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SCRIPT_DIR/scripts/generate-locks-part2.sh
 e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image

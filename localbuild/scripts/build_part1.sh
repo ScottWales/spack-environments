@@ -13,13 +13,8 @@
 set -eu
 set -o pipefail
 
-if [[ -d /opt/nci ]]; then
-	module load singularity
-	APPTAINER=$(which singularity)
-fi
-
 # Common variables to both stages
-source env.sh
+source $SCRIPT_DIR/scripts/env.sh
 
 if [ -f "$NGM_OUTDIR/part1.tar" ]; then
     rm "$NGM_OUTDIR/part1.tar"
@@ -35,8 +30,7 @@ cp -r $SPACKENVS/repos/bom-ngm/packages $SQUASHFS_ROOT/$SPACK_ROOT/var/spack/rep
 cp -r $SPACKENVS/envs/$BASE_ENV/* $SQUASHFS_ROOT/build
 chmod +x $SQUASHFS_ROOT/build/*.sh
 
-# e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
-e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SCRIPT_DIR/scripts/generate-locks.sh
 
 e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-mamba-env.sh
 

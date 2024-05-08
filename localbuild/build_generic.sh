@@ -81,5 +81,5 @@ fi
 
 # Build conda environment
 unset conda
-bash $SCRIPT_DIR/build_part1.sh
-bash $SCRIPT_DIR/build_part2.sh
+bash $SCRIPT_DIR/scripts/build_part1.sh
+bash $SCRIPT_DIR/scripts/build_part2.sh
