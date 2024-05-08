@@ -25,6 +25,8 @@ export SPACK_JOBS=${PBS_NCPUS:-2}
 # Make sure python is available
 export SINGULARITYENV_PREPEND_PATH=$MAMBA_ROOT/envs/container/bin
 
+cp $SCRIPT_DIR/scripts/Makefile $SQUASHFS_ROOT/build/Makefile
+
 e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SCRIPT_DIR/scripts/install-compiler.sh
 
 # Regenerate locks for current target

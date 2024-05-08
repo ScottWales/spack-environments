@@ -34,7 +34,7 @@ PART1=$(qsub $PBS_FLAGS "$SCRIPT_DIR/scripts/build_part1.sh")
 # Run main spack build
 PART2=$(qsub -q $QUEUE -W depend=afterok:${PART1} $PBS_FLAGS "$SCRIPT_DIR/scripts/build_part2.sh")
 
-source env.sh
+source $SCRIPT_DIR/scripts/env.sh
 cat <<EOF
 PBS tasks ${PART1} ${PART2}
 
