@@ -6,7 +6,7 @@
 #PBS -l mem=64gb
 #PBS -l walltime=1:00:00
 #PBS -l jobfs=20gb
-#PBS -l storage=scratch/hc46+gdata/access
+#PBS -l storage=gdata/access
 #PBS -m ae
 #PBS -j oe
 

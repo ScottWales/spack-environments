@@ -18,7 +18,7 @@ export BASEIMAGE=/g/data/access/ngm/data/gadicontainer/v1/baseimage.sif
 export NGM_OUTDIR=/scratch/$PROJECT/$USER/tmp
 
 # Locally built packages
-export MAMBA_REPO=/scratch/hc46/hc46_gitlab/conda-bld/
+export MAMBA_REPO=/g/data/access/ngm/data/conda-bld/
 export SPACK_CACHE=/scratch/$PROJECT/$USER/tmp/spack-build
 
 export APPTAINER=/opt/singularity/bin/singularity
