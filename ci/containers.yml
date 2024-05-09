@@ -66,6 +66,7 @@ cache build __CONCRETE_ENV__:
     stage: clean
     tags: [docker]
     script:
+        - rm -rf $BRANCH_CACHE/ci-$CONCRETE_ENV
         - mkdir -p $BRANCH_CACHE/ci-$CONCRETE_ENV
         - cp -r artifacts/ci-$CONCRETE_ENV/* $BRANCH_CACHE/ci-$CONCRETE_ENV
     needs:
