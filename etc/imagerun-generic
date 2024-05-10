@@ -1,0 +1,50 @@
+#!/bin/bash
+#  Copyright 2023 Bureau of Meteorology
+#  Author Scott Wales
+
+set -eu
+set -o pipefail
+
+# Runs a command inside a singularity image
+SCRIPT_DIR=$( cd -- "$( dirname -- "$(readlink -f ${BASH_SOURCE[0]})" )" &> /dev/null && pwd )
+CONTAINER=$SCRIPT_DIR/image.sif
+
+# Are we already in a container?
+if [ -d /.singularity.d ]; then
+
+    # Are we in the correct container?
+    if [ "$SINGULARITY_CONTAINER" != "$CONTAINER" ]; then
+        echo "Already inside container '$SINGULARITY_CONTAINER'"
+        echo "Cannot start container '$CONTAINER'"
+        exit 1
+    fi
+
+    # Already in the right container, just exec
+    exec "$@"
+    return "$?"
+fi
+
+if [ -n "${NGMENV_DEBUG:-}" ]; then
+    echo ENTERING "$CONTAINER"
+    echo "    NGMENV_DEBUG=$NGMENV_DEBUG"
+    echo "    NGMENV_SPACK_DONT_ISOLATE=${NGMENV_SPACK_DONT_ISOLATE:-}"
+    echo "    NGMENV_PYTHON_DONT_ISOLATE=${NGMENV_PYTHON_DONT_ISOLATE:-}"
+    echo "    NGMENV_MPI_HYBRID_MODE_ONLY=${NGMENV_MPI_HYBRID_MODE_ONLY:-}"
+    echo COMMAND "$@"
+    echo
+fi
+
+# Append the current PATH
+export APPTAINERENV_APPEND_PATH=${PATH}
+
+: ${BIND:=""}
+
+if [ $1 == "shell" ]; then
+    apptainer shell $BIND $SCRIPT_DIR/image.sif
+else
+    apptainer run $BIND $SCRIPT_DIR/image.sif "$@"
+fi
+
+if [ -n "${NGMENV_DEBUG:-}" ]; then
+    echo EXITING "$CONTAINER"
+fi

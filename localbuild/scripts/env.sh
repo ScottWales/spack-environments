@@ -12,7 +12,8 @@ function e() {
 }
 
 # Where to build the squashfs paths
-export SQUASHFS_ROOT="$TMPDIR/squashfs"
+: ${SQUASHFS_ROOT:="${TMPDIR}/squashfs"}
+export SQUASHFS_ROOT
 
 # Path to the container repo
 export SPACKENVS="$SCRIPT_DIR/.."
@@ -44,3 +45,4 @@ for d in $SQUASHFS_DIRS; do
     mkdir -p $SQUASHFS_ROOT$d
     MOUNT_ARGS="$MOUNT_ARGS --bind $SQUASHFS_ROOT$d:$d:rw"
 done
+

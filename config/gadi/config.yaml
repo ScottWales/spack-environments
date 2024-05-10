@@ -1,8 +1,0 @@
-config:
-    install_tree:
-        root: /scratch/$PROJECT/$USER/spack
-    license_dir: /scratch/$PROJECT/$USER/spack/licenses
-    source_cache: /scratch/$PROJECT/$USER/spack/cache
-    environments_root: /scratch/$PROJECT/$USER/spack/envs
-
-

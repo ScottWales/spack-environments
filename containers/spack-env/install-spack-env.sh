@@ -17,7 +17,7 @@ spack env activate container
 spack mirror add gitlab file://$SPACK_CACHE
 
 if [ -n "${SPACK_ALLOW_BUILDS:-}" ]; then
-    make -C /build -j ${SPACK_JOBS:-2} --file $PWD/Makefile --keep-going
+    make -C /build -j ${SPACK_JOBS:-2} --keep-going
 else
     spack install --use-buildcache=only --no-check-signature
 fi

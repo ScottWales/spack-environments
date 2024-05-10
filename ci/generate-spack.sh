@@ -69,7 +69,7 @@ done
 # Merge lock files from all concretized environments
 echo merged
 spack env create --without-view -d build/merged
-bin/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged build/ci-*/spack.lock
+ci/merge_spack_lock.py --ci-yaml=ci/spack-ci.yaml --output=build/merged build/ci-*/spack.lock
 
 # CI generate
 spack env activate --without-view build/merged

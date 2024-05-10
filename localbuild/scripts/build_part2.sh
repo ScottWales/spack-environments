@@ -6,18 +6,15 @@
 #PBS -l mem=64gb
 #PBS -l walltime=1:00:00
 #PBS -l jobfs=20gb
-#PBS -l storage=scratch/hc46+gdata/access
+#PBS -l storage=gdata/access
 #PBS -m ae
 #PBS -j oe
 
 set -eu
 set -o pipefail
 
-# Compiles the Spack packages
-module load singularity
-
 # Common variables to both stages
-source env.sh
+source $SCRIPT_DIR/scripts/env.sh
 
 # Load the build directories from part 1
 mkdir -p $SQUASHFS_ROOT
@@ -28,11 +25,13 @@ export SPACK_JOBS=${PBS_NCPUS:-2}
 # Make sure python is available
 export SINGULARITYENV_PREPEND_PATH=$MAMBA_ROOT/envs/container/bin
 
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash install-compiler.sh
+cp $SCRIPT_DIR/scripts/Makefile $SQUASHFS_ROOT/build/Makefile
+
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SCRIPT_DIR/scripts/install-compiler.sh
 
 # Regenerate locks for current target
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash generate-locks-part2.sh
-e singularity exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SCRIPT_DIR/scripts/generate-locks-part2.sh
+e $APPTAINER exec $MOUNT_ARGS "$BASEIMAGE" /bin/bash $SPACKENVS/containers/spack-env/install-spack-env.sh
 
 # Squashfs the image
 mksquashfs $SQUASHFS_ROOT $NGM_OUTDIR/spack.squashfs -all-root -noappend -processors ${PBS_NCPUS:-1}
@@ -43,7 +42,7 @@ if [ -d "$APPDIR" ]; then
 fi
 mkdir -p "$APPDIR"/{bin,etc}
 cp "$BASEIMAGE" "$APPDIR/etc/image.sif"
-/opt/singularity/bin/singularity sif add \
+$APPTAINER sif add \
     --datatype 4 \
     --partfs 1 \
     --parttype 4 \
@@ -52,7 +51,11 @@ cp "$BASEIMAGE" "$APPDIR/etc/image.sif"
     "$APPDIR/etc/image.sif" \
     "$NGM_OUTDIR/spack.squashfs"
 
-cp $SPACKENVS/etc/imagerun-gadi "$APPDIR/etc/imagerun"
+if [[ -d /opt/nci ]]; then
+	cp $SPACKENVS/etc/imagerun-gadi "$APPDIR/etc/imagerun"
+else
+	cp $SPACKENVS/etc/imagerun-generic "$APPDIR/etc/imagerun"
+fi
 cp $SPACKENVS/etc/run-image-command.sh "$APPDIR/bin"
 cp $SPACKENVS/etc/rose "$APPDIR/bin"
 
