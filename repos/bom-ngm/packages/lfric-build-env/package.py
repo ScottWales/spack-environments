@@ -5,6 +5,6 @@ class LfricBuildEnv(Package):
 
     version("2023.0")
 
-    depends_on(f"xios@2.5.2252")
+    depends_on(f"xios@2.5.2629")
     depends_on("yaxt idxtype=long")
     depends_on("pfunit@3 max_array_rank=6 +mpi +openmp")

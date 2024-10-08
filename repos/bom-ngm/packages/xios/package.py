@@ -16,6 +16,7 @@ class Xios(Package):
 
     version("develop", svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
     version("3.0.b2611", revision=2611, svn="http://forge.ipsl.fr/ioserver/svn/XIOS3/branches/xios-3.0-beta")
+    version("2.5.2629", revision=2629, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
     version("2.5.2252", revision=2252, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/trunk")
     version(
         "2.5", revision=1860, svn="http://forge.ipsl.fr/ioserver/svn/XIOS2/branches/xios-2.5"
@@ -42,6 +43,7 @@ class Xios(Package):
     # Use spack versions of blitz and netcdf-c for compatibility
     # with recent compilers and optimised platform libraries:
     patch("bld_extern_1.0.patch", when="@:1.0")
+    patch("lfric_xios3.patch", when="@2.5.2629")
     patch("lfric_xios3.patch", when="@3.0")
 
     # Workaround bug #17782 in llvm, where reading a double
@@ -50,7 +52,7 @@ class Xios(Package):
     patch("llvm_bug_17782.patch", when="@1.1: %clang")
 
     # Fix for recent gcc
-    patch("gcc_remap.patch", when="@2.5:2.9")
+    patch("gcc_remap.patch", when="@2.5.2252")
 
     # NEMO-specific patches from https://github.com/hiker/xios-2252/tree/master/patches
     patch("nemo/p1_add_refname", when="+nemo")
@@ -59,7 +61,8 @@ class Xios(Package):
     patch("nemo/p7_fix_crash_in_nc4_data_output", when="+nemo")
 
     # Fix for lfric to avoid run time segmentation fault reported at 'CMesh::createMeshEpsilon()' due to CMesh::createHashes()
-    patch("mesh_cpp.patch", when="+lfric")
+    patch("mesh_cpp.patch", when="@2.5.2252 +lfric")
+    patch("lfric_xios2.2629.patch", when="@2.5.2629")
 
     depends_on("netcdf-c+mpi")
     depends_on("netcdf-fortran")
