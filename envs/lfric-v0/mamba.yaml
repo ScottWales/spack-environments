@@ -5,4 +5,5 @@ dependencies:
   - jinja2
   - sci-fab
   - libclang
+  - python-clang
   - libxml2=2.10.3 # Must match spack
